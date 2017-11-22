@@ -4,15 +4,15 @@
   "version": "1.0.0",
   "description": "Headless browser automation to download all receipts from Uber account.",
   "author": "Meet Godhani <meet@breakenter.com> (https://www.breakenter.com)",
+  "contributors": [
+    "Adi Ofir <adi@breakenter.com> (https://www.breakenter.com)"
+  ],
   "keywords": [
     "node",
     "scrape",
     "utility",
     "receipts",
     "invoices"
-  ],
-  "contributors": [
-    "Adi Ofir <adi@breakenter.com> (https://www.breakenter.com)"
   ],
   "license": "MIT",
   "main": "index.js",
