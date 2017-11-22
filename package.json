@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "prompt": "^1.0.0",
+    "puppeteer": "^0.13.0"
+  }
+}
