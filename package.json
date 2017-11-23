@@ -2,7 +2,7 @@
   "name": "get-receipt",
   "productName": "Get Receipt",
   "version": "1.0.0",
-  "description": "Headless browser automation to download all receipts from Uber account.",
+  "description": "Browser automation to download all receipts from Uber account.",
   "author": "Meet Godhani <meet@breakenter.com> (https://www.breakenter.com)",
   "contributors": [
     "Adi Ofir <adi@breakenter.com> (https://www.breakenter.com)"
@@ -20,6 +20,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "boxen": "^1.2.2",
     "chalk": "^2.3.0",
     "lodash": "^4.17.4",
     "prompt": "^1.0.0",

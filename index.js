@@ -1,8 +1,12 @@
 'use strict';
 
+// Required Packages
 const puppeteer = require('puppeteer');
 const prompt = require('prompt');
+const chalk = require('chalk');
+const boxen = require('boxen');
 const _ = require('lodash');
+const log = console.log;
 
 // Desktop User Agents
 const desktop_agents = ['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
@@ -22,7 +26,9 @@ const PASSWORD_SELECTOR = '#password';
 const SMS_SELECTOR ='#verificationCode';
 const NEXT_BUTTON = '#app-body > div > div:nth-child(1) > form > button';
 const VERIFY_BUTTON = '#app-body > div > div > form > button';
+const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a';
 
+// Sleep/delay Function
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -30,17 +36,27 @@ function sleep(ms) {
 prompt.start();
 
 async function run() {
+  log(chalk.green.bold('Welcome to Get Receipt !'));
+  log(boxen(chalk.magenta('Get Receipt is simple tool to automate your browser and download invoices for your trips from Uber for accounting purpose.'),{ padding: 1 }) + '\n');
   const browser = await puppeteer.launch({
     headless: false
   });
 
   const page = await browser.newPage();
-  const self = this;
 
+  log(chalk.green('Setting user agent.'));
+// Set Random User Agent from array above
   await page.setUserAgent(desktop_agents[Math.floor(Math.random()*desktop_agents.length)]);
 
+  log(chalk.green("Opening Uber's login screen.\n\n\n"))
+// Go to Login screen
   await page.goto('https://auth.uber.com/login/');
 
+
+log(chalk.green("Let's login to your uber account."))
+/**
+ * Login Account
+ */
   // Input Email/ Username
   await page.waitForSelector(EMAIL_SELECTOR);
   // Enter Email
@@ -96,6 +112,10 @@ async function run() {
   await page.keyboard.type(code.verification_code);
   await page.click(VERIFY_BUTTON);
 
+
+  /**
+   * Main Dashboard
+   */
   await page.goto('https://riders.uber.com');
 
   await page.screenshot({path: 'screenshots/uber.png'});
