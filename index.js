@@ -142,7 +142,10 @@ async function run() {
     })
   });
 
+// Enable Filter
   if(enableFilter) {
+
+    // Fetch list of available filters
     const filterList = await page.evaluate(() => {
       let data = [];
       const elements = document.querySelectorAll('#trip-filterer > div:nth-child(1) > div > div.grid__item.three-quarters.palm-one-whole input');
@@ -158,12 +161,13 @@ async function run() {
       return data;
     });
 
-    const filTerSelected = await new Promise((resolve, reject) => {
+    // Select Month you want to Filter
+    const filterSelected = await new Promise((resolve, reject) => {
       const schema =
       [{
-        type: 'checkbox',
-        name: 'filteroptions',
-        message: "Do you want to filter your trips ?",
+        type: 'list',
+        name: 'filteroption',
+        message: "Choose month you want to filter.",
         choices: filterList
       }];
       inquirer.prompt(schema).then(answers => {
@@ -171,6 +175,10 @@ async function run() {
       })
     });
   }
+
+  // Click on filter and Apply
+  // Collect All Detail Links and count invoices in Total
+  // Loop through each link and download invoice.
 
   await page.screenshot({path: 'screenshots/uber.png'});
 
