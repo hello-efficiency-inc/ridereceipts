@@ -4,8 +4,8 @@
 
 ### Authors & Contributors
 
-Meet Godhani
-Adi Ofir
+- Meet Godhani
+- Adi Ofir
 
 ### License
 
