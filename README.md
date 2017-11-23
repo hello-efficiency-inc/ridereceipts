@@ -2,7 +2,10 @@
 
 
 
+### Authors & Contributors
 
+Meet Godhani
+Adi Ofir
 
 ### License
 
