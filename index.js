@@ -61,7 +61,13 @@ log(chalk.green("Let's login to your uber account."))
   await page.waitForSelector(EMAIL_SELECTOR);
   // Enter Email
   const email = await new Promise((resolve, reject) => {
-    prompt.get(['email'], function(err, result){
+    prompt.get({
+      properties: {
+        email: {
+          description: 'Enter your email'
+        }
+      }
+    }, function(err, result){
       resolve(result.email);
     })
   });
@@ -79,6 +85,7 @@ log(chalk.green("Let's login to your uber account."))
     prompt.get({
       properties: {
         password: {
+          description: 'Enter your password',
           hidden: true
         }
       }
@@ -101,6 +108,7 @@ log(chalk.green("Let's login to your uber account."))
     prompt.get({
       properties: {
         verification_code: {
+          description: 'Please enter verification code',
           required: true
         }
       }
@@ -117,6 +125,8 @@ log(chalk.green("Let's login to your uber account."))
    * Main Dashboard
    */
   await page.goto('https://riders.uber.com');
+
+
 
   await page.screenshot({path: 'screenshots/uber.png'});
 
