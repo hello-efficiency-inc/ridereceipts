@@ -31,12 +31,6 @@ const VERIFY_BUTTON = '#app-body > div > div > form > button';
 const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a';
 const SUBMIT_FILTER = '#trip-filterer-button';
 
-// Sleep/delay Function
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-prompt.start();
 
 async function run() {
   log(chalk.green.bold('Welcome to Get Receipt !\n'));
@@ -48,12 +42,15 @@ async function run() {
   const page = await browser.newPage();
 
   log(chalk.green('Setting user agent.'));
+
   // Set Random User Agent from array above
   await page.setUserAgent(desktop_agents[Math.floor(Math.random()*desktop_agents.length)]);
-
   log(chalk.green("Opening Uber's login screen.\n\n"))
+
+
   // Go to Login screen
   await page.goto('https://auth.uber.com/login/');
+  await page.waitFor(2 * 1000);
 
 
   log(chalk.green("Let's login to your Uber account."))
@@ -78,7 +75,7 @@ async function run() {
   await page.keyboard.type(email);
   await page.click(NEXT_BUTTON);
 
-  await sleep(1000);
+  await page.waitFor(2 * 1000);
 
   // Input Password for account
   await page.waitForSelector(PASSWORD_SELECTOR,200);
@@ -99,7 +96,7 @@ async function run() {
   await page.keyboard.type(password);
   await page.click(NEXT_BUTTON);
 
-  await sleep(1000);
+  await page.waitFor(2 * 1000);
 
   // Input SMS verification
   if(await page.$(SMS_SELECTOR) !== null) { // Check if we are on verification page first
@@ -116,15 +113,19 @@ async function run() {
       });
     })
     await page.click(SMS_SELECTOR);
-    await page.keyboard.type(code.verification_code);
+    await page.keyboard.type(code);
     await page.click(VERIFY_BUTTON);
   }
 
+  await page.waitFor(2 * 1000);
 
   /**
   * Main Dashboard
   */
   await page.goto('https://riders.uber.com');
+
+  await page.waitFor(2 * 1000);
+
 
   await page.waitForSelector(FILTER_TRIPS);
   await page.click(FILTER_TRIPS);
@@ -171,10 +172,20 @@ async function run() {
         choices: filterList
       }];
       inquirer.prompt(schema).then(answers => {
-        resolve(answers.filter);
+        const index = _.findIndex(filterList, { name: answers.filteroption });
+        resolve(filterList[index].id);
       })
     });
+
+    const FILTER_ITEM = "label[for="+filterSelected+"]";
+    
+      await page.waitFor(2 * 1000);
+    
+      await page.click(FILTER_ITEM);
+      await page.click(SUBMIT_FILTER);
   }
+
+  await page.waitFor(2 * 1000);
 
   // Click on filter and Apply
   // Collect All Detail Links and count invoices in Total
