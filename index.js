@@ -128,6 +128,9 @@ async function run() {
   await page.waitFor(2 * 1000);
 
 
+  await page.waitForSelector(FILTER_TRIPS);
+  await page.click(FILTER_TRIPS);
+
   const enableFilter = await new Promise((resolve, reject) => {
     const schema =
     [{
@@ -143,9 +146,6 @@ async function run() {
 
 // Enable Filter
   if(enableFilter) {
-
-    await page.waitForSelector(FILTER_TRIPS);
-    await page.click(FILTER_TRIPS);
 
     // Fetch list of available filters
     const filterList = await page.evaluate(() => {
@@ -206,13 +206,13 @@ async function run() {
   });
 
 
-  const DETAIL_LISTS = [];
+  if (downloadInvoice) {
 
-
-  if(downloadInvoice){
     await page.waitFor(2 * 1000);
 
-    while(await page.$(NEXT_PAGINATION) == null) {
+    const DETAIL_LISTS = [];
+
+    while(await page.$(NEXT_PAGINATION) != null) {
 
       const list = await page.evaluate(() => {
         const data = [];
@@ -223,13 +223,12 @@ async function run() {
               }
           return data;
       });
-
       DETAIL_LISTS.push(list);
 
       await page.waitFor(2 * 1000);
       await page.click(NEXT_PAGINATION);
     } 
-
+    log(DETAIL_LISTS);
     log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
   }
 
