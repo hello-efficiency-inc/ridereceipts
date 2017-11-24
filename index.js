@@ -35,6 +35,7 @@ const SUBMIT_FILTER = '#trip-filterer-button';
 const MY_ACCOUNT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li';
 const LOGOUT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li > div > ul > li:nth-child(6) > a';
 const DOWNLOAD_INVOICE = '#data-invoice-btn-download';
+const INVOICE_REQUEST = '#data-invoice-btn-request';
 
 
 async function run() {
@@ -240,8 +241,6 @@ async function run() {
         continue;
       }
     }
-
-    log(DETAIL_LISTS);
 
     log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
 
