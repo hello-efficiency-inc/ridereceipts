@@ -31,6 +31,8 @@ const NEXT_PAGINATION_INACTIVE_BUTTON = '#trips-pagination > div:nth-child(2) > 
 const VERIFY_BUTTON = '#app-body > div > div > form > button';
 const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a';
 const SUBMIT_FILTER = '#trip-filterer-button';
+const MY_ACCOUNT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li';
+const LOGOUT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li > div > ul > li:nth-child(6) > a';
 
 
 async function run() {
@@ -214,6 +216,8 @@ async function run() {
     const DETAIL_LISTS = [];
 
     while(await page.$(NEXT_PAGINATION_INACTIVE_BUTTON) === null) {
+      
+      await page.waitFor(2 * 1000);
 
       const list = await page.evaluate(() => {
         const data = [];
@@ -224,8 +228,8 @@ async function run() {
               }
           return data;
       });
+      
       DETAIL_LISTS.push(list);
-      await page.waitFor(2 * 1000);
 
       if(await page.$(NEXT_PAGINATION) !== null) {
         await page.click(NEXT_PAGINATION);
@@ -236,10 +240,20 @@ async function run() {
 
     log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
   }
-  
+
   // Loop through each link and download invoice.
 
   await page.screenshot({path: 'screenshots/uber.png'});
+
+  await page.hover(MY_ACCOUNT);
+
+  await page.waitFor(1 * 2000);
+
+  log(chalk.green("Cya!"));
+
+  await page.click(LOGOUT);
+
+  await page.waitFor(1 * 2000);
 
   page.close();
   browser.close();
