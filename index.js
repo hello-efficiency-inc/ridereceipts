@@ -26,7 +26,8 @@ const EMAIL_SELECTOR = '#useridInput';
 const PASSWORD_SELECTOR = '#password';
 const SMS_SELECTOR ='#verificationCode';
 const NEXT_BUTTON = '#app-body > div > div:nth-child(1) > form > button';
-const NEXT_INACTIVE_BUTTON = '#trips-pagination > div:nth-child(2) > div.btn--inactive';
+const NEXT_PAGINATION = '#trips-pagination > div:nth-child(2) > a';
+const NEXT_PAGINATION_INACTIVE_BUTTON = '#trips-pagination > div:nth-child(2) > div.btn--inactive';
 const VERIFY_BUTTON = '#app-body > div > div > form > button';
 const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a';
 const SUBMIT_FILTER = '#trip-filterer-button';
@@ -127,9 +128,6 @@ async function run() {
   await page.waitFor(2 * 1000);
 
 
-  await page.waitForSelector(FILTER_TRIPS);
-  await page.click(FILTER_TRIPS);
-
   const enableFilter = await new Promise((resolve, reject) => {
     const schema =
     [{
@@ -145,6 +143,9 @@ async function run() {
 
 // Enable Filter
   if(enableFilter) {
+
+    await page.waitForSelector(FILTER_TRIPS);
+    await page.click(FILTER_TRIPS);
 
     // Fetch list of available filters
     const filterList = await page.evaluate(() => {
@@ -177,6 +178,8 @@ async function run() {
       })
     });
 
+    // Apply Filter
+
     const FILTER_ITEM = "label[for="+filterSelected+"]";
     
       await page.waitFor(2 * 1000);
@@ -187,14 +190,60 @@ async function run() {
 
   await page.waitFor(2 * 1000);
 
+  log(chalk.green('Moving on ...'));
+
+  const downloadInvoice = await new Promise((resolve, reject) => {
+    const schema =
+    [{
+      type: 'confirm',
+      name: 'invoice',
+      message: "Do you want to download invoices for your trips ?",
+      default: true
+    }];
+    inquirer.prompt(schema).then(answers => {
+      resolve(answers.invoice);
+    })
+  });
+
+
+  const DETAIL_LISTS = [];
+
+
+  if(downloadInvoice){
+    await page.waitFor(2 * 1000);
+
+    while(await page.$(NEXT_PAGINATION) == null) {
+
+      const list = await page.evaluate(() => {
+        const data = [];
+        const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
+        
+              for(const detail of detail_element) {
+                data.push(detail.href);
+              }
+          return data;
+      });
+
+      DETAIL_LISTS.push(list);
+
+      await page.waitFor(2 * 1000);
+      await page.click(NEXT_PAGINATION);
+    } 
+
+    log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
+  }
+
+
+
+
   // Click on filter and Apply
   // Collect All Detail Links and count invoices in Total
   // Loop through each link and download invoice.
 
   await page.screenshot({path: 'screenshots/uber.png'});
 
-  // page.close();
-  // browser.close();
+  page.close();
+  browser.close();
 }
 
 run();
