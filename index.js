@@ -8,6 +8,7 @@ const chalk = require('chalk');
 const boxen = require('boxen');
 const _ = require('lodash');
 const log = console.log;
+const ora = require('ora');
 
 // Desktop User Agents
 const desktop_agents = ['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
@@ -33,13 +34,15 @@ const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__ite
 const SUBMIT_FILTER = '#trip-filterer-button';
 const MY_ACCOUNT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li';
 const LOGOUT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li > div > ul > li:nth-child(6) > a';
+const DOWNLOAD_INVOICE = '#data-invoice-btn-download';
 
 
 async function run() {
   log(chalk.green.bold('Welcome to Get Receipt !\n'));
   log(boxen(chalk.magenta('Get Receipt is simple tool to automate your browser and download invoices for\nyour trips from Uber for accounting purpose.'),{ padding: 1 }) + '\n');
   const browser = await puppeteer.launch({
-    headless: false
+    headless: false,
+    timeout: 0
   });
 
   const page = await browser.newPage();
@@ -184,9 +187,9 @@ async function run() {
     // Apply Filter
 
     const FILTER_ITEM = "label[for="+filterSelected+"]";
-    
+
       await page.waitFor(2 * 1000);
-    
+
       await page.click(FILTER_ITEM);
       await page.click(SUBMIT_FILTER);
   }
@@ -216,19 +219,19 @@ async function run() {
     const DETAIL_LISTS = [];
 
     while(await page.$(NEXT_PAGINATION_INACTIVE_BUTTON) === null) {
-      
+
       await page.waitFor(2 * 1000);
 
       const list = await page.evaluate(() => {
         const data = [];
         const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
-        
+
               for(const detail of detail_element) {
                 data.push(detail.href);
               }
           return data;
       });
-      
+
       DETAIL_LISTS.push(list);
 
       if(await page.$(NEXT_PAGINATION) !== null) {
@@ -238,24 +241,40 @@ async function run() {
       }
     }
 
+    log(DETAIL_LISTS);
+
     log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
+
+    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: './invoices'});
+
+    const spinner = ora('Fetching invoices. Please wait .....').start();
+
+    // Loop through each link and download invoice.
+    for(const detail of _.flattenDeep(DETAIL_LISTS)) {
+      spinner.text = 'Fetching ' + detail;
+
+      await page.waitFor(1 * 4000);
+
+      await page.goto(detail);
+
+      await page.waitForSelector(DOWNLOAD_INVOICE);
+
+      await page.waitFor(1 * 1000);
+
+      await page.click(DOWNLOAD_INVOICE);
+
+      await page.waitFor(1 * 2000);
+    }
+
+    spinner.stop('All Invoices downloaded !');
   }
 
-  // Loop through each link and download invoice.
+  await page.waitFor(1 * 2000);
 
   await page.screenshot({path: 'screenshots/uber.png'});
 
-  await page.hover(MY_ACCOUNT);
-
   await page.waitFor(1 * 2000);
 
-  log(chalk.green("Cya!"));
-
-  await page.click(LOGOUT);
-
-  await page.waitFor(1 * 2000);
-
-  page.close();
   browser.close();
 }
 
