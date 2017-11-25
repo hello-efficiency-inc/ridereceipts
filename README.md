@@ -6,6 +6,11 @@
 - Solution
 <Enter Description>
 
+
+## Demo
+
+![img][getreceipts_demo.gif]
+
 ## Getting Started
 
 Before we start , we need following below tools installed. Head over to their websites and install them.
