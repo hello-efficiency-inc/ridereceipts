@@ -1,6 +1,10 @@
 # Get Receipt #
 
-<description>
+- Problem
+<Enter Description>
+
+- Solution
+<Enter Description>
 
 ## Getting Started
 
