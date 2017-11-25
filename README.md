@@ -31,7 +31,9 @@ This project does not store any kind of data anywhere. It is a project without a
 
 ## Caution
 
-Since this program scrapes website. To be careful not getting banned by rate limiting set on Uber's server. Try to use command line app with having a good amount of idle time gap.
+- Since this program scrapes website. You might be halted by Uber's rate limiting. Try to use command line app with having a good amount of idle time gap.
+
+![img](ratelimit.png)
 
 ### Authors & Contributors
 
