@@ -8,7 +8,7 @@ As a user it is always a pain to download all invoices in one go from Uber for t
 
 - *Solution*
 
-Automation ! We created a command line script which would act as a robot login from your behalf and download all the invoices with you interacting with browser. If you choose filters it would also categorize all the invoices in monthly folder.
+Automation ! We created a command line script which would act as a robot login from your behalf and download all the invoices without you interacting with browser. If you choose filters it would also categorize all the invoices in monthly folder.
 
 
 ## Demo
