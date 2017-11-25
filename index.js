@@ -129,7 +129,7 @@ async function run() {
   log(chalk.green.bold('Welcome to Get Receipt !\n'));
   log(boxen(chalk.magenta('Get Receipt is simple tool to automate your browser and download invoices for\nyour trips from Uber for accounting purpose.'),{ padding: 1 }) + '\n');
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0
   });
 
