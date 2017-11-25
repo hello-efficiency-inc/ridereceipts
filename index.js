@@ -36,6 +36,90 @@ const MY_ACCOUNT = '#slide-menu-content > div > div:nth-child(1) > div.page-head
 const LOGOUT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li > div > ul > li:nth-child(6) > a';
 const DOWNLOAD_INVOICE = '#data-invoice-btn-download';
 const INVOICE_REQUEST = '#data-invoice-btn-request';
+let SELECTED_MONTH = null;
+
+// Prompt for Email Address
+async function getEmail() {
+  const email = await new Promise((resolve, reject) => {
+    const schema =
+    [{
+      type: 'input',
+      name: 'email',
+      message: "Please enter your email"
+    }];
+    inquirer.prompt(schema).then(answers => {
+      resolve(answers.email);
+    });
+  });
+  return email;
+}
+
+// Prompt for Password
+async function getPassword() {
+  const password = await new Promise((resolve, reject) => {
+    const schema =
+    [{
+      type: 'password',
+      name: 'password',
+      message: "Please enter your password"
+    }];
+    inquirer.prompt(schema).then(answers => {
+      resolve(answers.password);
+    });
+  });
+  return password;
+}
+
+// Prompt for verification code via SMS
+async function getVerificationCode() {
+  const code =  await new Promise((resolve, reject) => {
+    const schema =
+    [{
+      type: 'input',
+      name: 'code',
+      message: "Please enter your verification code that is sent via SMS to you."
+    }];
+    inquirer.prompt(schema).then(answers => {
+      resolve(answers.code);
+    });
+  });
+  return code;
+}
+
+// Prompt for Filter
+async function confirmFilter() {
+  const enableFilter = await new Promise((resolve, reject) => {
+    const schema =
+    [{
+      type: 'confirm',
+      name: 'filter',
+      message: "Do you want to filter your trips ?",
+      default: true
+    }];
+    inquirer.prompt(schema).then(answers => {
+      resolve(answers.filter);
+    })
+  });
+  return enableFilter;
+}
+
+// Prompt to get Month
+async function getMonth(list) {
+  const filterSelected = await new Promise((resolve, reject) => {
+    const schema =
+    [{
+      type: 'list',
+      name: 'filteroption',
+      message: "Choose month you want to filter.",
+      choices: list
+    }];
+    inquirer.prompt(schema).then(answers => {
+      const index = _.findIndex(list, { name: answers.filteroption });
+      resolve(list[index]);
+    })
+  });
+  return filterSelected;
+}
 
 
 async function run() {
@@ -54,71 +138,33 @@ async function run() {
   await page.setUserAgent(desktop_agents[Math.floor(Math.random()*desktop_agents.length)]);
   log(chalk.green("Opening Uber's login screen.\n\n"))
 
-
   // Go to Login screen
   await page.goto('https://auth.uber.com/login/');
   await page.waitFor(2 * 1000);
 
-
   log(chalk.green("Let's login to your Uber account."))
+
+
   /**
   * Login Account
   */
-  // Input Email/ Username
   await page.waitForSelector(EMAIL_SELECTOR);
-  // Enter Email
-  const email = await new Promise((resolve, reject) => {
-    const schema =
-    [{
-      type: 'input',
-      name: 'email',
-      message: "Please enter your email"
-    }];
-    inquirer.prompt(schema).then(answers => {
-      resolve(answers.email);
-    });
-  });
   await page.click(EMAIL_SELECTOR,200);
-  await page.keyboard.type(email);
+  await page.keyboard.type(await getEmail());
   await page.click(NEXT_BUTTON);
 
   await page.waitFor(2 * 1000);
 
   // Input Password for account
   await page.waitForSelector(PASSWORD_SELECTOR,200);
-
-  // Enter Password
-  const password = await new Promise((resolve, reject) => {
-    const schema =
-    [{
-      type: 'password',
-      name: 'password',
-      message: "Please enter your password"
-    }];
-    inquirer.prompt(schema).then(answers => {
-      resolve(answers.password);
-    });
-  });
   await page.click(PASSWORD_SELECTOR);
-  await page.keyboard.type(password);
+  await page.keyboard.type(await getPassword());
   await page.click(NEXT_BUTTON);
 
   await page.waitFor(2 * 1000);
 
-  // Input SMS verification
   if(await page.$(SMS_SELECTOR) !== null) { // Check if we are on verification page first
-    // Enter 2 Factor Mobile Verification Code
-    const code =  await new Promise((resolve, reject) => {
-      const schema =
-      [{
-        type: 'input',
-        name: 'code',
-        message: "Please enter your verification code that is sent via SMS to you."
-      }];
-      inquirer.prompt(schema).then(answers => {
-        resolve(answers.code);
-      });
-    })
+    const code = await getVerificationCode();
     await page.click(SMS_SELECTOR);
     await page.keyboard.type(code);
     await page.click(VERIFY_BUTTON);
@@ -133,21 +179,8 @@ async function run() {
 
   await page.waitFor(2 * 1000);
 
-  const enableFilter = await new Promise((resolve, reject) => {
-    const schema =
-    [{
-      type: 'confirm',
-      name: 'filter',
-      message: "Do you want to filter your trips ?",
-      default: true
-    }];
-    inquirer.prompt(schema).then(answers => {
-      resolve(answers.filter);
-    })
-  });
-
-// Enable Filter
-  if(enableFilter) {
+  // Enable Filter
+  if(await confirmFilter()) {
 
     await page.waitForSelector(FILTER_TRIPS);
     await page.click(FILTER_TRIPS);
@@ -171,28 +204,17 @@ async function run() {
     });
 
     // Select Month you want to Filter
-    const filterSelected = await new Promise((resolve, reject) => {
-      const schema =
-      [{
-        type: 'list',
-        name: 'filteroption',
-        message: "Choose month you want to filter.",
-        choices: filterList
-      }];
-      inquirer.prompt(schema).then(answers => {
-        const index = _.findIndex(filterList, { name: answers.filteroption });
-        resolve(filterList[index].id);
-      })
-    });
+    const filterSelected = await getMonth(filterList);
+
+    SELECTED_MONTH = filterSelected.name;
 
     // Apply Filter
+    const FILTER_ITEM = "label[for="+filterSelected.id+"]";
 
-    const FILTER_ITEM = "label[for="+filterSelected+"]";
+    await page.waitFor(2 * 1000);
 
-      await page.waitFor(2 * 1000);
-
-      await page.click(FILTER_ITEM);
-      await page.click(SUBMIT_FILTER);
+    await page.click(FILTER_ITEM);
+    await page.click(SUBMIT_FILTER);
   }
 
   await page.waitFor(2 * 1000);
@@ -213,6 +235,9 @@ async function run() {
   });
 
 
+  /**
+  * Download Invoices
+  */
   if (downloadInvoice) {
 
     await page.waitFor(2 * 1000);
@@ -227,10 +252,10 @@ async function run() {
         const data = [];
         const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
 
-              for(const detail of detail_element) {
-                data.push(detail.href);
-              }
-          return data;
+        for(const detail of detail_element) {
+          data.push(detail.href);
+        }
+        return data;
       });
 
       DETAIL_LISTS.push(list);
@@ -244,15 +269,22 @@ async function run() {
 
     log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
 
-    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: './invoices'});
+    log(SELECTED_MONTH)
 
-    const spinner = ora('Fetching invoices. Please wait .....').start();
+    // Check if month is set. If yes then store all invoices in that folder.
+    if(!SELECTED_MONTH) {
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: './invoices/all'});
+    } else {
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: `./invoices/${SELECTED_MONTH}`});
+    }
+
+    const spinner = ora('Fetching ' + _.flattenDeep(DETAIL_LISTS).length + ' invoices. Please wait .....').start();
 
     // Loop through each link and download invoice.
     for(const detail of _.flattenDeep(DETAIL_LISTS)) {
       spinner.text = 'Fetching ' + detail;
 
-      await page.waitFor(1 * 4000);
+      await page.waitFor(1 * 2000);
 
       await page.goto(detail);
 
@@ -268,9 +300,11 @@ async function run() {
     spinner.stop('All Invoices downloaded !');
   }
 
+  log(chalk.green('All Invoices downloaded. Thanks for using the tool !'));
+
   await page.waitFor(1 * 2000);
 
-  await page.screenshot({path: 'screenshots/uber.png'});
+  //await page.screenshot({path: 'screenshots/uber.png'});
 
   await page.waitFor(1 * 2000);
 
