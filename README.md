@@ -2,11 +2,13 @@
 
 Get receipt is an command line application made using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer), a headless chrome node library mainly used for web scraping and browser automation.
 
-- Problem
-<Enter Description>
+- *Problem*
 
-- Solution
-<Enter Description>
+As a user it is always a pain to download all invoices in one go from Uber for tax reasons. According to their current UI, you have to manually go each trip detail and download invoice.
+
+- *Solution*
+
+Automation ! We created a command line script which would act as a robot login from your behalf and download all the invoices with you interacting with browser. If you choose filters it would also categorize all the invoices in monthly folder.
 
 
 ## Demo
