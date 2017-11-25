@@ -9,7 +9,7 @@
 
 ## Demo
 
-![img][demo.gif]
+![img](demo.gif)
 
 ## Getting Started
 
