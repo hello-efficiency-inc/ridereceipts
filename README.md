@@ -29,6 +29,10 @@ get-receipt
 
 This project does not store any kind of data anywhere. It is a project without any database involved.
 
+## Caution
+
+Since this program scrapes website. To be careful not getting banned by rate limiting set on Uber's server. Try to use command line app with having a good amount of idle time gap.
+
 ### Authors & Contributors
 
 - Meet Godhani
