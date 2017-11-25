@@ -29,6 +29,8 @@ const SMS_SELECTOR ='#verificationCode';
 const NEXT_BUTTON = '#app-body > div > div:nth-child(1) > form > button';
 const NEXT_PAGINATION = '#trips-pagination > div:nth-child(2) > a';
 const NEXT_PAGINATION_INACTIVE_BUTTON = '#trips-pagination > div:nth-child(2) > div.btn--inactive';
+const INACTIVE_PREVIOUS_BUTTON = '.btn--inactive.pagination__previous';
+const INACTIVE_NEXT_BUTTON = '.btn--inactive.pagination__next';
 const VERIFY_BUTTON = '#app-body > div > div > form > button';
 const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a';
 const SUBMIT_FILTER = '#trip-filterer-button';
@@ -37,6 +39,7 @@ const LOGOUT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.p
 const DOWNLOAD_INVOICE = '#data-invoice-btn-download';
 const INVOICE_REQUEST = '#data-invoice-btn-request';
 let SELECTED_MONTH = null;
+const ERROR = '#error-caption';
 
 // Prompt for Email Address
 async function getEmail() {
@@ -136,7 +139,7 @@ async function run() {
 
   // Set Random User Agent from array above
   await page.setUserAgent(desktop_agents[Math.floor(Math.random()*desktop_agents.length)]);
-  log(chalk.green("Opening Uber's login screen.\n\n"))
+  log(chalk.green("Opening Uber's login screen.\n"))
 
   // Go to Login screen
   await page.goto('https://auth.uber.com/login/');
@@ -267,13 +270,29 @@ async function run() {
       }
     }
 
-    log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
+      await page.waitFor(2 * 1000);
+// Pagination is deactivated
+    if(await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
+      await page.waitFor(2 * 1000);
 
-    log(SELECTED_MONTH)
+      const list = await page.evaluate(() => {
+        const data = [];
+        const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
+
+        for(const detail of detail_element) {
+          data.push(detail.href);
+        }
+        return data;
+      });
+
+      DETAIL_LISTS.push(list);
+    }
+
+    log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
 
     // Check if month is set. If yes then store all invoices in that folder.
     if(!SELECTED_MONTH) {
-      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: './invoices/all'});
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: './invoices/All'});
     } else {
       await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: `./invoices/${SELECTED_MONTH}`});
     }
@@ -301,10 +320,6 @@ async function run() {
   }
 
   log(chalk.green('All Invoices downloaded. Thanks for using the tool !'));
-
-  await page.waitFor(1 * 2000);
-
-  //await page.screenshot({path: 'screenshots/uber.png'});
 
   await page.waitFor(1 * 2000);
 
