@@ -1,5 +1,7 @@
 # Get Receipt #
 
+Get receipt is an command line application made using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer), a headless chrome node library mainly used for web scraping and browser automation.
+
 - Problem
 <Enter Description>
 
