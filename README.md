@@ -9,7 +9,7 @@
 
 ## Demo
 
-![img][getreceipts_demo.gif]
+![img][demo.gif]
 
 ## Getting Started
 
