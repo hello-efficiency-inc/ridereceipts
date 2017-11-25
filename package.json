@@ -11,13 +11,18 @@
     "node",
     "scrape",
     "utility",
+    "puppeteer",
+    "webscraping",
+    "productivity",
     "receipts",
     "invoices"
   ],
   "license": "MIT",
-  "main": "index.js",
   "scripts": {
     "start": "node index.js"
+  },
+  "bin": {
+    "get-receipt": "./index.js"
   },
   "dependencies": {
     "boxen": "^1.2.2",
