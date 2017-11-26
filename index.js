@@ -37,8 +37,6 @@ const SUBMIT_FILTER = '#trip-filterer-button';
 const MY_ACCOUNT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li';
 const LOGOUT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li > div > ul > li:nth-child(6) > a';
 const DOWNLOAD_INVOICE = '#data-invoice-btn-download';
-const INVOICE_REQUEST = '#data-invoice-btn-request';
-let SELECTED_MONTH = null;
 const ERROR = '#error-caption';
 
 // Prompt for Email Address
@@ -129,7 +127,7 @@ async function run() {
   log(chalk.green.bold('Welcome to Get Receipt !\n'));
   log(boxen(chalk.magenta('Get Receipt is simple tool to automate your browser and download invoices for\nyour trips from Uber for accounting purpose.'),{ padding: 1 }) + '\n');
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 0
   });
 
@@ -138,11 +136,11 @@ async function run() {
   log(chalk.green('Setting user agent.'));
 
   // Set Random User Agent from array above
-  await page.setUserAgent(desktop_agents[Math.floor(Math.random()*desktop_agents.length)]);
+//  await page.setUserAgent(desktop_agents[Math.floor(Math.random()*desktop_agents.length)]);
   log(chalk.green("Opening Uber's login screen.\n"))
 
   // Go to Login screen
-  await page.goto('https://auth.uber.com/login/');
+  await page.goto('https://auth.uber.com/login/', { waitUntil: 'domcontentloaded'});
   await page.waitFor(2 * 1000);
 
   log(chalk.green("Let's login to your Uber account."))
@@ -290,28 +288,36 @@ async function run() {
 
     log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
 
-    // Check if month is set. If yes then store all invoices in that folder.
-    if(!SELECTED_MONTH) {
-      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: './invoices/All'});
-    } else {
-      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: `./invoices/${SELECTED_MONTH}`});
-    }
-
     const spinner = ora('Fetching ' + _.flattenDeep(DETAIL_LISTS).length + ' invoices. Please wait .....').start();
 
     // Loop through each link and download invoice.
-    for(const detail of _.flattenDeep(DETAIL_LISTS)) {
-      spinner.text = 'Fetching ' + detail;
+    for(let [key, value] of _.flattenDeep(DETAIL_LISTS).entries()) {
+      spinner.text = `Fetching ${key + 1}/${_.flattenDeep(DETAIL_LISTS).length} - ${value}`;
 
       await page.waitFor(1 * 2000);
 
-      await page.goto(detail);
-
-      await page.waitForSelector(DOWNLOAD_INVOICE);
+      await page.goto(value, { waitUntil: 'domcontentloaded'});
 
       await page.waitFor(1 * 1000);
 
-      await page.click(DOWNLOAD_INVOICE);
+      // Check if month is set. If yes then store all invoices in that folder.
+      const month = await page.evaluate(() => {
+        const timedate = document.querySelector('#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.page-lead > div').innerText;
+        return timedate;
+      });
+      const splittedMonth = _.words(month);
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: `./invoices/${splittedMonth[4]}-${splittedMonth[6]}`});
+
+      // Check if request button is hidden
+      const invoiceRequest = await page.evaluate(() => {
+        return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden');
+      });
+
+      // Check if request invoice button is hidden. Then go ahead download it.
+      if(invoiceRequest) {
+        await page.waitFor(1 * 1000);
+        await page.click(DOWNLOAD_INVOICE);
+      }
 
       await page.waitFor(1 * 2000);
     }
