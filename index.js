@@ -133,6 +133,7 @@ async function downloadInvoice() {
       resolve(answers.invoice);
     })
   });
+  return downloadInvoice;
 }
 
 
@@ -142,7 +143,7 @@ async function run() {
 
   // Launch Puppeteer
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 0
   });
 
@@ -221,8 +222,6 @@ async function run() {
 
     // Select Month you want to Filter
     const filterSelected = await getMonth(filterList);
-
-    SELECTED_MONTH = filterSelected.name;
 
     // Apply Filter
     const FILTER_ITEM = "label[for="+filterSelected.id+"]";
@@ -337,7 +336,7 @@ async function run() {
     spinner.stop('All Invoices downloaded !');
   }
 
-  log(chalk.green('All Invoices downloaded. Check your invoices folder to see all of your invoices. Thanks for using the tool !'));
+  log(chalk.green('All Invoices downloaded. Check your invoices folder to see all Thanks for using the tool !'));
 
   await page.waitFor(1 * 2000);
 
