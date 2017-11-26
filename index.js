@@ -34,10 +34,7 @@ const INACTIVE_NEXT_BUTTON = '.btn--inactive.pagination__next';
 const VERIFY_BUTTON = '#app-body > div > div > form > button';
 const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a';
 const SUBMIT_FILTER = '#trip-filterer-button';
-const MY_ACCOUNT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li';
-const LOGOUT = '#slide-menu-content > div > div:nth-child(1) > div.page-header.page-boundary.container > div > div.flexbox > div:nth-child(3) > ul.nav.nav--block.float--right.flush.hidden--portable > li > div > ul > li:nth-child(6) > a';
 const DOWNLOAD_INVOICE = '#data-invoice-btn-download';
-const ERROR = '#error-caption';
 
 // Prompt for Email Address
 async function getEmail() {
@@ -122,12 +119,31 @@ async function getMonth(list) {
   return filterSelected;
 }
 
+// Prompt for Download Invoice confirmation
+async function downloadInvoice() {
+  const downloadInvoice = await new Promise((resolve, reject) => {
+    const schema =
+    [{
+      type: 'confirm',
+      name: 'invoice',
+      message: "Do you want to download invoices for your trips ?",
+      default: true
+    }];
+    inquirer.prompt(schema).then(answers => {
+      resolve(answers.invoice);
+    })
+  });
+}
 
+
+// Run scrape
 async function run() {
   log(chalk.green.bold('Welcome to Get Receipt !\n'));
   log(boxen(chalk.magenta('Get Receipt is simple tool to automate your browser and download invoices for\nyour trips from Uber for accounting purpose.'),{ padding: 1 }) + '\n');
+
+  // Launch Puppeteer
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0
   });
 
@@ -136,7 +152,7 @@ async function run() {
   log(chalk.green('Setting user agent.'));
 
   // Set Random User Agent from array above
-//  await page.setUserAgent(desktop_agents[Math.floor(Math.random()*desktop_agents.length)]);
+  await page.setUserAgent(desktop_agents[Math.floor(Math.random()*desktop_agents.length)]);
   log(chalk.green("Opening Uber's login screen.\n"))
 
   // Go to Login screen
@@ -222,33 +238,22 @@ async function run() {
 
   log(chalk.green('Moving on ...'));
 
-  const downloadInvoice = await new Promise((resolve, reject) => {
-    const schema =
-    [{
-      type: 'confirm',
-      name: 'invoice',
-      message: "Do you want to download invoices for your trips ?",
-      default: true
-    }];
-    inquirer.prompt(schema).then(answers => {
-      resolve(answers.invoice);
-    })
-  });
-
-
   /**
   * Download Invoices
   */
-  if (downloadInvoice) {
+  if (await downloadInvoice()) {
 
     await page.waitFor(2 * 1000);
 
     const DETAIL_LISTS = [];
 
+    // Loop until next button is disabled
+
     while(await page.$(NEXT_PAGINATION_INACTIVE_BUTTON) === null) {
 
       await page.waitFor(2 * 1000);
 
+      // Evaluate list of detail links
       const list = await page.evaluate(() => {
         const data = [];
         const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
@@ -268,11 +273,13 @@ async function run() {
       }
     }
 
-      await page.waitFor(2 * 1000);
-// Pagination is deactivated
+    await page.waitFor(2 * 1000);
+
+    // Pagination is deactivated
     if(await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
       await page.waitFor(2 * 1000);
 
+      // Evaluate list of detail links
       const list = await page.evaluate(() => {
         const data = [];
         const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
@@ -303,6 +310,8 @@ async function run() {
         const timedate = document.querySelector('#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.page-lead > div').innerText;
         return timedate;
       });
+
+      // Separate out words into array
       const splittedMonth = _.words(month);
       await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: `./invoices/${splittedMonth[4]}-${splittedMonth[6]}`});
 
