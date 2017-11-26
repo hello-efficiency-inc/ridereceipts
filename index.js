@@ -294,8 +294,6 @@ async function run() {
     for(let [key, value] of _.flattenDeep(DETAIL_LISTS).entries()) {
       spinner.text = `Fetching ${key + 1}/${_.flattenDeep(DETAIL_LISTS).length} - ${value}`;
 
-      await page.waitFor(1 * 2000);
-
       await page.goto(value, { waitUntil: 'domcontentloaded'});
 
       await page.waitFor(1 * 1000);
