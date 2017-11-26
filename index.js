@@ -138,8 +138,7 @@ async function downloadInvoice() {
 
 // Run scrape
 async function run() {
-  log(chalk.green.bold('Welcome to Get Receipt !\n'));
-  log(boxen(chalk.magenta('Get Receipt is simple tool to automate your browser and download invoices for\nyour trips from Uber for accounting purpose.'),{ padding: 1 }) + '\n');
+  log(boxen(chalk.magenta('Welcome to Get Receipt !\nGet Receipt is simple tool to automate your browser and download invoices for\nyour trips from Uber for accounting purpose.\n\nFor more info visit https://github.com/break-enter/getreceipt.'),{ padding: 1, borderStyle: 'classic' }) + '\n');
 
   // Launch Puppeteer
   const browser = await puppeteer.launch({
@@ -293,7 +292,13 @@ async function run() {
       DETAIL_LISTS.push(list);
     }
 
-    log(chalk.green("We have " + _.flattenDeep(DETAIL_LISTS).length + " no. of Invoices !"));
+    if(_.flattenDeep(DETAIL_LISTS).length > 10) {
+      log(chalk.green(`\nWhoa, ${_.flattenDeep(DETAIL_LISTS).length} invoices? Put your feet up, this will take a while, my friend.\n`));
+    } else if (_.flattenDeep(DETAIL_LISTS).length <= 2) {
+      log(chalk.green(`\nRunning a script for just ${_.flattenDeep(DETAIL_LISTS).length} invoices? Now that's just lazy, but we won't judge.\n`));
+    } else {
+      log(chalk.green(`\nWhoa, we found ${_.flattenDeep(DETAIL_LISTS).length} invoices ! Put your feet up and relax while it processes.\n`));
+    }
 
     const spinner = ora('Fetching ' + _.flattenDeep(DETAIL_LISTS).length + ' invoices. Please wait .....').start();
 
@@ -332,7 +337,7 @@ async function run() {
     spinner.stop('All Invoices downloaded !');
   }
 
-  log(chalk.green('All Invoices downloaded. Thanks for using the tool !'));
+  log(chalk.green('All Invoices downloaded. Check your invoices folder to see all of your invoices. Thanks for using the tool !'));
 
   await page.waitFor(1 * 2000);
 
