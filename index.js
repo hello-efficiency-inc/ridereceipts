@@ -156,7 +156,7 @@ async function run() {
   log(chalk.green("Opening Uber's login screen.\n"))
 
   // Go to Login screen
-  await page.goto('https://auth.uber.com/login/', { waitUntil: 'domcontentloaded'});
+  await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com', { waitUntil: 'domcontentloaded'});
   await page.waitFor(2 * 1000);
 
   log(chalk.green("Let's login to your Uber account."))
@@ -192,9 +192,7 @@ async function run() {
   /**
   * Main Dashboard
   */
-  await page.goto('https://riders.uber.com');
-
-  await page.waitFor(2 * 1000);
+  // await page.goto('https://riders.uber.com');
 
   // Enable Filter
   if(await confirmFilter()) {
@@ -241,7 +239,7 @@ async function run() {
   */
   if (await downloadInvoice()) {
 
-    await page.waitFor(2 * 1000);
+    await page.waitFor(2 * 1500);
 
     const DETAIL_LISTS = [];
 
