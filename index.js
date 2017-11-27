@@ -144,7 +144,7 @@ async function run() {
 
   // Launch Puppeteer
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0
   });
 
@@ -244,12 +244,12 @@ async function run() {
     const filterSelected = await getMonth(filterList);
 
     // Apply Filter
-    const FILTER_ITEM = "label[for="+filterSelected.id+"]";
+    const FILTER_ITEM = `label[for=${filterSelected.id}]`;
 
-    await page.waitFor(2 * 1000);
-
-    await page.click(FILTER_ITEM);
-    await page.click(SUBMIT_FILTER);
+    if(await page.$(FILTER_ITEM) !== null) {
+      await page.click(FILTER_ITEM);
+      await page.click(SUBMIT_FILTER);
+    }
   }
 
   await page.waitFor(2 * 1000);
