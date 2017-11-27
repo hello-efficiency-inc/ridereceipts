@@ -144,7 +144,7 @@ async function run() {
 
   // Launch Puppeteer
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 0
   });
 
@@ -264,10 +264,10 @@ async function run() {
     await page.waitFor(2 * 1500);
 
     // Add Function to Expose
-    await page.exposeFunction('getYear', text => moment(text).format('YYYY'));
-    await page.exposeFunction('currentYear',() => {
-      return moment().format('YYYY');
-    });
+    // await page.exposeFunction('getYear', text => moment(text,'MM/DD/YY').format('YYYY'));
+    // await page.exposeFunction('currentYear',() => {
+    //   return moment().format('YYYY');
+    // });
 
     const DETAIL_LISTS = [];
 
@@ -284,10 +284,12 @@ async function run() {
         const invoice_dates = document.querySelectorAll('#trips-table > tbody > tr > td:nth-child(2)');
 
         for(let [key, value] of detail_element.entries()) {
-          const year = window.getYear(invoice_dates[0].innerText);
-          if (year === window.currentYear()) {
-            data.push(value.href);
-          }
+          // const year = window.getYear(invoice_dates[key].innerText);
+          // console.log('current: ' + window.currentYear() + 'year: ' + year);
+          // if (year === window.currentYear()) {
+          //   data.push(value.href);
+          // }
+          data.push(value.href);
         }
         return data;
       });
@@ -314,10 +316,11 @@ async function run() {
         const invoice_dates = document.querySelectorAll('#trips-table > tbody > tr > td:nth-child(2)');
 
         for(let [key, value] of detail_element.entries()) {
-          const year = window.getYear(invoice_dates[0].innerText);
-          if (year === window.currentYear()) {
-            data.push(value.href);
-          }
+          // const year = window.getYear(invoice_dates[key].innerText);
+          // if (year === window.currentYear()) {
+          //   data.push(value.href);
+          // }
+          data.push(value.href);
         }
         return data;
       });
