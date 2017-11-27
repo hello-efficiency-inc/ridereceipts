@@ -144,7 +144,7 @@ async function run() {
 
   // Launch Puppeteer
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0
   });
 
