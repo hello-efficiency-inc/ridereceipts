@@ -160,6 +160,20 @@ async function run() {
   await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com', { waitUntil: 'domcontentloaded'});
   await page.waitFor(2 * 1000);
 
+  // Check for Rate Limit
+  const rateLimit = await page.evaluate(() => {
+    if(document.querySelector('body').innerText === 'HARD') {
+      return true;
+    }
+    return false;
+  });
+
+  if(rateLimit) {
+    log(chalk.green('Oops ! Seems like site has rate limited or banned IP Address temporary. Maybe try after few hours.'));
+    page.close();
+    return browser.close();
+  }
+
   log(chalk.green("Let's login to your Uber account."))
 
 
@@ -171,7 +185,14 @@ async function run() {
   await page.keyboard.type(await getEmail());
   await page.click(NEXT_BUTTON);
 
-  await page.waitFor(2 * 1000);
+  await page.waitFor(3 * 1000);
+
+// If Page Selector doesn't appear means that either IP is banned temporary or it is asking for captcha.
+  if(await page.$(PASSWORD_SELECTOR) === null) {
+    log(chalk.green('Oops ! Seems like site is asking for captcha or banned temporary. Maybe try after few hours.'));
+    page.close();
+    return browser.close();
+  }
 
   // Input Password for account
   await page.waitForSelector(PASSWORD_SELECTOR,200);
@@ -242,6 +263,12 @@ async function run() {
 
     await page.waitFor(2 * 1500);
 
+    // Add Function to Expose
+    await page.exposeFunction('getYear', text => moment(text).format('YYYY'));
+    await page.exposeFunction('currentYear',() => {
+      return moment().format('YYYY');
+    });
+
     const DETAIL_LISTS = [];
 
     // Loop until next button is disabled
@@ -257,8 +284,8 @@ async function run() {
         const invoice_dates = document.querySelectorAll('#trips-table > tbody > tr > td:nth-child(2)');
 
         for(let [key, value] of detail_element.entries()) {
-          const year = moment(invoice_dates[0].innerText).format('YYYY');
-          if (year === moment().format('YYYY')) {
+          const year = window.getYear(invoice_dates[0].innerText);
+          if (year === window.currentYear()) {
             data.push(value.href);
           }
         }
@@ -280,10 +307,6 @@ async function run() {
     if(await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
       await page.waitFor(2 * 1000);
 
-      await page.exposeFunction('getYear', text => moment(text).format('YYYY'));
-      await page.exposeFunction('currentYear',() => {
-        return moment().format('YYYY');
-      });
       // Evaluate list of detail links
       const list = await page.evaluate(() => {
         const data = [];
