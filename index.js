@@ -9,6 +9,7 @@ const boxen = require('boxen');
 const _ = require('lodash');
 const log = console.log;
 const ora = require('ora');
+const moment = require('moment');
 
 // Desktop User Agents
 const desktop_agents = ['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
@@ -253,9 +254,13 @@ async function run() {
       const list = await page.evaluate(() => {
         const data = [];
         const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
+        const invoice_dates = document.querySelectorAll('#trips-table > tbody > tr > td:nth-child(2)');
 
-        for(const detail of detail_element) {
-          data.push(detail.href);
+        for(let [key, value] of detail_element.entries()) {
+          const year = moment(invoice_dates[0].innerText).format('YYYY');
+          if (year === moment().format('YYYY')) {
+            data.push(value.href);
+          }
         }
         return data;
       });
@@ -275,13 +280,21 @@ async function run() {
     if(await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
       await page.waitFor(2 * 1000);
 
+      await page.exposeFunction('getYear', text => moment(text).format('YYYY'));
+      await page.exposeFunction('currentYear',() => {
+        return moment().format('YYYY');
+      });
       // Evaluate list of detail links
       const list = await page.evaluate(() => {
         const data = [];
         const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
+        const invoice_dates = document.querySelectorAll('#trips-table > tbody > tr > td:nth-child(2)');
 
-        for(const detail of detail_element) {
-          data.push(detail.href);
+        for(let [key, value] of detail_element.entries()) {
+          const year = window.getYear(invoice_dates[0].innerText);
+          if (year === window.currentYear()) {
+            data.push(value.href);
+          }
         }
         return data;
       });
@@ -294,7 +307,7 @@ async function run() {
     } else if (_.flattenDeep(DETAIL_LISTS).length <= 2) {
       log(chalk.green(`\nRunning a script for just ${_.flattenDeep(DETAIL_LISTS).length} invoices? Now that's just lazy, but we won't judge.\n`));
     } else {
-      log(chalk.green(`\nWhoa, we found ${_.flattenDeep(DETAIL_LISTS).length} invoices ! Put your feet up and relax while it processes.\n`));
+      log(chalk.green(`\nWhoa,we found ${_.flattenDeep(DETAIL_LISTS).length} invoices ! Put your feet up and relax while it processes.\n`));
     }
 
     const spinner = ora('Fetching ' + _.flattenDeep(DETAIL_LISTS).length + ' invoices. Please wait .....').start();
