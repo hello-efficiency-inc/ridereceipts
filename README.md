@@ -30,12 +30,12 @@ git clone https://mgodhani@bitbucket.org/breakenter/getreceipt.git
 
 cd getreceipt
 
-npm -g install
+npm install
 
 ```
 After running commands above, run following below:
 ```
-get-receipt
+npm start or node index.js
 
 ```
 
