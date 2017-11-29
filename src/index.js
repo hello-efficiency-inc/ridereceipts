@@ -187,7 +187,7 @@ async function run() {
 
   await page.waitFor(3 * 1000);
 
-// If Page Selector doesn't appear means that either IP is banned temporary or it is asking for captcha.
+  // If Page Selector doesn't appear means that either IP is banned temporary or it is asking for captcha.
   if(await page.$(PASSWORD_SELECTOR) === null) {
     log(chalk.green('Oops ! Seems like site is asking for captcha or banned temporary. Maybe try after few hours.'));
     page.close();
@@ -263,12 +263,6 @@ async function run() {
 
     await page.waitFor(2 * 1500);
 
-    // Add Function to Expose
-    // await page.exposeFunction('getYear', text => moment(text,'MM/DD/YY').format('YYYY'));
-    // await page.exposeFunction('currentYear',() => {
-    //   return moment().format('YYYY');
-    // });
-
     const DETAIL_LISTS = [];
 
     // Loop until next button is disabled
@@ -284,11 +278,6 @@ async function run() {
         const invoice_dates = document.querySelectorAll('#trips-table > tbody > tr > td:nth-child(2)');
 
         for(let [key, value] of detail_element.entries()) {
-          // const year = window.getYear(invoice_dates[key].innerText);
-          // console.log('current: ' + window.currentYear() + 'year: ' + year);
-          // if (year === window.currentYear()) {
-          //   data.push(value.href);
-          // }
           data.push(value.href);
         }
         return data;
@@ -313,13 +302,8 @@ async function run() {
       const list = await page.evaluate(() => {
         const data = [];
         const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
-        const invoice_dates = document.querySelectorAll('#trips-table > tbody > tr > td:nth-child(2)');
 
         for(let [key, value] of detail_element.entries()) {
-          // const year = window.getYear(invoice_dates[key].innerText);
-          // if (year === window.currentYear()) {
-          //   data.push(value.href);
-          // }
           data.push(value.href);
         }
         return data;
