@@ -21,6 +21,8 @@ Before we start , we need following below tools installed. Head over to their we
 
 - [Node 8.+](https://nodejs.org)
 
+For best experience in Mac. It is recommended to use [iTerm](https://www.iterm2.com/) instead of default terminal in Mac OS.
+
 ## Usage
 
 ```
