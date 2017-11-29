@@ -344,7 +344,7 @@ async function run() {
 
       await page.goto(value, { waitUntil: 'domcontentloaded'});
 
-      await page.waitFor(1 * 1000);
+      await page.waitFor(1 * 2000);
 
       // Check if month is set. If yes then store all invoices in that folder.
       const month = await page.evaluate(() => {
@@ -363,7 +363,7 @@ async function run() {
 
       // Check if request invoice button is hidden. Then go ahead download it.
       if(invoiceRequest) {
-        await page.waitFor(1 * 1000);
+        await page.waitFor(1 * 2000);
         await page.click(DOWNLOAD_INVOICE);
       }
 
