@@ -7,9 +7,10 @@ const inquirer = require('inquirer');
 const chalk = require('chalk');
 const boxen = require('boxen');
 const _ = require('lodash');
-const log = console.log;
 const ora = require('ora');
-const moment = require('moment');
+
+
+const log = console.log;
 
 // Desktop User Agents
 const desktop_agents = ['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
@@ -182,7 +183,7 @@ async function run() {
   */
   await page.waitForSelector(EMAIL_SELECTOR);
   await page.click(EMAIL_SELECTOR,200);
-  await page.keyboard.type(await getEmail());
+  await page.keyboard.type(await getEmail(), {delay: 100});
   await page.click(NEXT_BUTTON);
 
   await page.waitFor(3 * 1000);
@@ -195,9 +196,9 @@ async function run() {
   }
 
   // Input Password for account
-  await page.waitForSelector(PASSWORD_SELECTOR,200);
+  await page.waitForSelector(PASSWORD_SELECTOR, 200);
   await page.click(PASSWORD_SELECTOR);
-  await page.keyboard.type(await getPassword());
+  await page.keyboard.type(await getPassword(), {delay: 100});
   await page.click(NEXT_BUTTON);
 
   await page.waitFor(2 * 1000);
@@ -205,7 +206,7 @@ async function run() {
   if(await page.$(SMS_SELECTOR) !== null) { // Check if we are on verification page first
     const code = await getVerificationCode();
     await page.click(SMS_SELECTOR);
-    await page.keyboard.type(code);
+    await page.keyboard.type(code, {delay: 100});
     await page.click(VERIFY_BUTTON);
   }
 
@@ -275,8 +276,6 @@ async function run() {
       const list = await page.evaluate(() => {
         const data = [];
         const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
-        const invoice_dates = document.querySelectorAll('#trips-table > tbody > tr > td:nth-child(2)');
-
         for(let [key, value] of detail_element.entries()) {
           data.push(value.href);
         }
@@ -302,7 +301,6 @@ async function run() {
       const list = await page.evaluate(() => {
         const data = [];
         const detail_element = document.querySelectorAll("#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a");
-
         for(let [key, value] of detail_element.entries()) {
           data.push(value.href);
         }
@@ -326,7 +324,7 @@ async function run() {
     for(let [key, value] of _.flattenDeep(DETAIL_LISTS).entries()) {
       spinner.text = `Fetching ${key + 1}/${_.flattenDeep(DETAIL_LISTS).length} - ${value}`;
 
-      await page.goto(value, { waitUntil: 'domcontentloaded'});
+      await page.goto(value, { timeout: 0});
 
       await page.waitFor(1 * 2000);
 

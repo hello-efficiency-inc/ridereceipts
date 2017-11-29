@@ -39,6 +39,7 @@ npm start
 
 ```
 
+All downloaded invoices would be available inside `invoices` folder.
 
 ### Note
 
@@ -55,7 +56,7 @@ This project does not store any kind of data anywhere. It is a project without a
 - Meet Godhani
 - Adi Ofir
 
-### To Do
+### To do
 
 - Coming up with desktop application with user interface vs command line application.
 
