@@ -11,11 +11,11 @@ As a user it is always a pain to download all invoices in one go from Uber for t
 Automation ! We created a command line script which would act as a robot login from your behalf and download all the invoices without you interacting with browser. If you choose filters it would also categorize all the invoices in monthly folder.
 
 
-## Demo
+### Demo
 
 ![img](demo.gif)
 
-## Getting Started
+### Getting Started
 
 Before we start , we need following below tools installed. Head over to their websites and install them.
 
@@ -23,7 +23,7 @@ Before we start , we need following below tools installed. Head over to their we
 
 For best experience in Mac. It is recommended to use [iTerm](https://www.iterm2.com/) instead of default terminal in Mac OS.
 
-## Usage
+### Usage
 
 ```
 git clone https://mgodhani@bitbucket.org/breakenter/getreceipt.git
@@ -40,11 +40,11 @@ npm start or node index.js
 ```
 
 
-## Note
+### Note
 
 This project does not store any kind of data anywhere. It is a project without any database involved.
 
-## Caution
+### Caution
 
 - Since this program scrapes website. You might be halted by Uber's rate limiting. Try to use command line app with having a good amount of idle time gap.
 
@@ -55,9 +55,13 @@ This project does not store any kind of data anywhere. It is a project without a
 - Meet Godhani
 - Adi Ofir
 
-## Support / Contribution
+### To Do
 
-Please feel free to give suggestion or report bug by [creating issue](https://github.com/mrgodhani/rss-reader/issues).
+- Coming up with desktop application with user interface vs command line application.
+
+### Support / Contribution
+
+Please feel free to give suggestion or report bug by [creating issue](https://github.com/break-enter/getreceipt/issues).
 
 
 ### License
