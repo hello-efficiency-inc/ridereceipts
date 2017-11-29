@@ -19,7 +19,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node ./src/index.js"
   },
   "bin": {
     "get-receipt": "./src/index.js"
