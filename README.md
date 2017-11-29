@@ -55,6 +55,11 @@ This project does not store any kind of data anywhere. It is a project without a
 - Meet Godhani
 - Adi Ofir
 
+## Support / Contribution
+
+Please feel free to give suggestion or report bug by [creating issue](https://github.com/mrgodhani/rss-reader/issues).
+
+
 ### License
 
 [MIT License](LICENSE)
