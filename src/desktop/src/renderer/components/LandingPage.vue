@@ -1,139 +1,229 @@
 <template>
-  <div id="wrapper">
-    <img id="logo" src="~@/assets/logo.png" alt="electron-vue">
-    <main>
-      <div class="left-side">
-        <span class="title">
-          Welcome to your new project!
-        </span>
-        <system-information></system-information>
+    <div class="form-wrap">
+      <div class="form-wrap__title">
+        <h1>über receipt</h1>
       </div>
-
-      <div class="right-side">
-        <div class="doc">
-          <div class="title">Getting Started</div>
-          <p>
-            electron-vue comes packed with detailed documentation that covers everything from
-            internal configurations, using the project structure, building your application,
-            and so much more.
-          </p>
-          <button @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')">Read the Docs</button><br><br>
-        </div>
-        <div class="doc">
-          <div class="title alt">Other Documentation</div>
-          <button class="alt" @click="open('https://electron.atom.io/docs/')">Electron</button>
-          <button class="alt" @click="open('https://vuejs.org/v2/guide/')">Vue.js</button>
-          <button class="alt" @click="start()">Start</button>
-        </div>
+      <form class="form-wrap__form form--fullscreen">
+        <ol class="form-wrap__fields">
+          <li>
+							<label class="form-wraps__fields-label fs-anim-upper" for="q1">What's your email?</label>
+							<input class="fs-anim-lower" id="q1" name="q1" type="text" placeholder="Email address" required/>
+						</li>
+            <li>
+  							<label class="form-wraps__fields-label fs-anim-upper" for="q1">What's your password?</label>
+  							<input class="fs-anim-lower" id="q1" name="q1" type="password" placeholder="Password" required/>
+  					</li>
+            <li class="current">
+  							<label class="form-wraps__fields-label fs-anim-upper" for="q1">Please enter your verification code that is sent to you via SMS</label>
+  							<input class="fs-anim-lower" id="q1" name="q1" type="text" placeholder="Verification code" required/>
+  					</li>
+        </ol>
+      </form>
+      <div class="form-wrap__controls">
+          <button class="form-wrap__submit" type="submit">Continue</button>
       </div>
-    </main>
-  </div>
+    </div>
 </template>
 
 <script>
-import SystemInformation from './LandingPage/SystemInformation'
-import puppeteer from 'puppeteer'
+  import SystemInformation from './LandingPage/SystemInformation'
+  // import jetpack from 'fs-jetpack'
+  import puppeteer from 'puppeteer'
 
-export default {
-  name: 'landing-page',
-  components: { SystemInformation },
-  methods: {
-    open (link) {
-      this.$electron.shell.openExternal(link)
+  export default {
+    name: 'landing-page',
+    components: {SystemInformation},
+    data () {
+      return {
+        test: 'test'
+      }
     },
-    start: async () => {
-      const browser = await puppeteer.launch()
-
-      const page = await browser.newPage()
-      await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com')
-
-      console.log(await page.content())
-      browser.close()
+    methods: {
+      open (link) {
+        this.$electron.shell.openExternal(link)
+      },
+      start: async () => {
+        console.log(this.$electron)
+        const browser = await puppeteer.launch()
+        const self = await this
+        const page = await browser.newPage()
+        await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com')
+        await page.screenshot({path: `${await self.$electron.app.remote.getPath('desktop')}/screenshot.png`})
+        browser.close()
+      }
     }
   }
-}
 </script>
+<style lang="scss">
+.form-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
 
-<style>
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  .form-wrap__submit {
+    display: block;
+    float: right;
+  }
 }
 
-body { font-family: 'Source Sans Pro', sans-serif; }
+.form-wrap__title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 40px;
+  width: 100%;
 
-#wrapper {
-  background:
-  radial-gradient(
-    ellipse at top left,
-    rgba(255, 255, 255, 1) 40%,
-    rgba(229, 229, 229, .9) 100%
-    );
-    height: 100vh;
-    padding: 60px 80px;
-    width: 100vw;
+  h1 {
+    font-weight: 700;
+    font-size:  2.5em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+}
+
+.form-wrap__form {
+  position: relative;
+  text-align: left;
+  font-size: 2.5em;
+}
+
+.form--fullscreen {
+  max-width: 960px;
+  top: 32%;
+  margin: 0 auto;
+  width: 70%;
+
+  .form-wrap__fields > li {
+    position: absolute;
+    width: 100%;
+  }
+}
+
+.form-wrap__fields {
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  top: 0;
+  list-style: none;
+
+  & > li.current {
+    visibility: visible;
   }
 
-  #logo {
-    height: auto;
-    margin-bottom: 20px;
-    width: 420px;
+  & > li {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    border: none;
+    visibility: hidden;
   }
 
-  main {
-    display: flex;
-    justify-content: space-between;
+  & > li label {
+    position: relative;
   }
 
-  main > div { flex-basis: 50%; }
-
-  .left-side {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .welcome {
-    color: #555;
-    font-size: 23px;
-    margin-bottom: 10px;
-  }
-
-  .title {
-    color: #2c3e50;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 6px;
-  }
-
-  .title.alt {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .doc p {
-    color: black;
-    margin-bottom: 10px;
-  }
-
-  .doc button {
-    font-size: .8em;
-    cursor: pointer;
-    outline: none;
-    padding: 0.75em 2em;
-    border-radius: 2em;
+  & > li label.form-wraps__fields-label {
     display: inline-block;
-    color: #fff;
-    background-color: #4fc08d;
-    transition: all 0.15s ease;
-    box-sizing: border-box;
-    border: 1px solid #4fc08d;
+    padding: 0 5px 1em 0;
+    font-weight: 700;
+    pointer-events: none;
   }
 
-  .doc button.alt {
-    color: #42b983;
-    background-color: transparent;
+  /* placeholder */
+& input::-webkit-input-placeholder,
+& textarea::-webkit-input-placeholder {
+	color: rgba(0,0,0,0.3);
+}
+
+& input:-moz-placeholder,
+& textarea:-moz-placeholder {
+	color: rgba(0,0,0,0.3);
+}
+
+& input::-moz-placeholder,
+& textarea::-moz-placeholder {
+	color: rgba(0,0,0,0.3);
+}
+
+& input:-ms-input-placeholder,
+& textarea:-ms-input-placeholder {
+	color: rgba(0,0,0,0.3);
+}
+
+/* Hide placeholder when focused in Webkit browsers */
+& input:focus::-webkit-input-placeholder {
+	color: transparent;
+}
+
+}
+
+.form-wrap__fields input {
+  display: block;
+  margin: 0;
+  padding: 0 0 0.15em;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid rgba(0,0,0,02);
+  background-color: transparent;
+  color: #0B1E4E;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  font-size: 1.5em;
+  border-radius: 0;
+
+  &:focus {
+    box-shadow: none;
+    background: none;
+    outline: none;
   }
-  </style>
+}
+
+button.form-wrap__submit {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0 40px 60px 0;
+  background: none;
+  font-size: 1.25rem;
+  padding: 0.6em 1.5em;
+  border: 3px solid #0B1E4E;
+  border-radius: 40px;
+  font-weight: 700;
+  color: rgba(0,0,0,1);
+  transition: all 0.25s ease-in;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: #0B1E4E;
+    color: white;
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:after {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    line-height: 3;
+    background: transparent;
+    text-align: center;
+    color: black;
+    content: 'or press ENTER';
+    font-size: 0.65em;
+    pointer-events: none;
+  }
+}
+
+.form--show-next {
+  animation: animMoveUpFromDown 0.4s both;
+}
+
+@keyframes animMoveUpFromDown {
+	from { transform: translateY(100%); }
+	to { transform: translateY(0); }
+}
+</style>
