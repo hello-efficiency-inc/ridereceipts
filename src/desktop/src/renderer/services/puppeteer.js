@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 import jetpack from 'fs-jetpack'
-import downloader from 'puppeteer/utils/ChromiumDownloader'
+import os from 'os'
 import { remote, ipcRenderer } from 'electron'
 
 const PAGE_CLOSE = 'PAGE_CLOSE'
@@ -77,19 +77,22 @@ export default async function () {
   // const DASHBOARD_PAGE = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.one-fifth.page-sidebar.hidden--portable > ul > li.soft--ends > div.center-block.three-quarters.push-half--bottom > div > img'
   const useDataDir = jetpack.cwd(remote.app.getAppPath()).cwd(remote.app.getPath('desktop'))
 
-  const platform = downloader.currentPlatform()
+  const platform = os.platform()
 
   let exec
 
   // Get Executable Path by Platform
   switch (platform) {
-    case 'mac':
+    case 'darwin':
       exec = `${useDataDir.path()}/chrome-mac/Chromium.app/Contents/MacOS/Chromium`
       break
     case 'linux':
       exec = `${useDataDir.path()}/chrome-linux/chrome`
       break
     case 'win32':
+      if (os.arch() === 'x64') {
+        exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
+      }
       exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
       break
     case 'win64':

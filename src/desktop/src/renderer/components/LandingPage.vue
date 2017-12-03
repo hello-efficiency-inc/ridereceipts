@@ -42,7 +42,7 @@
         </label>
       </li>
       <li :class="{ current: form === 'FILTER_OPTION', 'form--show': form === 'FILTER_OPTION' }">
-        <label class="form-wraps__fields-label fs-anim-upper" for="filter">Do you want to filter your trips ?</label>
+        <label class="form-wraps__fields-label fs-anim-upper" for="filter">Please choose a month you want to retrieve invoices from.</label>
         <label v-for="filter in filters" class="form-wrap__radio" :for="filter.id">
           {{ filter.name }}
           <input @keyup.enter="submitForm()" v-model="filter_option" :id="filter.id" :value="filter.name" type="radio" required/>

@@ -1,12 +1,12 @@
 {
-  "name": "uberinvocie",
+  "name": "uberinvoice",
   "version": "1.0.0",
   "author": "Meet Godhani <meet@breakenter.com>",
   "description": "Simple automation desktop app to download all invoices from Uber and save it in folder.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
-    "build": "cross-env PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true node .electron-vue/build.js && electron-builder",
+    "build": "cross-env node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -63,8 +63,7 @@
     "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
-    "vue-simple-spinner": "^1.2.8",
-    "vuex": "^2.3.1"
+    "vue-simple-spinner": "^1.2.8"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
