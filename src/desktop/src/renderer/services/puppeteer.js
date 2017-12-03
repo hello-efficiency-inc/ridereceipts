@@ -143,8 +143,9 @@ export default async function () {
   // Login Account
   await page.click(EMAIL_SELECTOR)
   ipcRenderer.send('form', EMAIL)
-  await page.keyboard.type(await getEmail(), {delay: 100})
+  await page.keyboard.type(await getEmail(), {delay: 50})
   await page.click(NEXT_BUTTON)
+  await page.waitFor(1000)
 
   const emailVisibility = await page.evaluate(() => {
     const display = document.querySelector('#username')
@@ -153,9 +154,7 @@ export default async function () {
 
   if (!emailVisibility) {
     ipcRenderer.send('form', ERROR)
-    page.screenshot({path: `${useDataDir.path()}/screenshot.png`})
-    page.close()
-    browser.close()
+    await browser.close()
   }
 
   await page.waitForSelector(PASSWORD_SELECTOR)
@@ -185,9 +184,10 @@ export default async function () {
 
       if (elements.length > 0) {
         for (let i = 0; i < elements.length; i++) {
+          console.log(document.querySelector(`label[for='${elements[i].id}']`))
           const item = {
             id: elements[i].id,
-            name: document.querySelector('label [for=' + elements[i].id + ']').innerText
+            name: document.querySelector(`label[for='${elements[i].id}']`).innerText
           }
           data.push(item)
         }

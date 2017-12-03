@@ -4,7 +4,10 @@
             <h1>Uber Invoice</h1>
         </div>
         <form class="form-wrap__form form--fullscreen">
-            <ol :class="{'form--show-next': form === 'PASSWORD' || 'VERIFICATION' || 'ERROR' }"
+            <div v-if="loading" class="spinner">
+              <spinner></spinner>
+            </div>
+            <ol :class="{'form--show-next': currentForm }"
                 class="form-wrap__fields">
                 <li :class="{ current: form === 'EMAIL', 'form--show': form === 'EMAIL' }">
                     <label class="form-wraps__fields-label fs-anim-upper" for="email">What's your email?</label>
@@ -67,11 +70,13 @@
 
 <script>
   import puppeteer from '../services/puppeteer'
+  import Spinner from 'vue-simple-spinner'
 
   export default {
     name: 'landing-page',
     data () {
       return {
+        spinnerColor: '#0B1E4E',
         form: null,
         email: null,
         password: null,
@@ -82,7 +87,16 @@
         download: null
       }
     },
+    components: {
+      Spinner
+    },
     computed: {
+      loading () {
+        return this.form === null
+      },
+      currentForm () {
+        return this.form === 'PASSWORD' || 'VERIFICATION' || 'FILTER_CONFIRM' || 'FILTER_OPTION' || 'ERROR'
+      },
       errorButton () {
         if (this.form === 'ERROR') {
           return true
@@ -95,6 +109,7 @@
     },
     mounted () {
       puppeteer()
+
       this.$electron.ipcRenderer.on('form', (event, data) => {
         this.setCurrentForm(data)
       })
@@ -110,6 +125,9 @@
         this.email = null
         this.password = null
         this.verification = null
+        this.filters = null
+        this.filter_options = null
+        this.filter_confirm = null
         puppeteer()
       },
       submitForm () {
@@ -371,5 +389,13 @@
             background: #fff;
             position: relative;
         }
+    }
+
+    .spinner {
+      padding-top:100px;
+      position: absolute;
+      top: 60%;
+      margin: 0 auto;
+      width: 100%;
     }
 </style>
