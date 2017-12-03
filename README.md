@@ -1,4 +1,4 @@
-# Get Receipt #
+# Uber Invoice #
 
 Get receipt is an command line application made using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer), a headless chrome node library mainly used for web scraping and browser automation.
 
@@ -9,35 +9,6 @@ As a user it is always a pain to download all invoices in one go from Uber for t
 - *Solution*
 
 Automation ! We created a command line script which would act as a robot login from your behalf and download all the invoices without you interacting with browser. If you choose filters it would also categorize all the invoices in monthly folder.
-
-
-### Demo
-
-![img](demo.gif)
-
-### Getting Started
-
-Before we start , we need following below tools installed. Head over to their websites and install them.
-
-- [Node 8.+](https://nodejs.org)
-
-For best experience in Mac. It is recommended to use [iTerm](https://www.iterm2.com/) instead of default terminal in Mac OS.
-
-### Usage
-
-```
-git clone https://mgodhani@bitbucket.org/breakenter/getreceipt.git
-
-cd getreceipt
-
-npm install
-
-```
-After running commands above, run following below:
-```
-npm start
-
-```
 
 All downloaded invoices would be available inside `invoices` folder.
 
