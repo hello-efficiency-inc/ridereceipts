@@ -2,6 +2,9 @@
   "name": "uberinvoice",
   "version": "1.0.0",
   "author": "Meet Godhani <meet@breakenter.com>",
+  "contributors": [
+    "Adi Ofir <adi@breakenter.com> (https://www.breakenter.com)"
+  ],
   "description": "Simple automation desktop app to download all invoices from Uber and save it in folder.",
   "license": "MIT",
   "main": "./dist/electron/main.js",

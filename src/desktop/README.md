@@ -1,4 +1,4 @@
-# getreceipt
+# Uber Invoice
 
 > Simple automation desktop app to download all invoices from Uber and save it in folder.
 
