@@ -104,7 +104,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0,
     executablePath: exec
   })
@@ -120,11 +120,13 @@ export default async function () {
     browser.close()
   })
 
-  await page.on('console', (msg) => {
-    for (let i = 0; i < msg.args.length; ++i) {
-      console.log(`${i}: ${msg.args[i]}`)
-    }
-  })
+  if (process.env.NODE_ENV === 'development') {
+    await page.on('console', (msg) => {
+      for (let i = 0; i < msg.args.length; ++i) {
+        console.log(`${i}: ${msg.args[i]}`)
+      }
+    })
+  }
 
   // Check for Rate Limit
   const rateLimit = await page.evaluate(() => {

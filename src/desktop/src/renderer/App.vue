@@ -30,7 +30,6 @@
     font-size: 1em;
     font-weight: 400;
     overflow: hidden;
-    overflow-y: scroll;
     min-height: 700px;
     -webkit-font-smoothing: antialiased;
 	  -moz-osx-font-smoothing: grayscale;

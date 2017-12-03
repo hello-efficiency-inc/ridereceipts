@@ -1,6 +1,8 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain } from 'electron'
+
+let myWindow = null
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -31,6 +33,17 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+}
+// Allow only one instance
+const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+  if (myWindow) {
+    if (myWindow.isMinimized()) myWindow.restore()
+    myWindow.focus()
+  }
+})
+
+if (isSecondInstance) {
+  app.quit()
 }
 
 app.on('ready', createWindow)
