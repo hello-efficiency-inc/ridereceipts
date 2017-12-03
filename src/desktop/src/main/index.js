@@ -1,7 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
-
+import { app, BrowserWindow, ipcMain } from 'electron'
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -46,6 +45,35 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+ipcMain.on('form', (event, status) => {
+  console.log(status)
+  event.sender.send('form', status)
+})
+
+ipcMain.on('email', (event, data) => {
+  event.sender.send('emaildata', data)
+})
+
+ipcMain.on('password', (event, data) => {
+  event.sender.send('passdata', data)
+})
+
+ipcMain.on('code', (event, data) => {
+  event.sender.send('codedata', data)
+})
+
+ipcMain.on('filter_confirm', (event, data) => {
+  event.sender.send('filterconfirmation', data)
+})
+
+ipcMain.on('filter_option', (event, data) => {
+  event.sender.send('filteroption', data)
+})
+
+ipcMain.on('filters', (event, data) => {
+  event.sender.send('filters', data)
 })
 
 /**

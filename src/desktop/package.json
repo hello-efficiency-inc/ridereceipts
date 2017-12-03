@@ -1,12 +1,12 @@
 {
-  "name": "getreceipt",
-  "version": "0.0.0",
+  "name": "uberinvocie",
+  "version": "1.0.0",
   "author": "Meet Godhani <meet@breakenter.com>",
   "description": "Simple automation desktop app to download all invoices from Uber and save it in folder.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
-    "build": "node .electron-vue/build.js && electron-builder",
+    "build": "cross-env PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -19,8 +19,8 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "getreceipt",
-    "appId": "org.simulatedgreg.electron-vue",
+    "productName": "uberinvoice",
+    "appId": "org.breakenter.uberinvoice",
     "directories": {
       "output": "build"
     },
@@ -53,12 +53,14 @@
     }
   },
   "dependencies": {
-    "axios": "^0.16.1",
+    "download-chromium": "^2.0.1",
     "fs-jetpack": "^1.2.0",
     "node-sass": "^4.7.2",
     "normalize-scss": "^7.0.0",
     "puppeteer": "^0.13.0",
     "sass-loader": "^6.0.6",
+    "unzip": "^0.1.11",
+    "util": "^0.10.3",
     "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",

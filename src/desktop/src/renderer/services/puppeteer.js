@@ -9,6 +9,7 @@ const PASSWORD = 'PASSWORD'
 const VERIFICATION = 'VERIFICATION'
 const CHROME_NOT_FOUND = 'CHROME_NOT_FOUND'
 const FILTER_CONFIRM = 'FILTER_CONFIRM'
+const FILTER_OPTION = 'FILTER_OPTION'
 const ERROR = 'ERROR'
 
 // Desktop User Agents
@@ -52,7 +53,7 @@ async function getCode () {
 
 async function getFilterConfirm () {
   const confirm = new Promise((resolve) => {
-    ipcRenderer.once('confirmdata', (event, data) => {
+    ipcRenderer.once('filterconfirmation', (event, data) => {
       resolve(data)
     })
   })
@@ -114,6 +115,17 @@ export default async function () {
   // Launch Page
   await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com', {waitUntil: 'domcontentloaded'})
 
+  await page.on('error', () => {
+    page.close()
+    browser.close()
+  })
+
+  await page.on('console', (msg) => {
+    for (let i = 0; i < msg.args.length; ++i) {
+      console.log(`${i}: ${msg.args[i]}`)
+    }
+  })
+
   // Check for Rate Limit
   const rateLimit = await page.evaluate(() => {
     if (document.querySelector('body').innerText === 'HARD') {
@@ -134,32 +146,58 @@ export default async function () {
   await page.keyboard.type(await getEmail(), {delay: 100})
   await page.click(NEXT_BUTTON)
 
-  if (await page.$(PASSWORD_SELECTOR) === null) {
+  const emailVisibility = await page.evaluate(() => {
+    const display = document.querySelector('#username')
+    return display !== null
+  })
+
+  if (!emailVisibility) {
     ipcRenderer.send('form', ERROR)
-    await page.screenshot({path: `${useDataDir.path()}/screenshot.png`})
+    page.screenshot({path: `${useDataDir.path()}/screenshot.png`})
     page.close()
-    return browser.close()
+    browser.close()
   }
 
   await page.waitForSelector(PASSWORD_SELECTOR)
-  await page.click(PASSWORD_SELECTOR, 200)
+  await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)
   await page.keyboard.type(await getPassword(), {delay: 100})
   await page.click(NEXT_BUTTON)
 
-  if (await page.$(SMS_SELECTOR) !== null) {
-    await page.click(SMS_SELECTOR, 200)
-    ipcRenderer.send('form', VERIFICATION)
-    await page.keyboard.type(await getCode(), { delay: 100 })
-    await page.click(VERIFY_BUTTON)
-  }
+  await page.waitForSelector(PASSWORD_SELECTOR, { hidden: true })
+  await page.click(SMS_SELECTOR)
+  ipcRenderer.send('form', VERIFICATION)
+  await page.keyboard.type(await getCode(), { delay: 100 })
+  await page.click(VERIFY_BUTTON)
 
   await page.waitForNavigation()
   ipcRenderer.send('form', FILTER_CONFIRM)
 
   await page.waitForSelector(FILTER_TRIPS)
-  if (await getFilterConfirm()) {}
-  await page.screenshot({path: `${useDataDir.path()}/screenshot.png`})
+  if (await getFilterConfirm()) {
+    await page.click(FILTER_TRIPS)
+
+    // Fetch list of available filters
+    const filterList = await page.evaluate(() => {
+      let data = []
+      const elements = document.querySelectorAll('#trip-filterer > div:nth-child(1) > div > div.grid__item.three-quarters.palm-one-whole input')
+      console.log(elements.length)
+
+      if (elements.length > 0) {
+        for (let i = 0; i < elements.length; i++) {
+          const item = {
+            id: elements[i].id,
+            name: document.querySelector('label [for=' + elements[i].id + ']').innerText
+          }
+          data.push(item)
+        }
+      }
+
+      return data
+    })
+    ipcRenderer.send('form', FILTER_OPTION)
+    ipcRenderer.send('filters', filterList)
+  }
 
   await browser.close()
 }

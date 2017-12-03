@@ -110,6 +110,7 @@ let rendererConfig = {
   },
   plugins: [
     new ExtractTextPlugin('styles.css'),
+    new webpack.IgnorePlugin(/vertx/),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.ejs'),
