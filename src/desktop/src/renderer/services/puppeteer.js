@@ -1,6 +1,7 @@
 import puppeteer from 'puppeteer'
 import jetpack from 'fs-jetpack'
 import os from 'os'
+import _ from 'lodash'
 import { remote, ipcRenderer } from 'electron'
 
 const PAGE_CLOSE = 'PAGE_CLOSE'
@@ -10,6 +11,7 @@ const VERIFICATION = 'VERIFICATION'
 const CHROME_NOT_FOUND = 'CHROME_NOT_FOUND'
 const FILTER_CONFIRM = 'FILTER_CONFIRM'
 const FILTER_OPTION = 'FILTER_OPTION'
+const DOWNLOAD_INVOICE = 'DOWNLOAD_INVOICE'
 const ERROR = 'ERROR'
 
 // Desktop User Agents
@@ -60,19 +62,37 @@ async function getFilterConfirm () {
   return confirm
 }
 
+async function getMonth () {
+  const month = new Promise((resolve) => {
+    ipcRenderer.once('monthdata', (event, data) => {
+      resolve(data)
+    })
+  })
+  return month
+}
+
+async function downloadInvoice () {
+  const confirm = new Promise((resolve) => {
+    ipcRenderer.once('downloadconfirmation', (event, data) => {
+      resolve(data)
+    })
+  })
+  return confirm
+}
+
 export default async function () {
   // Selectors Needed
   const EMAIL_SELECTOR = '#useridInput'
   const PASSWORD_SELECTOR = '#password'
   const SMS_SELECTOR = '#verificationCode'
   const NEXT_BUTTON = '#app-body > div > div:nth-child(1) > form > button'
-  // const NEXT_PAGINATION = '#trips-pagination > div:nth-child(2) > a'
-  // const NEXT_PAGINATION_INACTIVE_BUTTON = '#trips-pagination > div:nth-child(2) > div.btn--inactive'
-  // const INACTIVE_PREVIOUS_BUTTON = '.btn--inactive.pagination__previous'
-  // const INACTIVE_NEXT_BUTTON = '.btn--inactive.pagination__next'
+  const NEXT_PAGINATION = '#trips-pagination > div:nth-child(2) > a'
+  const NEXT_PAGINATION_INACTIVE_BUTTON = '#trips-pagination > div:nth-child(2) > div.btn--inactive'
+  const INACTIVE_PREVIOUS_BUTTON = '.btn--inactive.pagination__previous'
+  const INACTIVE_NEXT_BUTTON = '.btn--inactive.pagination__next'
   const VERIFY_BUTTON = '#app-body > div > div > form > button'
   const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a'
-  // const SUBMIT_FILTER = '#trip-filterer-button'
+  const SUBMIT_FILTER = '#trip-filterer-button'
   // const DOWNLOAD_INVOICE = '#data-invoice-btn-download'
   // const DASHBOARD_PAGE = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.one-fifth.page-sidebar.hidden--portable > ul > li.soft--ends > div.center-block.three-quarters.push-half--bottom > div > img'
   const useDataDir = jetpack.cwd(remote.app.getAppPath()).cwd(remote.app.getPath('desktop'))
@@ -85,6 +105,7 @@ export default async function () {
   switch (platform) {
     case 'darwin':
       exec = `${useDataDir.path()}/chrome-mac/Chromium.app/Contents/MacOS/Chromium`
+      //  exec = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
       break
     case 'linux':
       exec = `${useDataDir.path()}/chrome-linux/chrome`
@@ -107,9 +128,12 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 0,
-    executablePath: exec
+    executablePath: exec,
+    args: [
+      '--disable-gpu'
+    ]
   })
 
   const page = await browser.newPage()
@@ -123,13 +147,11 @@ export default async function () {
     browser.close()
   })
 
-  if (process.env.NODE_ENV === 'development') {
-    await page.on('console', (msg) => {
-      for (let i = 0; i < msg.args.length; ++i) {
-        console.log(`${i}: ${msg.args[i]}`)
-      }
-    })
-  }
+  await page.on('console', msg => {
+    for (let i = 0; i < msg.args.length; ++i) {
+      console.log(`${i}: ${msg.args[i]}`)
+    }
+  })
 
   // Check for Rate Limit
   const rateLimit = await page.evaluate(() => {
@@ -181,12 +203,11 @@ export default async function () {
   if (await getFilterConfirm()) {
     await page.click(FILTER_TRIPS)
 
+    await page.waitFor(1000)
     // Fetch list of available filters
     const filterList = await page.evaluate(() => {
       let data = []
       const elements = document.querySelectorAll('#trip-filterer > div:nth-child(1) > div > div.grid__item.three-quarters.palm-one-whole input')
-      console.log(elements.length)
-
       if (elements.length > 0) {
         for (let i = 0; i < elements.length; i++) {
           console.log(document.querySelector(`label[for='${elements[i].id}']`))
@@ -202,6 +223,116 @@ export default async function () {
     })
     ipcRenderer.send('form', FILTER_OPTION)
     ipcRenderer.send('filters', filterList)
+
+    const filterSelected = await getMonth()
+
+    const FILTER_ITEM = `label[for=${filterSelected.id}]`
+
+    await page.waitFor(1000)
+
+    await page.click(FILTER_ITEM)
+    await page.click(SUBMIT_FILTER)
+  }
+
+  ipcRenderer.send('form', DOWNLOAD_INVOICE)
+
+  await page.waitFor(2000)
+
+  if (await downloadInvoice()) {
+    await page.waitFor(2000)
+
+    const DETAIL_LISTS = []
+
+    // Loop Until next button is disabled
+    while (await page.$(NEXT_PAGINATION_INACTIVE_BUTTON) === null) {
+      await page.waitFor(2000)
+
+      // Evaluate list of detail links
+      const list = await page.evaluate(() => {
+        const data = []
+        const detailElement = document.querySelectorAll('#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a')
+
+        for (let i = 0; i < detailElement.length; ++i) {
+          const tripId = detailElement[i].href.split('/')
+          data.push(`https://riders.uber.com/get_invoices?q={"trip_uuid": "${tripId[4]}"}`)
+        }
+
+        return data
+      })
+
+      DETAIL_LISTS.push(list)
+
+      if (await page.$(NEXT_PAGINATION) !== null) {
+        await page.click(NEXT_PAGINATION)
+      } else {
+        continue
+      }
+    }
+
+    await page.waitFor(2000)
+
+    if (await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
+      await page.waitFor(2 * 1000)
+
+      // Evaluate list of detail links
+      const list = await page.evaluate(() => {
+        const data = []
+        const detailElement = document.querySelectorAll('#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a')
+        for (let i = 0; i < detailElement.length; ++i) {
+          const tripId = detailElement[i].href.split('/')
+          data.push(`https://riders.uber.com/get_invoices?q={"trip_uuid": "${tripId[4]}"}`)
+        }
+        return data
+      })
+
+      DETAIL_LISTS.push(list)
+    }
+
+    console.log(DETAIL_LISTS)
+
+    const DETAIL_ITEMS = []
+
+    // Go through each link and store JSON Details
+    for (let i = 0; i < _.flattenDeep(DETAIL_LISTS).length; ++i) {
+      await page.goto(_.flattenDeep(DETAIL_LISTS)[i], { waitUntil: 'domcontentloaded' })
+      const tripItem = await page.evaluate(() => {
+        const element = document.querySelector('body')
+        return JSON.parse(element.innerHTML)
+      })
+      DETAIL_ITEMS.push(tripItem[0])
+    }
+
+    console.log(DETAIL_ITEMS)
+
+    // Loop through each link and download invoice.
+    // for (const element of _.flattenDeep(DETAIL_LISTS)) {
+    //   await page.goto(element, { timeout: 0 })
+    //
+    //   await page.waitFor(1 * 2000)
+    //
+    //   // Check if month is set. If yes then store all invoices in that folder.
+    //   const month = await page.evaluate(() => {
+    //     const timedate = document.querySelector('#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.page-lead > div').innerText
+    //     return timedate
+    //   })
+    //
+    //   // Separate out words into array
+    //   const splittedMonth = _.words(month)
+    //   await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: `./invoices/${splittedMonth[4]}-${splittedMonth[6]}`})
+    //
+    //   // Check if request button is hidden
+    //   const invoiceRequest = await page.evaluate(() => {
+    //     return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden')
+    //   })
+    //
+    //   // Check if request invoice button is hidden. Then go ahead download it.
+    //   if (invoiceRequest) {
+    //     await page.waitFor(1 * 2000)
+    //     await page.click(DOWNLOAD_INVOICE)
+    //   }
+    //
+    //   await page.waitFor(1 * 2000)
+    // }
   }
 
   await browser.close()

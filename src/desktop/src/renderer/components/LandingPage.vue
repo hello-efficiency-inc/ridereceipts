@@ -45,7 +45,20 @@
         <label class="form-wraps__fields-label fs-anim-upper" for="filter">Please choose a month you want to retrieve invoices from.</label>
         <label v-for="filter in filters" class="form-wrap__radio" :for="filter.id">
           {{ filter.name }}
-          <input @keyup.enter="submitForm()" v-model="filter_option" :id="filter.id" :value="filter.name" type="radio" required/>
+          <input @keyup.enter="submitForm()" v-model="filter_option" :id="filter.id" :value="filter.id" type="radio" required/>
+          <div class="radio__indicator"></div>
+        </label>
+      </li>
+      <li :class="{ current: form === 'DOWNLOAD_INVOICE', 'form--show': form === 'DOWNLOAD_INVOICE' }">
+        <label class="form-wraps__fields-label fs-anim-upper" for="download">Do you want to download invoices ?</label>
+        <label class="form-wrap__radio">
+          Yes
+          <input @keyup.enter="submitForm()" v-model="download_invoice" value="true" type="radio" required/>
+          <div class="radio__indicator"></div>
+        </label>
+        <label class="form-wrap__radio">
+          No
+          <input @keyup.enter="submitForm()" v-model="download_invoice" value="false" type="radio" required/>
           <div class="radio__indicator"></div>
         </label>
       </li>
@@ -53,9 +66,10 @@
         <label class="form-wraps__fields-label fs-anim-upper" for="q1">Oops seems like your IP Address is banned temporary. Please try again later.</label>
       </li>
       <li :class="{ current: form === 'CHROME_NOT_FOUND', 'form--show': form === 'CHROME_NOT_FOUND' }">
-        <label class="form-wraps__fields-label fs-anim-upper" for="q1">Oops seems you don't have chrome executable path in place on desktop. Please download it from <a
-          href="https://download-chromium.appspot.com/">here</a>
-          and extract zip file to a folder on your desktop.</label>
+        <div class="form-wraps__fields-label fs-anim-upper">
+          Oops! seems like you don't have chromium installed. Please download it from
+          <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a> and place the extracted files at your desktop.
+        </div>
         </li>
       </ol>
     </form>
@@ -86,6 +100,7 @@ export default {
       filters: null,
       filter_option: null,
       filter_confirm: null,
+      download_invoice: null,
       download: null
     }
   },
@@ -131,6 +146,7 @@ export default {
       this.filters = null
       this.filter_options = null
       this.filter_confirm = null
+      this.download_invoice = null
       puppeteer()
     },
     submitForm () {
@@ -149,6 +165,9 @@ export default {
           break
         case 'FILTER_OPTION':
           this.$electron.ipcRenderer.send('filter_option', this.filter_option)
+          break
+        case 'DOWNLOAD_INVOICE':
+          this.$electron.ipcRenderer.send('download_invoice', this.download_invoice)
       }
     }
   }

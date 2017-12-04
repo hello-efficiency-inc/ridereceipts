@@ -56,6 +56,8 @@
     }
   },
   "dependencies": {
+    "electron-chromedriver": "^1.7.1",
+    "emoji-data-css": "^1.0.1",
     "fs-jetpack": "^1.2.0",
     "node-sass": "^4.7.2",
     "normalize-scss": "^7.0.0",
@@ -66,7 +68,8 @@
     "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
-    "vue-simple-spinner": "^1.2.8"
+    "vue-simple-spinner": "^1.2.8",
+    "webdriverio": "^4.9.11"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
