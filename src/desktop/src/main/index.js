@@ -62,8 +62,11 @@ app.on('activate', () => {
 })
 
 ipcMain.on('form', (event, status) => {
-  console.log(status)
   event.sender.send('form', status)
+})
+
+ipcMain.on('invoiceTotal', (event, status) => {
+  event.sender.send('invoiceTotal', status)
 })
 
 ipcMain.on('email', (event, data) => {

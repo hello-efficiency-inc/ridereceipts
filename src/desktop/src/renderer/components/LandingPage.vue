@@ -62,6 +62,9 @@
           <div class="radio__indicator"></div>
         </label>
       </li>
+      <li :class="{ current: form === 'INVOICE_COUNT', 'form--show': form === 'INVOICE_COUNT' }">
+        <div>{{ invoice_count }}</div>
+      </li>
       <li :class="{ current: form === 'ERROR', 'form--show': form === 'ERROR' }">
         <label class="form-wraps__fields-label fs-anim-upper" for="q1">Oops seems like your IP Address is banned temporary. Please try again later.</label>
       </li>
@@ -101,7 +104,8 @@ export default {
       filter_option: null,
       filter_confirm: null,
       download_invoice: null,
-      download: null
+      download: null,
+      invoice_count: null
     }
   },
   components: {
@@ -132,6 +136,9 @@ export default {
     })
     this.$electron.ipcRenderer.on('filters', (event, data) => {
       this.filters = data
+    })
+    this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
+      this.invoice_count = data
     })
   },
   methods: {

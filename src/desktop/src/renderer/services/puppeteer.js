@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer'
 import jetpack from 'fs-jetpack'
 import os from 'os'
 import _ from 'lodash'
+import moment from 'moment'
 import { remote, ipcRenderer } from 'electron'
 
 const PAGE_CLOSE = 'PAGE_CLOSE'
@@ -12,6 +13,8 @@ const CHROME_NOT_FOUND = 'CHROME_NOT_FOUND'
 const FILTER_CONFIRM = 'FILTER_CONFIRM'
 const FILTER_OPTION = 'FILTER_OPTION'
 const DOWNLOAD_INVOICE = 'DOWNLOAD_INVOICE'
+const INVOICE_COUNT = 'INVOICE_COUNT'
+// const INVOICE_PROGRESS = 'INVOICE_PROGRESS'
 const ERROR = 'ERROR'
 
 // Desktop User Agents
@@ -96,7 +99,7 @@ export default async function () {
   // const DOWNLOAD_INVOICE = '#data-invoice-btn-download'
   // const DASHBOARD_PAGE = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.one-fifth.page-sidebar.hidden--portable > ul > li.soft--ends > div.center-block.three-quarters.push-half--bottom > div > img'
   const useDataDir = jetpack.cwd(remote.app.getAppPath()).cwd(remote.app.getPath('desktop'))
-
+  const documentDir = jetpack.cwd(remote.app.getPath('documents'))
   const platform = os.platform()
 
   let exec
@@ -226,7 +229,7 @@ export default async function () {
 
     const filterSelected = await getMonth()
 
-    const FILTER_ITEM = `label[for=${filterSelected.id}]`
+    const FILTER_ITEM = `label[for=${filterSelected}]`
 
     await page.waitFor(1000)
 
@@ -288,8 +291,7 @@ export default async function () {
       DETAIL_LISTS.push(list)
     }
 
-    console.log(DETAIL_LISTS)
-
+    // Final list of invoice object links
     const DETAIL_ITEMS = []
 
     // Go through each link and store JSON Details
@@ -299,10 +301,29 @@ export default async function () {
         const element = document.querySelector('body')
         return JSON.parse(element.innerHTML)
       })
-      DETAIL_ITEMS.push(tripItem[0])
+      // Check if the data is there. If it is then push it to array
+      if (tripItem.length > 0) {
+        DETAIL_ITEMS.push(tripItem[0])
+      }
     }
 
+    DETAIL_ITEMS.map((item) => {
+      item.month = moment(item.invoice_date).format('MMMM')
+      item.invoice_date = moment(item.invoice_date).format('MMMM DD')
+      return item
+    })
+
     console.log(DETAIL_ITEMS)
+
+    ipcRenderer.send('form', INVOICE_COUNT)
+    ipcRenderer.send('invoiceTotal', DETAIL_ITEMS.length)
+
+    for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].month}/`)})
+      await page.goto(`https://riders.uber.com/invoice-gen${DETAIL_ITEMS[i].document_path}`)
+      // Rename
+      jetpack.rename(documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`, `${DETAIL_ITEMS[i].invoice_Date}.pdf`))
+    }
 
     // Loop through each link and download invoice.
     // for (const element of _.flattenDeep(DETAIL_LISTS)) {
