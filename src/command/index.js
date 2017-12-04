@@ -141,7 +141,7 @@ async function downloadInvoice() {
 
 // Run scrape
 async function run() {
-  log(boxen(chalk.magenta('Welcome to Get Receipt !\nGet Receipt is simple tool to automate your browser and download invoices for\nyour trips from Uber for accounting purpose.\n\nFor more info visit https://github.com/break-enter/getreceipt.'),{ padding: 1, borderStyle: 'classic' }) + '\n');
+  log(boxen(chalk.magenta('Welcome to Uber Invoice !\nUber Invoice is simple tool to automate your browser and download invoices for\nyour trips from Uber for accounting purpose.\n\nFor more info visit https://github.com/break-enter/getreceipt.'),{ padding: 1, borderStyle: 'classic' }) + '\n');
 
   // Launch Puppeteer
   const browser = await puppeteer.launch({
