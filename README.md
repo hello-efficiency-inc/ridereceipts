@@ -1,41 +1,25 @@
-# Uber Invoice #
+# Uber Invoice
 
-Get receipt is an command line application made using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer), a headless chrome node library mainly used for web scraping and browser automation.
+> Simple automation desktop app to download all invoices from Uber and save it in folder.
 
-- *Problem*
+#### Build Setup
 
-As a user it is always a pain to download all invoices in one go from Uber for tax reasons. According to their current UI, you have to manually go each trip detail and download invoice.
+``` bash
+# install dependencies
+npm install
 
-- *Solution*
+# serve with hot reload at localhost:9080
+npm run dev
 
-Automation ! We created a command line script which would act as a robot login from your behalf and download all the invoices without you interacting with browser. If you choose filters it would also categorize all the invoices in monthly folder.
-
-All downloaded invoices would be available inside `invoices` folder.
-
-### Note
-
-This project does not store any kind of data anywhere. It is a project without any database involved.
-
-### Caution
-
-- Since this program scrapes website. You might be halted by Uber's rate limiting. Try to use command line app with having a good amount of idle time gap.
-
-![img](ratelimit.png)
-
-### Authors & Contributors
-
-- Meet Godhani
-- Adi Ofir
-
-### To do
-
-- Coming up with desktop application with user interface vs command line application.
-
-### Support / Contribution
-
-Please feel free to give suggestion or report bug by [creating issue](https://github.com/break-enter/getreceipt/issues).
+# build electron application for production
+npm run build
 
 
-### License
+# lint all JS/Vue component files in `src/`
+npm run lint
 
-[MIT License](LICENSE)
+```
+
+---
+
+This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[142eea4](https://github.com/SimulatedGREG/electron-vue/tree/142eea44aa50fdead91a469daedfcff04308c3fc) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
