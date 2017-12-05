@@ -315,29 +315,29 @@ export default async function () {
     ipcRenderer.send('form', INVOICE_COUNT)
     ipcRenderer.send('invoiceTotal', DETAIL_ITEMS.length)
 
-    for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
-      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].month}/`)})
-      await page.goto(`https://riders.uber.com/trips/${DETAIL_ITEMS[i].trip_uid}`, {waitUntil: 'networkidle2'})
-
+    for (let i = 0; i <= DETAIL_ITEMS.length; ++i) {
       const progress = _.ceil(_.divide(i, DETAIL_ITEMS.length) * 100)
 
-      // Check if request button is hidden
-      const invoiceRequest = await page.evaluate(() => {
-        return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden')
-      })
+      if (DETAIL_ITEMS[i]) {
+        await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].month}/`)})
+        await page.goto(`https://riders.uber.com/trips/${DETAIL_ITEMS[i].trip_uid}`, {waitUntil: 'networkidle2'})
 
-      // Check if request invoice button is hidden. Then go ahead download it.
-      if (invoiceRequest) {
-        await page.waitFor(1 * 2000)
-        await page.click(DOWNLOAD_INVOICE_TRIP)
+        // Check if request button is hidden
+        const invoiceRequest = await page.evaluate(() => {
+          return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden')
+        })
+
+        // Check if request invoice button is hidden. Then go ahead download it.
+        if (invoiceRequest) {
+          await page.waitFor(1 * 2000)
+          await page.click(DOWNLOAD_INVOICE_TRIP)
+        }
       }
-
       ipcRenderer.send('progress', progress)
-      await page.waitFor(1000)
     }
 
-    for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
-      if (jetpack.exists(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`)) {
+    for (let i = 0; i <= DETAIL_ITEMS.length; ++i) {
+      if (DETAIL_ITEMS[i] && jetpack.exists(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`)) {
         jetpack.rename(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`, `${DETAIL_ITEMS[i].invoice_date}.pdf`)
       }
     }
