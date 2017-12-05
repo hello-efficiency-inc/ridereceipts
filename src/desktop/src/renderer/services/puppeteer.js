@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer'
 import jetpack from 'fs-jetpack'
 import os from 'os'
 import _ from 'lodash'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { remote, ipcRenderer } from 'electron'
 
 const PAGE_CLOSE = 'PAGE_CLOSE'
@@ -96,7 +96,7 @@ export default async function () {
   const VERIFY_BUTTON = '#app-body > div > div > form > button'
   const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a'
   const SUBMIT_FILTER = '#trip-filterer-button'
-  // const DOWNLOAD_INVOICE = '#data-invoice-btn-download'
+  const DOWNLOAD_INVOICE_TRIP = '#data-invoice-btn-download'
   // const DASHBOARD_PAGE = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.one-fifth.page-sidebar.hidden--portable > ul > li.soft--ends > div.center-block.three-quarters.push-half--bottom > div > img'
   const useDataDir = jetpack.cwd(remote.app.getAppPath()).cwd(remote.app.getPath('desktop'))
   const documentDir = jetpack.cwd(remote.app.getPath('documents'))
@@ -131,7 +131,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -203,7 +203,7 @@ export default async function () {
   ipcRenderer.send('form', FILTER_CONFIRM)
 
   await page.waitForSelector(FILTER_TRIPS)
-  if (await getFilterConfirm()) {
+  if (await getFilterConfirm() === 'true') {
     await page.click(FILTER_TRIPS)
 
     await page.waitFor(1000)
@@ -239,16 +239,16 @@ export default async function () {
 
   ipcRenderer.send('form', DOWNLOAD_INVOICE)
 
-  await page.waitFor(2000)
+  await page.waitFor(1000)
 
   if (await downloadInvoice()) {
-    await page.waitFor(2000)
+    await page.waitFor(1000)
 
     const DETAIL_LISTS = []
 
     // Loop Until next button is disabled
     while (await page.$(NEXT_PAGINATION_INACTIVE_BUTTON) === null) {
-      await page.waitFor(2000)
+      await page.waitFor(1000)
 
       // Evaluate list of detail links
       const list = await page.evaluate(() => {
@@ -272,10 +272,10 @@ export default async function () {
       }
     }
 
-    await page.waitFor(2000)
+    await page.waitFor(1000)
 
     if (await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
-      await page.waitFor(2 * 1000)
+      await page.waitFor(1 * 1000)
 
       // Evaluate list of detail links
       const list = await page.evaluate(() => {
@@ -309,51 +309,39 @@ export default async function () {
 
     DETAIL_ITEMS.map((item) => {
       item.month = moment(item.invoice_date).format('MMMM')
-      item.invoice_date = moment(item.invoice_date).format('MMMM DD')
+      item.invoice_date = moment(item.invoice_date).tz('America/Toronto').format('MMMM-DD-YYYY_hh-mm-ss-a')
       return item
     })
-
-    console.log(DETAIL_ITEMS)
 
     ipcRenderer.send('form', INVOICE_COUNT)
     ipcRenderer.send('invoiceTotal', DETAIL_ITEMS.length)
 
     for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
       await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].month}/`)})
-      await page.goto(`https://riders.uber.com/invoice-gen${DETAIL_ITEMS[i].document_path}`)
-      // Rename
-      jetpack.rename(documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`, `${DETAIL_ITEMS[i].invoice_Date}.pdf`))
+      await page.goto(`https://riders.uber.com/trips/${DETAIL_ITEMS[i].trip_uid}`, {waitUntil: 'networkidle2'})
+
+      const progress = _.ceil(_.divide(i, DETAIL_ITEMS.length) * 100)
+
+      // Check if request button is hidden
+      const invoiceRequest = await page.evaluate(() => {
+        return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden')
+      })
+
+      // Check if request invoice button is hidden. Then go ahead download it.
+      if (invoiceRequest) {
+        await page.waitFor(1 * 2000)
+        await page.click(DOWNLOAD_INVOICE_TRIP)
+      }
+
+      ipcRenderer.send('progress', progress)
+      await page.waitFor(1000)
     }
 
-    // Loop through each link and download invoice.
-    // for (const element of _.flattenDeep(DETAIL_LISTS)) {
-    //   await page.goto(element, { timeout: 0 })
-    //
-    //   await page.waitFor(1 * 2000)
-    //
-    //   // Check if month is set. If yes then store all invoices in that folder.
-    //   const month = await page.evaluate(() => {
-    //     const timedate = document.querySelector('#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.page-lead > div').innerText
-    //     return timedate
-    //   })
-    //
-    //   // Separate out words into array
-    //   const splittedMonth = _.words(month)
-    //   await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: `./invoices/${splittedMonth[4]}-${splittedMonth[6]}`})
-    //
-    //   // Check if request button is hidden
-    //   const invoiceRequest = await page.evaluate(() => {
-    //     return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden')
-    //   })
-    //
-    //   // Check if request invoice button is hidden. Then go ahead download it.
-    //   if (invoiceRequest) {
-    //     await page.waitFor(1 * 2000)
-    //     await page.click(DOWNLOAD_INVOICE)
-    //   }
-    //
-    //   await page.waitFor(1 * 2000)
-    // }
+    for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
+      if (jetpack.exists(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`)) {
+        jetpack.rename(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`, `${DETAIL_ITEMS[i].invoice_date}.pdf`)
+      }
+    }
   }
 
   await browser.close()

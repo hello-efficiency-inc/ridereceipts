@@ -63,7 +63,14 @@
         </label>
       </li>
       <li :class="{ current: form === 'INVOICE_COUNT', 'form--show': form === 'INVOICE_COUNT' }">
-        <div>{{ invoice_count }}</div>
+        <div class="form-wraps__fields-label">
+          We found {{ invoice_count }} invoices !
+          <br/>
+          <span v-if="percent">
+            Downloading please wait ....
+            {{ percent }}%
+          </span>
+        </div>
       </li>
       <li :class="{ current: form === 'ERROR', 'form--show': form === 'ERROR' }">
         <label class="form-wraps__fields-label fs-anim-upper" for="q1">Oops seems like your IP Address is banned temporary. Please try again later.</label>
@@ -105,7 +112,8 @@ export default {
       filter_confirm: null,
       download_invoice: null,
       download: null,
-      invoice_count: null
+      invoice_count: null,
+      percent: 0
     }
   },
   components: {
@@ -139,6 +147,9 @@ export default {
     })
     this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
       this.invoice_count = data
+    })
+    this.$electron.ipcRenderer.on('progress', (event, data) => {
+      this.percent = data
     })
   },
   methods: {
@@ -250,7 +261,7 @@ export default {
     position: relative;
   }
 
-  & > li label.form-wraps__fields-label {
+  & > li .form-wraps__fields-label {
     display: inline-block;
     padding: 0 5px 1em 0;
     font-weight: 700;
