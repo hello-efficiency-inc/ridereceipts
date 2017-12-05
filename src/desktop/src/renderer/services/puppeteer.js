@@ -304,6 +304,7 @@ export default async function () {
       if (tripItem.length > 0) {
         DETAIL_ITEMS.push(tripItem[0])
       }
+      await page.waitFor(1000)
     }
 
     DETAIL_ITEMS.map((item) => {
