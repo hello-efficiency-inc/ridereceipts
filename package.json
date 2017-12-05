@@ -60,6 +60,7 @@
     "emoji-data-css": "^1.0.1",
     "fs-jetpack": "^1.2.0",
     "moment": "^2.19.3",
+    "moment-timezone": "^0.5.14",
     "node-sass": "^4.7.2",
     "normalize-scss": "^7.0.0",
     "puppeteer": "^0.13.0",

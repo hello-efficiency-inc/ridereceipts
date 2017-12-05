@@ -69,6 +69,10 @@ ipcMain.on('invoiceTotal', (event, status) => {
   event.sender.send('invoiceTotal', status)
 })
 
+ipcMain.on('progress', (event, status) => {
+  event.sender.send('progress', status)
+})
+
 ipcMain.on('email', (event, data) => {
   event.sender.send('emaildata', data)
 })
