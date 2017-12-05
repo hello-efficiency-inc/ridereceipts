@@ -97,7 +97,6 @@ export default async function () {
   const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a'
   const SUBMIT_FILTER = '#trip-filterer-button'
   const DOWNLOAD_INVOICE_TRIP = '#data-invoice-btn-download'
-  // const DASHBOARD_PAGE = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.one-fifth.page-sidebar.hidden--portable > ul > li.soft--ends > div.center-block.three-quarters.push-half--bottom > div > img'
   const useDataDir = jetpack.cwd(remote.app.getAppPath()).cwd(remote.app.getPath('desktop'))
   const documentDir = jetpack.cwd(remote.app.getPath('documents'))
   const platform = os.platform()
