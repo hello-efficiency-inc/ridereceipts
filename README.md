@@ -1,8 +1,9 @@
-<p align="center"><img src="uber-run.png" width="150" alt="Uber Run"></p>
+<p align="center"><img src="/uber-run.png" alt="Uber Run"></p>
 
 <p align="center">
 <a href="https://codeclimate.com/github/break-enter/uberrun/maintainability"><img src="https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability" /></a>
 </p>
+
 
 > Simple automation desktop app to download and organize your tax invoices from Uber.
 
