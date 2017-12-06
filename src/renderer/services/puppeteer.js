@@ -32,60 +32,13 @@ const desktopAgents = ['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (
   'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
 
 
-
-
-async function getEmail () {
-  const email = new Promise((resolve, reject) => {
-    ipcRenderer.once('emaildata', (event, data) => {
+async function listenEvent (eventname) {
+  const data = new Promise((resolve, reject) => {
+    ipcRenderer.once(eventname, (event, data) => {
       resolve(data)
     })
   })
-  return email
-}
-
-async function getPassword () {
-  const password = new Promise((resolve, reject) => {
-    ipcRenderer.once('passdata', (event, data) => {
-      resolve(data)
-    })
-  })
-  return password
-}
-
-async function getCode () {
-  const code = new Promise((resolve) => {
-    ipcRenderer.once('codedata', (event, data) => {
-      resolve(data)
-    })
-  })
-  return code
-}
-
-async function getFilterConfirm () {
-  const confirm = new Promise((resolve) => {
-    ipcRenderer.once('filterconfirmation', (event, data) => {
-      resolve(data)
-    })
-  })
-  return confirm
-}
-
-async function getMonth () {
-  const month = new Promise((resolve) => {
-    ipcRenderer.once('monthdata', (event, data) => {
-      resolve(data)
-    })
-  })
-  return month
-}
-
-async function downloadInvoice () {
-  const confirm = new Promise((resolve) => {
-    ipcRenderer.once('downloadconfirmation', (event, data) => {
-      resolve(data)
-    })
-  })
-  return confirm
+  return data
 }
 
 async function evaluateList (page) {
@@ -194,7 +147,7 @@ export default async function () {
   // Login Account
   await page.click(EMAIL_SELECTOR)
   ipcRenderer.send('form', EMAIL)
-  await page.keyboard.type(await getEmail(), {delay: 50})
+  await page.keyboard.type(await listenEvent('emaildata'), {delay: 50})
   await page.click(NEXT_BUTTON)
   await page.waitFor(1000)
 
@@ -211,20 +164,20 @@ export default async function () {
   await page.waitForSelector(PASSWORD_SELECTOR)
   await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)
-  await page.keyboard.type(await getPassword(), {delay: 100})
+  await page.keyboard.type(await listenEvent('passdata'), {delay: 100})
   await page.click(NEXT_BUTTON)
 
   await page.waitForSelector(PASSWORD_SELECTOR, { hidden: true })
   await page.click(SMS_SELECTOR)
   ipcRenderer.send('form', VERIFICATION)
-  await page.keyboard.type(await getCode(), { delay: 100 })
+  await page.keyboard.type(await listenEvent('codedata'), { delay: 100 })
   await page.click(VERIFY_BUTTON)
 
   await page.waitForNavigation()
   ipcRenderer.send('form', FILTER_CONFIRM)
 
   await page.waitForSelector(FILTER_TRIPS)
-  if (await getFilterConfirm() === 'true') {
+  if (await listenEvent('filterconfirmation') === 'true') {
     await page.click(FILTER_TRIPS)
 
     await page.waitFor(1000)
@@ -248,7 +201,7 @@ export default async function () {
     ipcRenderer.send('form', FILTER_OPTION)
     ipcRenderer.send('filters', filterList)
 
-    const filterSelected = await getMonth()
+    const filterSelected = await listenEvent('monthdata')
 
     const FILTER_ITEM = `label[for=${filterSelected}]`
 
@@ -262,7 +215,7 @@ export default async function () {
 
   await page.waitFor(1000)
 
-  if (await downloadInvoice()) {
+  if (await listenEvent('downloadconfirmation')) {
     await page.waitFor(1000)
 
     const DETAIL_LISTS = []
@@ -346,9 +299,8 @@ export default async function () {
 
     ipcRenderer.send('dircleanup', DIR_CLEANUP)
 
-    const invoiceFilePath = `${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`
-
     for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
+      const invoiceFilePath = `${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`
       if (jetpack.exists(invoiceFilePath)) {
         jetpack.rename(invoiceFilePath, `${DETAIL_ITEMS[i].invoice_date}.pdf`)
       }
