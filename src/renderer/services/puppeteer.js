@@ -31,6 +31,9 @@ const desktopAgents = ['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (
   'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
   'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
 
+
+
+
 async function getEmail () {
   const email = new Promise((resolve, reject) => {
     ipcRenderer.once('emaildata', (event, data) => {
@@ -343,9 +346,11 @@ export default async function () {
 
     ipcRenderer.send('dircleanup', DIR_CLEANUP)
 
+    const invoiceFilePath = `${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`
+
     for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
-      if (jetpack.exists(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`)) {
-        jetpack.rename(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`, `${DETAIL_ITEMS[i].invoice_date}.pdf`)
+      if (jetpack.exists(invoiceFilePath)) {
+        jetpack.rename(invoiceFilePath, `${DETAIL_ITEMS[i].invoice_date}.pdf`)
       }
     }
 
