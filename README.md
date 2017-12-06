@@ -25,3 +25,7 @@ npm run build
 npm run lint
 
 ```
+
+#### Credits
+
+Adi Ofr ([@breakenterTo](https://twitter.com/breakenterTo)) for Logo and all design related contributions.
