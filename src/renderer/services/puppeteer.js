@@ -85,6 +85,23 @@ async function downloadInvoice () {
   return confirm
 }
 
+async function evaluateList (page) {
+  // Evaluate list of detail links
+  const list = await page.evaluate(() => {
+    const data = []
+    const detailElement = document.querySelectorAll('#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a')
+
+    for (let i = 0; i < detailElement.length; ++i) {
+      const tripId = detailElement[i].href.split('/')
+      data.push(`https://riders.uber.com/get_invoices?q={"trip_uuid": "${tripId[4]}"}`)
+    }
+
+    return data
+  })
+
+  return list
+}
+
 export default async function () {
   // Selectors Needed
   const EMAIL_SELECTOR = '#useridInput'
@@ -254,17 +271,7 @@ export default async function () {
       await page.waitFor(1000)
 
       // Evaluate list of detail links
-      const list = await page.evaluate(() => {
-        const data = []
-        const detailElement = document.querySelectorAll('#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a')
-
-        for (let i = 0; i < detailElement.length; ++i) {
-          const tripId = detailElement[i].href.split('/')
-          data.push(`https://riders.uber.com/get_invoices?q={"trip_uuid": "${tripId[4]}"}`)
-        }
-
-        return data
-      })
+      const list = await evaluateList(page)
 
       DETAIL_LISTS.push(list)
 
@@ -281,15 +288,7 @@ export default async function () {
       await page.waitFor(1 * 1000)
 
       // Evaluate list of detail links
-      const list = await page.evaluate(() => {
-        const data = []
-        const detailElement = document.querySelectorAll('#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a')
-        for (let i = 0; i < detailElement.length; ++i) {
-          const tripId = detailElement[i].href.split('/')
-          data.push(`https://riders.uber.com/get_invoices?q={"trip_uuid": "${tripId[4]}"}`)
-        }
-        return data
-      })
+      const list = await evaluateList(page)
 
       DETAIL_LISTS.push(list)
     }
