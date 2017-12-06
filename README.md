@@ -2,9 +2,11 @@
 <img src="uber-run.png" width="150" alt="Uber Run">
 </p>
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability)](https://codeclimate.com/github/break-enter/uberrun/maintainability)
+<p align="center">
+<a href="https://codeclimate.com/github/break-enter/uberrun/maintainability"><img src="https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability" /></a>
+</p>
 
-> Simple automation desktop app to download all invoices from Uber and save it in folder.
+> Simple automation desktop app to download and organize your tax invoices from Uber.
 
 #### Build Setup
 
@@ -26,4 +28,4 @@ npm run lint
 
 #### Credits
 
-- Adi Ofr ([@breakenterTo](https://twitter.com/breakenterTo)) for logo and all design related contributions.
+- Adi Ofir ([@breakenterTo](https://twitter.com/breakenterTo)) for logo and all design related contributions.
