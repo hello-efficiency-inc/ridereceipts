@@ -1,5 +1,3 @@
-# Uber Run
-
 <p align="center"><img src="uber-run.png" width="150"></p>
 
 > Simple automation desktop app to download all invoices from Uber and save it in folder.
