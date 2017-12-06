@@ -62,14 +62,29 @@
           <div class="radio__indicator"></div>
         </label>
       </li>
+      <li :class="{ current: form === 'GENERATE_LINKS', 'form--show': form === 'GENERATE_LINKS' }">
+        <div class="form-wraps__fields-label">
+          Please wait. Generating invoice download links ....
+        </div>
+      </li>
       <li :class="{ current: form === 'INVOICE_COUNT', 'form--show': form === 'INVOICE_COUNT' }">
         <div class="form-wraps__fields-label">
-          We found {{ invoice_count }} invoices !
+          We found {{ invoice_count }} invoices ! 🎉 🎉 🎉
           <br/>
           <span v-if="percent">
-            Downloading please wait ....
+            Downloading please wait ....<br/>
             {{ percent }}%
           </span>
+          <span v-if="dir_cleanup">
+            Organizing files in proper directories.
+          </span>
+        </div>
+      </li>
+      <li :class="{ current: form === 'DOWNLOADED', 'form--show': form === 'DOWNLOADED' }">
+        <div class="form-wraps__fields-label">
+          Congratulations we downloaded {{ invoice_count }} invoices ! 🎉 🎉 🎉
+          <br/>
+          You can access all of invoices at <pre>Documents/Uber Invoices</pre>
         </div>
       </li>
       <li :class="{ current: form === 'ERROR', 'form--show': form === 'ERROR' }">
@@ -112,7 +127,9 @@ export default {
       filter_confirm: null,
       download_invoice: null,
       download: null,
+      downloaded: null,
       invoice_count: null,
+      dir_cleanup: null,
       percent: 0
     }
   },
@@ -124,9 +141,12 @@ export default {
       return this.form === null
     },
     currentForm () {
-      return this.form === 'PASSWORD' || 'VERIFICATION' || 'FILTER_CONFIRM' || 'FILTER_OPTION' || 'ERROR'
+      return this.form === 'PASSWORD' || 'VERIFICATION' || 'FILTER_CONFIRM' || 'FILTER_OPTION' || 'DOWNLOAD_INVOICE' || 'INVOICE_COUNT' || 'ERROR' || 'DOWNLOADED'
     },
     errorButton () {
+      if (this.form === 'DOWNLOADED') {
+        return true
+      }
       if (this.form === 'ERROR') {
         return true
       }
@@ -151,6 +171,10 @@ export default {
     this.$electron.ipcRenderer.on('progress', (event, data) => {
       this.percent = data
     })
+    this.$electron.ipcRenderer.on('dircleanup', (event, data) => {
+      this.percent = null
+      this.dir_cleanup = true
+    })
   },
   methods: {
     setCurrentForm (data) {
@@ -165,6 +189,8 @@ export default {
       this.filter_options = null
       this.filter_confirm = null
       this.download_invoice = null
+      this.percent = null
+      this.dir_cleanup = false
       puppeteer()
     },
     submitForm () {

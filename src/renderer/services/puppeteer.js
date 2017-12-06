@@ -14,7 +14,9 @@ const FILTER_CONFIRM = 'FILTER_CONFIRM'
 const FILTER_OPTION = 'FILTER_OPTION'
 const DOWNLOAD_INVOICE = 'DOWNLOAD_INVOICE'
 const INVOICE_COUNT = 'INVOICE_COUNT'
-// const INVOICE_PROGRESS = 'INVOICE_PROGRESS'
+const DIR_CLEANUP = 'DIR_CLEANUP'
+const GENERATE_LINKS = 'GENERATE_LINKS'
+const DOWNLOADED = 'DOWNLOADED'
 const ERROR = 'ERROR'
 
 // Desktop User Agents
@@ -130,7 +132,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -245,6 +247,8 @@ export default async function () {
 
     const DETAIL_LISTS = []
 
+    ipcRenderer.send('form', GENERATE_LINKS)
+
     // Loop Until next button is disabled
     while (await page.$(NEXT_PAGINATION_INACTIVE_BUTTON) === null) {
       await page.waitFor(1000)
@@ -308,8 +312,9 @@ export default async function () {
     }
 
     DETAIL_ITEMS.map((item) => {
+      item.year = moment(item.invoice_date).format('YYYY')
       item.month = moment(item.invoice_date).format('MMMM')
-      item.invoice_date = moment(item.invoice_date).tz('America/Toronto').format('MMMM-DD-YYYY_hh-mm-ss-a')
+      item.invoice_date = moment(item.invoice_date).tz('America/Toronto').format('MMMM-DD-YYYY_hh-mm-a')
       return item
     })
 
@@ -317,7 +322,7 @@ export default async function () {
     ipcRenderer.send('invoiceTotal', DETAIL_ITEMS.length)
 
     for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
-      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].month}/`)})
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/`)})
       await page.goto(`https://riders.uber.com/trips/${DETAIL_ITEMS[i].trip_uid}`, {waitUntil: 'networkidle2'})
 
       const progress = _.ceil(_.divide(i, DETAIL_ITEMS.length) * 100)
@@ -337,11 +342,15 @@ export default async function () {
       await page.waitFor(1000)
     }
 
+    ipcRenderer.send('dircleanup', DIR_CLEANUP)
+
     for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
-      if (jetpack.exists(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`)) {
-        jetpack.rename(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`, `${DETAIL_ITEMS[i].invoice_date}.pdf`)
+      if (jetpack.exists(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`)) {
+        jetpack.rename(`${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`, `${DETAIL_ITEMS[i].invoice_date}.pdf`)
       }
     }
+
+    ipcRenderer.send('form', DOWNLOADED)
   }
 
   await browser.close()
