@@ -56,8 +56,6 @@
     }
   },
   "dependencies": {
-    "electron-chromedriver": "^1.7.1",
-    "emoji-data-css": "^1.0.1",
     "fs-jetpack": "^1.2.0",
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",
@@ -65,7 +63,6 @@
     "normalize-scss": "^7.0.0",
     "puppeteer": "^0.13.0",
     "sass-loader": "^6.0.6",
-    "unzip": "^0.1.11",
     "util": "^0.10.3",
     "vue": "^2.5.9",
     "vue-electron": "^1.0.6",
