@@ -28,4 +28,4 @@ npm run lint
 
 #### Credits
 
-Adi Ofr ([@breakenterTo](https://twitter.com/breakenterTo)) for Logo and all design related contributions.
+- Adi Ofr ([@breakenterTo](https://twitter.com/breakenterTo)) for Logo and all design related contributions.
