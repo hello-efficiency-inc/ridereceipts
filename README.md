@@ -1,7 +1,9 @@
 <p align="center"><img src="uber-run.png" width="150"></p>
 
 <p align="center">
-<a href="https://codeclimate.com/github/break-enter/uberrun/maintainability"><img src="https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability" /></a>
+<a href="https://codeclimate.com/github/break-enter/uberrun/maintainability">
+<img src="https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability" />
+</a>
 </p>
 
 > Simple automation desktop app to download all invoices from Uber and save it in folder.
