@@ -4,6 +4,9 @@
 <a href="https://codeclimate.com/github/break-enter/uberrun/maintainability">
 <img src="https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability" />
 </a>
+<a href="https://david-dm.org/break-enter/uberrun">
+<img src="https://david-dm.org/break-enter/uberrun.svg" />
+</a>
 </p>
 
 
