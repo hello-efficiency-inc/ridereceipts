@@ -7,6 +7,7 @@
 <a href="https://david-dm.org/break-enter/uberrun">
 <img src="https://david-dm.org/break-enter/uberrun.svg" />
 </a>
+<a href="https://david-dm.org/break-enter/uberrun?type=dev" title="devDependencies status"><img src="https://david-dm.org/break-enter/uberrun/dev-status.svg"/></a>
 </p>
 
 
