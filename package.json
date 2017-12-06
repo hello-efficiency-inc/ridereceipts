@@ -67,11 +67,10 @@
     "sass-loader": "^6.0.6",
     "unzip": "^0.1.11",
     "util": "^0.10.3",
-    "vue": "^2.3.3",
+    "vue": "^2.5.9",
     "vue-electron": "^1.0.6",
-    "vue-router": "^2.5.3",
-    "vue-simple-spinner": "^1.2.8",
-    "webdriverio": "^4.9.11"
+    "vue-router": "^3.0.1",
+    "vue-simple-spinner": "^1.2.8"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
