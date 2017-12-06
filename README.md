@@ -33,6 +33,6 @@ npm run lint
 
 ```
 
-#### Credits
+## Credits
 
 - Adi Ofir ([@breakenterTo](https://twitter.com/breakenterTo)) for logo and all design related contributions.
