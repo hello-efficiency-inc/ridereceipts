@@ -31,7 +31,7 @@ const desktopAgents = ['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (
   'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
   'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
 
-
+// Listen to Event Once
 async function listenEvent (eventname) {
   const data = new Promise((resolve, reject) => {
     ipcRenderer.once(eventname, (event, data) => {
@@ -41,6 +41,7 @@ async function listenEvent (eventname) {
   return data
 }
 
+// Grab list
 async function evaluateList (page) {
   // Evaluate list of detail links
   const list = await page.evaluate(() => {
