@@ -1,10 +1,7 @@
 {
-  "name": "uberinvoice",
+  "name": "uberrun",
   "version": "1.0.0",
   "author": "Meet Godhani <meet@breakenter.com>",
-  "contributors": [
-    "Adi Ofir <adi@breakenter.com> (https://www.breakenter.com)"
-  ],
   "description": "Simple automation desktop app to download all invoices from Uber and save it in folder.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
@@ -56,6 +53,7 @@
     }
   },
   "dependencies": {
+    "bootstrap": "4.0.0-beta.2",
     "fs-jetpack": "^1.2.0",
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",

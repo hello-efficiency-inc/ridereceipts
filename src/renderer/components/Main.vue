@@ -1,166 +1,161 @@
 <template>
-  <div class="form-wrap">
-    <div class="form-wrap__title">
-      <h1>Uber Invoice</h1>
+  <div>
+     <div class="splash" v-if="form === null">
+      <img id="logo" src="static/uber-run.svg" alt="Uber Run">
+      <spinner></spinner>
     </div>
-    <form class="form-wrap__form form--fullscreen">
-      <div v-if="loading" class="spinner">
-        <spinner></spinner>
-      </div>
-      <ol :class="{'form--show-next': currentForm }"
-      class="form-wrap__fields">
-      <li :class="{ current: form === 'EMAIL', 'form--show': form === 'EMAIL' }">
-        <label class="form-wraps__fields-label fs-anim-upper" for="email">What's your email?</label>
-        <input class="fs-anim-lower" id="email" @keyup.enter="submitForm()" v-model="email" name="email"
-        type="text"
-        placeholder="Email address" required/>
-      </li>
-      <li :class="{ current: form === 'PASSWORD', 'form--show': form === 'PASSWORD' }">
-        <label class="form-wraps__fields-label fs-anim-upper" for="password">What's your password?</label>
-        <input class="fs-anim-lower" id='password' @keyup.enter="submitForm()" v-model="password"
-        name="password" type="password"
-        placeholder="Password" required/>
-      </li>
-      <li :class="{ current: form === 'VERIFICATION', 'form--show': form === 'VERIFICATION' }">
-        <label class="form-wraps__fields-label fs-anim-upper" for="verification">Please enter your verification code that is sent to you via SMS</label>
-        <input class="fs-anim-lower" id="verification" @keyup.enter="submitForm()" v-model="verification"
-        name="verification"
-        type="text" placeholder="Verification code"
-        required/>
-      </li>
-      <li :class="{ current: form === 'FILTER_CONFIRM', 'form--show': form === 'FILTER_CONFIRM' }">
-        <label class="form-wraps__fields-label fs-anim-upper" for="filter">Do you want to filter your trips ?</label>
-        <label class="form-wrap__radio" for="yes">
-          Yes
-          <input @keyup.enter="submitForm()" v-model="filter_confirm" id="yes" value="true" type="radio" required/>
-          <div class="radio__indicator"></div>
-        </label>
-        <label class="form-wrap__radio" for="no">
-          No
-          <input @keyup.enter="submitForm()" v-model="filter_confirm" id="no" value="false" type="radio" required/>
-          <div class="radio__indicator"></div>
-        </label>
-      </li>
-      <li :class="{ current: form === 'FILTER_OPTION', 'form--show': form === 'FILTER_OPTION' }">
-        <label class="form-wraps__fields-label fs-anim-upper" for="filter">Please choose a month you want to retrieve invoices from.</label>
-        <label v-for="filter in filters" class="form-wrap__radio" :for="filter.id">
-          {{ filter.name }}
-          <input @keyup.enter="submitForm()" v-model="filter_option" :id="filter.id" :value="filter.id" type="radio" required/>
-          <div class="radio__indicator"></div>
-        </label>
-      </li>
-      <li :class="{ current: form === 'DOWNLOAD_INVOICE', 'form--show': form === 'DOWNLOAD_INVOICE' }">
-        <label class="form-wraps__fields-label fs-anim-upper" for="download">Do you want to download invoices ?</label>
-        <label class="form-wrap__radio">
-          Yes
-          <input @keyup.enter="submitForm()" v-model="download_invoice" value="true" type="radio" required/>
-          <div class="radio__indicator"></div>
-        </label>
-        <label class="form-wrap__radio">
-          No
-          <input @keyup.enter="submitForm()" v-model="download_invoice" value="false" type="radio" required/>
-          <div class="radio__indicator"></div>
-        </label>
-      </li>
-      <li :class="{ current: form === 'GENERATE_LINKS', 'form--show': form === 'GENERATE_LINKS' }">
-        <div class="form-wraps__fields-label">
-          Please wait. Generating invoice download links ....
+    <div class="wrapper" v-if="form !== null">
+     <nav class="navbar navbar-light bg-transparent">
+       <div class="navbar-brand">
+         <img src="static/uber-run.svg" alt="Uber Run" width="80">
         </div>
-      </li>
-      <li :class="{ current: form === 'INVOICE_COUNT', 'form--show': form === 'INVOICE_COUNT' }">
-        <div class="form-wraps__fields-label">
-          We found {{ invoice_count }} invoices ! 🎉 🎉 🎉
-          <br/>
-          <span v-if="percent">
-            Downloading please wait ....<br/>
-            {{ percent }}%
-          </span>
-          <span v-if="dir_cleanup">
-            Organizing files in proper directories.
-          </span>
+      </nav>
+      <transition name="fade">
+        <div class="jumbotron form--container" v-if="form === 'EMAIL'">
+          <div class="form-group">
+            <label for="email">Please enter your email address.</label>
+            <input type="email" class="form-control form-control-lg"  @keyup.enter="submitForm()" v-model="fields.email" id="email" aria-describedby="emai" placeholder="Enter email">
+          </div>
         </div>
-      </li>
-      <li :class="{ current: form === 'DOWNLOADED', 'form--show': form === 'DOWNLOADED' }">
-        <div class="form-wraps__fields-label">
-          Congratulations we downloaded {{ invoice_count }} invoices ! 🎉 🎉 🎉
-          <br/>
-          You can access all of invoices at <pre>Documents/Uber Invoices</pre>
+         <div class="jumbotron form--container" v-if="form === 'PASSWORD'">
+          <div class="form-group">
+            <label for="password">Please enter your password.</label>
+            <input type="password" class="form-control form-control-lg" @keyup.enter="submitForm()" id="password" v-model="fields.password" aria-describedby="password" placeholder="Enter Password">
+          </div>
         </div>
-      </li>
-      <li :class="{ current: form === 'ERROR', 'form--show': form === 'ERROR' }">
-        <label class="form-wraps__fields-label fs-anim-upper" for="q1">Oops seems like your IP Address is banned temporary. Please try again later.</label>
-      </li>
-      <li :class="{ current: form === 'CHROME_NOT_FOUND', 'form--show': form === 'CHROME_NOT_FOUND' }">
-        <div class="form-wraps__fields-label fs-anim-upper">
-          Oops! seems like you don't have chromium installed. Please download it from
-          <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a> and place the extracted files at your desktop.
+        <div class="jumbotron form--container" v-if="form === 'VERIFICATION'">
+          <div class="form-group">
+            <label for="verification">Please enter your verification code that is sent to you via SMS</label>
+            <input type="text" class="form-control form-control-lg" @keyup.enter="submitForm()" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
+          </div>
         </div>
-        </li>
-      </ol>
-    </form>
-    <div v-if="!loading">
-      <div v-if="!errorButton" class="form-wrap__controls">
-        <button class="form-wrap__submit" @click="submitForm()">Continue</button>
-      </div>
-      <div v-if="errorButton" class="form-wrap__controls">
-        <button class="form-wrap__submit" @click="startAgain()">Start Again</button>
+        <div class="jumbotron form--container" v-if="form === 'FILTER_CONFIRM'">
+          <div class="form-group">
+            <label>Do you want to filter your trips ?</label>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" id="yes" value="true" checked>
+                Yes
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" id="no" value="false">
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'">
+          <div class="form-group">
+            <label>Please choose a month you want to retrieve invoices from.</label>
+            <div class="form-check">
+              <label v-for="filter in fields.filters" :key="filter.id" class="form-check-label">
+                <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" :id="filter.id" :value="filter.id" checked>
+                {{ filter.name }}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="jumbotron form--container" v-if="form === 'DOWNLOAD_INVOICE'">
+          <div class="form-group">
+            <label>Do you want to download invoices ?</label>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" name="filter" id="yes" value="true" checked>
+               Yes
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" name="filter" id="no" value="false">
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="jumbotron form--container" v-if="form === 'GENERATE_LINKS'">
+          <div class="form-group">
+            <label>Grabbing all invoice links from the website. Please wait ...</label>
+            <br/>
+            <spinner></spinner>
+          </div>
+        </div>
+        <div class="jumbotron form--container" v-if="form === 'INVOICE_COUNT'">
+          <div class="form-group">
+            <label>We found {{ fields.invoice_count }} invoices ! 🎉 🎉 🎉</label>
+            <br/>
+            <div class="progress" style="height: 30px;">
+              <div class="progress-bar" role="progressbar" :style="{ width: percent }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <p>Downloading invoices please wait ...</p>
+          </div>
+        </div>
+        <div class="jumbotron form--container" v-if="form === 'DOWNLOADED'">
+          <div class="form-group">
+            <label>Awesome downloaded all invoices ! 🎉 🎉 🎉</label>
+            <p class="invoice-link">To view all downloaded invoices <a href="" @click.stop.prevent="openInvoiceFolder()">Click here</a></p>
+          </div>
+        </div>
+        <div class="jumbotron form--container" v-if="form === 'ERROR'">
+          <div class="form-group">
+            <label>Oops seems like your IP Address is banned temporary. Please try again later.</label>
+          </div>
+        </div>
+        <div class="jumbotron form--container" v-if="form === 'CHROME_NOT_FOUND'">
+          <div class="form-group">
+            <label>
+              Oops! seems like you don't have chromium installed. Please download it from
+          <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a> and place the extracted folder on your desktop.
+            </label>
+          </div>
+        </div>
+      </transition>
+      <div class="submit-container">
+        <div class="container">
+          <div class="row">
+              <div class="col-md-12">
+                <div class="continue-btn float-right">
+                  <button type="button" v-if="!errorButton || hideContinue" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit">Continue</button>
+                  <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit">Start Again</button>
+                </div>
+              </div>
+           </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
-import puppeteer from '../services/puppeteer'
 import Spinner from 'vue-simple-spinner'
+import puppeteer from '../services/puppeteer'
+import jetpack from 'fs-jetpack'
 
 export default {
-  name: 'landing-page',
   data () {
     return {
-      spinnerColor: '#0B1E4E',
       form: null,
-      email: null,
-      password: null,
-      verification: null,
-      filters: null,
-      filter_option: null,
-      filter_confirm: null,
-      download_invoice: null,
-      download: null,
-      downloaded: null,
-      invoice_count: null,
-      dir_cleanup: null,
-      percent: 0
+      fields: {
+        email: null,
+        password: null,
+        verification_code: null,
+        filters: [],
+        filter_option: null,
+        filter_confirm: true,
+        download_invoice: true,
+        invoice_count: null
+      },
+      downloaded: false,
+      dir_cleanup: false
     }
   },
   components: {
     Spinner
   },
-  computed: {
-    loading () {
-      return this.form === null
-    },
-    currentForm () {
-      return this.form === 'PASSWORD' || 'VERIFICATION' || 'FILTER_CONFIRM' || 'FILTER_OPTION' || 'DOWNLOAD_INVOICE' || 'INVOICE_COUNT' || 'ERROR' || 'DOWNLOADED'
-    },
-    errorButton () {
-      if (this.form === 'DOWNLOADED') {
-        return true
-      }
-      if (this.form === 'ERROR') {
-        return true
-      }
-      if (this.form === 'CHROME_NOT_FOUND') {
-        return true
-      }
-      return false
-    }
-  },
   mounted () {
     puppeteer()
-
     this.$electron.ipcRenderer.on('form', (event, data) => {
-      this.setCurrentForm(data)
+      this.form = data
     })
     this.$electron.ipcRenderer.on('filters', (event, data) => {
       this.filters = data
@@ -176,292 +171,169 @@ export default {
       this.dir_cleanup = true
     })
   },
-  methods: {
-    setCurrentForm (data) {
-      this.form = data
+  computed: {
+    hideContinue () {
+      if (this.form === 'GENERATE_LINKS') {
+        return true
+      }
+
+      if (this.form === 'INVOICE_COUNT') {
+        return true
+      }
+
+      return false
     },
+    errorButton () {
+      if (this.form === 'DOWNLOADED') {
+        return true
+      }
+      if (this.form === 'ERROR') {
+        return true
+      }
+      if (this.form === 'CHROME_NOT_FOUND') {
+        return true
+      }
+      return false
+    }
+  },
+  methods: {
     startAgain () {
-      this.form = null
-      this.email = null
-      this.password = null
-      this.verification = null
-      this.filters = null
-      this.filter_options = null
-      this.filter_confirm = null
-      this.download_invoice = null
-      this.percent = null
-      this.dir_cleanup = false
+      this.fields = {}
       puppeteer()
+    },
+    openInvoiceFolder () {
+      const documentDir = jetpack.cwd(this.$electron.remote.app.getPath('documents'))
+      this.$electron.shell.openItem(documentDir.path('Uber Invoice'))
     },
     submitForm () {
       switch (this.form) {
         case 'EMAIL':
-          this.$electron.ipcRenderer.send('email', this.email)
+          this.$electron.ipcRenderer.send('email', this.fields.email)
           break
         case 'PASSWORD':
-          this.$electron.ipcRenderer.send('password', this.password)
+          this.$electron.ipcRenderer.send('password', this.fields.password)
           break
         case 'VERIFICATION':
-          this.$electron.ipcRenderer.send('code', this.verification)
+          this.$electron.ipcRenderer.send('code', this.fields.verification_code)
           break
         case 'FILTER_CONFIRM':
-          this.$electron.ipcRenderer.send('filter_confirm', this.filter_confirm)
+          this.$electron.ipcRenderer.send('filter_confirm', this.fields.filter_confirm)
           break
         case 'FILTER_OPTION':
-          this.$electron.ipcRenderer.send('filter_option', this.filter_option)
+          this.$electron.ipcRenderer.send('filter_option', this.fields.filter_option)
           break
         case 'DOWNLOAD_INVOICE':
-          this.$electron.ipcRenderer.send('download_invoice', this.download_invoice)
+          this.$electron.ipcRenderer.send('download_invoice', this.fields.download_invoice)
       }
     }
   }
 }
 </script>
-<style lang="scss">
-.form-wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
+<style lang="scss" scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
 
-  .form-wrap__submit {
-    display: block;
-    float: right;
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
+}
+
+.splash {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+
+  img {
+    height: 180px;
+    margin-bottom: 40px;
   }
 }
 
-.form-wrap__title {
+.bg-transparent {
+  background: transparent;
+}
+
+.submit-container {
   position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  padding: 40px;
   width: 100%;
-
-  h1 {
-    font-weight: 700;
-    font-size: 2.5em;
-    text-transform: uppercase;
-    margin: 0;
-  }
-}
-
-.form-wrap__form {
-  position: relative;
-  text-align: left;
-  font-size: 2.5em;
-}
-
-.form--fullscreen {
-  max-width: 960px;
-  top: 32%;
-  margin: 0 auto;
-  width: 70%;
-
-  .form-wrap__fields > li {
-    position: absolute;
-    width: 100%;
-  }
-}
-
-.form-wrap__fields {
-  position: relative;
-  margin: 0 auto;
-  padding: 0;
-  top: 0;
-  list-style: none;
-
-  & > li.current {
-    visibility: visible;
-  }
-
-  & > li {
-    position: relative;
-    z-index: 1;
-    margin: 0;
-    padding: 0;
-    border: none;
-    visibility: hidden;
-  }
-
-  & > li label {
-    position: relative;
-  }
-
-  & > li .form-wraps__fields-label {
-    display: inline-block;
-    padding: 0 5px 1em 0;
-    font-weight: 700;
-    pointer-events: none;
-  }
-
-  /* placeholder */
-  & input::-webkit-input-placeholder,
-  & textarea::-webkit-input-placeholder {
-    color: rgba(0, 0, 0, 0.3);
-  }
-
-  & input:-moz-placeholder,
-  & textarea:-moz-placeholder {
-    color: rgba(0, 0, 0, 0.3);
-  }
-
-  & input::-moz-placeholder,
-  & textarea::-moz-placeholder {
-    color: rgba(0, 0, 0, 0.3);
-  }
-
-  & input:-ms-input-placeholder,
-  & textarea:-ms-input-placeholder {
-    color: rgba(0, 0, 0, 0.3);
-  }
-
-  /* Hide placeholder when focused in Webkit browsers */
-  & input:focus::-webkit-input-placeholder {
-    color: transparent;
-  }
-
-}
-
-.form-wrap__fields input {
-  display: block;
-  margin: 0;
-  padding: 0 0 0.15em;
-  width: 100%;
-  border: none;
-  border-bottom: 2px solid rgba(0, 0, 0, 02);
-  background-color: transparent;
-  color: #0B1E4E;
-  text-overflow: ellipsis;
-  font-weight: bold;
-  font-size: 1.5em;
-  border-radius: 0;
-
-  &:focus {
-    box-shadow: none;
-    background: none;
-    outline: none;
-  }
-}
-
-button.form-wrap__submit {
-  position: absolute;
-  right: 0;
   bottom: 0;
-  margin: 0 40px 60px 0;
-  background: none;
-  font-size: 1.25rem;
-  padding: 0.6em 1.5em;
-  border: 3px solid #0B1E4E;
-  border-radius: 40px;
-  font-weight: 700;
-  color: rgba(0, 0, 0, 1);
-  transition: all 0.2s ease;
-  cursor: pointer;
+  height: 100px;
+  padding-top: 10px;
+}
 
-  &:hover {
-    background: #0B1E4E;
-    color: white;
-    outline: none;
-    box-shadow: none;
+.form--container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  min-height: 70vh;
+  padding: 3.5rem 8rem;
+
+  label:not(.form-check-label) {
+    font-size: 3em;
+    font-weight: 700;
+    margin-bottom: 15px;
+    line-height: 1.3;
   }
 
-  &:focus {
-    outline: none;
-    box-shadow: none;
+  .form-check-label {
+    font-size: 1.3em;
+    line-height: 1.3em;
   }
 
-  &:after {
+  input {
+    outline: none;
+    border: none;
+    border-bottom: 2px solid rgba(0, 0, 0, 02);
+    background-color: transparent;
+    border-radius: 0px;
+    font-size: 2.5em;
+    color: #0B1E4E;
+    text-overflow: ellipsis;
+    font-weight: bold;
+
+    &:focus {
+      box-shadow: none;
+      background: none;
+      outline: none;
+     }
+  }
+
+  p.invoice-link {
+    font-size: 1.5em;
+  }
+}
+
+.continue-btn {
+  button {
+    cursor: pointer;
+  }
+  p {
+    margin-top: 5px;
+  }
+
+  .btn--submit {
     position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    line-height: 3;
-    background: transparent;
-    text-align: center;
-    color: black;
-    content: 'or press ENTER';
-    font-size: 0.65em;
-    pointer-events: none;
+    padding: 0.6em 1.5em;
+    border-radius: 40px;
+    right: 10px;
+
+    &:after {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      line-height: 2;
+      background: transparent;
+      text-align: center;
+      color: black;
+      content: 'or press ENTER';
+      font-size: 0.85em;
+      pointer-events: none;
+      font-weight: 600;
+    }
   }
-}
-
-.form--show {
-  animation: animFadeIn 0.5s;
-}
-
-@keyframes animFadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.form--show-next {
-  animation: animMoveUpFromDown 0.4s both;
-}
-
-@keyframes animMoveUpFromDown {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.form-wrap__radio {
-  display: block;
-  position: relative;
-  padding-left: 30px;
-  margin-bottom: 15px;
-  cursor: pointer;
-  font-size: 24px;
-  font-weight: 400;
-}
-
-.form-wrap__radio input {
-  position: absolute;
-  z-index: -1;
-  opacity: 0;
-}
-
-.form-wrap__radio input:checked ~ .radio__indicator {
-  background: #2aa1c0;
-
-  &:after {
-    display: block;
-  }
-}
-
-.radio__indicator {
-  position: absolute;
-  top: 7px;
-  left: 0;
-  height: 20px;
-  width: 20px;
-  background: #e6e6e6;
-  border-radius: 50%;
-
-  &:after {
-    content: '';
-    display: none;
-    left: 7px;
-    top: 7px;
-    height: 6px;
-    width: 6px;
-    border-radius: 50%;
-    background: #fff;
-    position: relative;
-  }
-}
-
-.spinner {
-  padding-top:100px;
-  position: absolute;
-  top: 60%;
-  margin: 0 auto;
-  width: 100%;
 }
 </style>
