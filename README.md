@@ -16,6 +16,11 @@
 
 ![screenshot](/appscreen.png)
 
+## Requirements
+
+Since Electron is not 100% headless. We are using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer) to scrape website. 
+
+In order to make app work please download [Chromium](https://download-chromium.appspot.com/) and extract folder on your desktop.
 
 ## Developer Notes
 
