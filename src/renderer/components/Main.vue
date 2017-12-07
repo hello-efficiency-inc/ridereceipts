@@ -86,7 +86,7 @@
             <label>We found {{ fields.invoice_count }} invoices ! 🎉 🎉 🎉</label>
             <br/>
             <div class="progress" style="height: 30px;">
-              <div class="progress-bar" role="progressbar" :style="{ width: percent }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar" role="progressbar" :style="{ width: percent + '%' }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <p>Downloading invoices please wait ...</p>
           </div>
@@ -116,7 +116,7 @@
           <div class="row">
               <div class="col-md-12">
                 <div class="continue-btn float-right">
-                  <button type="button" v-if="!errorButton || hideContinue" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit">Continue</button>
+                  <button type="button" v-if="!errorButton" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit" :disabled="disableButton">Continue</button>
                   <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit">Start Again</button>
                 </div>
               </div>
@@ -145,6 +145,7 @@ export default {
         download_invoice: true,
         invoice_count: null
       },
+      percent: null,
       downloaded: false,
       dir_cleanup: false
     }
@@ -161,7 +162,7 @@ export default {
       this.filters = data
     })
     this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
-      this.invoice_count = data
+      this.fields.invoice_count = data
     })
     this.$electron.ipcRenderer.on('progress', (event, data) => {
       this.percent = data
@@ -172,15 +173,13 @@ export default {
     })
   },
   computed: {
-    hideContinue () {
+    disableButton () {
       if (this.form === 'GENERATE_LINKS') {
         return true
       }
-
       if (this.form === 'INVOICE_COUNT') {
         return true
       }
-
       return false
     },
     errorButton () {

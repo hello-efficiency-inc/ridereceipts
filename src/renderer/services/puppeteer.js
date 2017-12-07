@@ -281,7 +281,7 @@ export default async function () {
       await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/`)})
       await page.goto(`https://riders.uber.com/trips/${DETAIL_ITEMS[i].trip_uid}`, {waitUntil: 'networkidle2'})
 
-      const progress = _.ceil(_.divide(i, DETAIL_ITEMS.length) * 100)
+      const progress = i === (DETAIL_ITEMS.length - 1) ? _.ceil(_.divide(i + 1, DETAIL_ITEMS.length) * 100) : _.ceil(_.divide(i, DETAIL_ITEMS.length) * 100)
 
       // Check if request button is hidden
       const invoiceRequest = await page.evaluate(() => {
@@ -297,8 +297,6 @@ export default async function () {
       ipcRenderer.send('progress', progress)
       await page.waitFor(1000)
     }
-
-    ipcRenderer.send('dircleanup', DIR_CLEANUP)
 
     for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
       const invoiceFilePath = `${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`

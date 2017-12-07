@@ -102,10 +102,6 @@ ipcMain.on('filters', (event, data) => {
   event.sender.send('filters', data)
 })
 
-ipcMain.on('dircleanup', (event, data) => {
-  event.sender.send('dircleanup', data)
-})
-
 /**
  * Auto Updater
  *
