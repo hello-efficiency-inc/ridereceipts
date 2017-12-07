@@ -10,7 +10,7 @@
          <img src="static/uber-run.svg" alt="Uber Run" width="80">
         </div>
       </nav>
-      <transition-group tag="div" name="fade">
+      <transition name="fade">
         <div class="jumbotron form--container" v-if="form === 'EMAIL'">
           <div class="form-group">
             <label for="email">Please enter your email address.</label>
