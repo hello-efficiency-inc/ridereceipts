@@ -19,6 +19,14 @@
 
 ![screenshot](/appscreen.png)
 
+## Why
+
+For businesses and sole proprietors it is sometimes pain to download invoices for their taxes from Uber with their current user interface. They have to manually go each trip and download it.
+
+## Solution
+
+Automation. We made this desktop app to automate the task of downloading invoices and save it one place versus manually going to Uber account and scan through each and every trips in order to download invoice.
+
 ## Requirements
 
 Since Electron is not 100% headless. We are using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer) to scrape website.
