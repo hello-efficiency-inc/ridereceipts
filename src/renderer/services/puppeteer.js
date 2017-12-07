@@ -177,7 +177,7 @@ export default async function () {
   ipcRenderer.send('form', FILTER_CONFIRM)
 
   await page.waitForSelector(FILTER_TRIPS)
-  if (await listenEvent('filterconfirmation')) {
+  if (await listenEvent('filterconfirmation') !== 'false') {
     await page.click(FILTER_TRIPS)
 
     await page.waitFor(1000)
@@ -214,7 +214,7 @@ export default async function () {
 
   await page.waitFor(1000)
 
-  if (await listenEvent('downloadconfirmation')) {
+  if (await listenEvent('downloadconfirmation') !== 'false') {
     await page.waitFor(1000)
 
     const DETAIL_LISTS = []
