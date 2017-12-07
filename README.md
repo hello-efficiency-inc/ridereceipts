@@ -22,6 +22,10 @@ Since Electron is not 100% headless. We are using [Google Puppeteer](https://git
 
 In order to make app work please download [Chromium](https://download-chromium.appspot.com/) and extract folder on your desktop.
 
+## Limitation
+
+Currently program would grab invoices whatever is available on Uber's site. Invoices that are "*expired*" or has "*Request invoice*" option would be skipped from downloading.
+
 ## Developer Notes
 
 #### Build Setup
