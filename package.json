@@ -2,7 +2,7 @@
   "name": "uberrun",
   "version": "1.0.0",
   "author": "Meet Godhani <meet@breakenter.com>",
-  "description": "Simple automation desktop app to download all invoices from Uber and save it in folder.",
+  "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -19,8 +19,8 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "uberinvoice",
-    "appId": "org.breakenter.uberinvoice",
+    "productName": "uberrun",
+    "appId": "org.breakenter.uberrun",
     "directories": {
       "output": "build"
     },
@@ -58,10 +58,8 @@
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",
     "node-sass": "^4.7.2",
-    "normalize-scss": "^7.0.0",
     "puppeteer": "^0.13.0",
     "sass-loader": "^6.0.6",
-    "util": "^0.10.3",
     "vue": "^2.5.9",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
