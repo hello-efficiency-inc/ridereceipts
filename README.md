@@ -1,6 +1,9 @@
 <p align="center"><img src="/uber-run.png" alt="Uber Run" width="150"></p>
 
 <p align="center">
+<a href="https://travis-ci.org/break-enter/uberrun">
+<img src="https://travis-ci.org/break-enter/uberrun.svg?branch=master">
+</a>
 <a href="https://codeclimate.com/github/break-enter/uberrun/maintainability">
 <img src="https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability" />
 </a>
@@ -18,7 +21,7 @@
 
 ## Requirements
 
-Since Electron is not 100% headless. We are using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer) to scrape website. 
+Since Electron is not 100% headless. We are using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer) to scrape website.
 
 In order to make app work please download [Chromium](https://download-chromium.appspot.com/) and extract folder on your desktop.
 
