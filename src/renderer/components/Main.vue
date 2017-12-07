@@ -10,7 +10,7 @@
          <img src="static/uber-run.svg" alt="Uber Run" width="80">
         </div>
       </nav>
-      <transition name="fade">
+      <transition-group tag="div" name="fade">
         <div class="jumbotron form--container" v-if="form === 'EMAIL'">
           <div class="form-group">
             <label for="email">Please enter your email address.</label>
@@ -111,12 +111,12 @@
           </div>
         </div>
       </transition>
-      <div class="submit-container">
+      <div class="submit-container" v-if="!disableButton">
         <div class="container">
           <div class="row">
               <div class="col-md-12">
                 <div class="continue-btn float-right">
-                  <button type="button" v-if="!errorButton" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit" :disabled="disableButton">Continue</button>
+                  <button type="button" v-if="!errorButton" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit">Continue</button>
                   <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit">Start Again</button>
                 </div>
               </div>
