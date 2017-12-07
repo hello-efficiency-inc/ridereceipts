@@ -49,3 +49,7 @@ npm run lint
 ## Credits
 
 - Adi Ofir ([@breakenterTo](https://twitter.com/breakenterTo)) for logo and all design related contributions.
+
+## Support / Contribution
+
+Please feel free to give suggestion or report bug by [creating issue](https://github.com/break-enter/uberrun/issues) or letting me know on twitter [@mrgodhani](https://twitter.com/mrgodhani).
