@@ -159,7 +159,7 @@ export default {
       this.form = data
     })
     this.$electron.ipcRenderer.on('filters', (event, data) => {
-      this.filters = data
+      this.fields.filters = data
     })
     this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
       this.fields.invoice_count = data

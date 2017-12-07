@@ -55,9 +55,11 @@
   "dependencies": {
     "bootstrap": "4.0.0-beta.2",
     "fs-jetpack": "^1.2.0",
+    "jquery": "^3.2.1",
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",
     "node-sass": "^4.7.2",
+    "popper.js": "^1.12.9",
     "puppeteer": "^0.13.0",
     "sass-loader": "^6.0.6",
     "vue": "^2.5.9",
