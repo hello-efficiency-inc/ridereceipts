@@ -11,42 +11,42 @@
         </div>
       </nav>
       <transition name="fade">
-        <div class="jumbotron form--container" v-if="form === 'EMAIL'">
+        <div class="jumbotron form--container" v-if="form === 'EMAIL'" key="email">
           <div class="form-group">
             <label for="email">Please enter your email address.</label>
             <input type="email" class="form-control form-control-lg"  @keyup.enter="submitForm()" v-model="fields.email" id="email" aria-describedby="emai" placeholder="Enter email">
           </div>
         </div>
-         <div class="jumbotron form--container" v-if="form === 'PASSWORD'">
+         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
             <label for="password">Please enter your password.</label>
             <input type="password" class="form-control form-control-lg" @keyup.enter="submitForm()" id="password" v-model="fields.password" aria-describedby="password" placeholder="Enter Password">
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'VERIFICATION'">
+        <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
           <div class="form-group">
             <label for="verification">Please enter your verification code that is sent to you via SMS</label>
             <input type="text" class="form-control form-control-lg" @keyup.enter="submitForm()" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'FILTER_CONFIRM'">
+        <div class="jumbotron form--container" v-if="form === 'FILTER_CONFIRM'" key="filterconfirm">
           <div class="form-group">
             <label>Do you want to filter your trips ?</label>
             <div class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" id="yes" value="true" checked>
+                <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" value="true" checked>
                 Yes
               </label>
             </div>
             <div class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" id="no" value="false">
+                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" value="false">
                 No
               </label>
             </div>
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'">
+        <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
           <div class="form-group">
             <label>Please choose a month you want to retrieve invoices from.</label>
             <div v-for="filter in fields.filters" :key="filter.id"  class="form-check">
@@ -57,7 +57,7 @@
             </div>
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'DOWNLOAD_INVOICE'">
+        <div class="jumbotron form--container" v-if="form === 'DOWNLOAD_INVOICE'" key="downloadinvoice">
           <div class="form-group">
             <label>Do you want to download invoices ?</label>
             <div class="form-check">
@@ -74,14 +74,14 @@
             </div>
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'GENERATE_LINKS'">
+        <div class="jumbotron form--container" v-if="form === 'GENERATE_LINKS'" key="generatelinks">
           <div class="form-group">
             <label>Grabbing all invoice links from the website. Please wait ...</label>
             <br/>
             <spinner></spinner>
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'INVOICE_COUNT'">
+        <div class="jumbotron form--container" v-if="form === 'INVOICE_COUNT'" key="invoicecounts">
           <div class="form-group">
             <label>We found {{ fields.invoice_count }} invoices ! 🎉 🎉 🎉</label>
             <br/>
@@ -91,18 +91,18 @@
             <p>Downloading invoices please wait ...</p>
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'DOWNLOADED'">
+        <div class="jumbotron form--container" v-if="form === 'DOWNLOADED'" key="downloaded">
           <div class="form-group">
             <label>Awesome downloaded all invoices ! 🎉 🎉 🎉</label>
             <p class="invoice-link">To view all downloaded invoices <a href="" @click.stop.prevent="openInvoiceFolder()">Click here</a></p>
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'ERROR'">
+        <div class="jumbotron form--container" v-if="form === 'ERROR'" :key="error">
           <div class="form-group">
             <label>Oops seems like your IP Address is banned temporary. Please try again later.</label>
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'CHROME_NOT_FOUND'">
+        <div class="jumbotron form--container" v-if="form === 'CHROME_NOT_FOUND'" key="chromenotfound">
           <div class="form-group">
             <label>
               Oops! seems like you don't have chromium installed. Please download it from
