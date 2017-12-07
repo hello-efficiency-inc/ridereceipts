@@ -49,9 +49,9 @@
         <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'">
           <div class="form-group">
             <label>Please choose a month you want to retrieve invoices from.</label>
-            <div class="form-check">
-              <label v-for="filter in fields.filters" :key="filter.id" class="form-check-label">
-                <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" :id="filter.id" :value="filter.id" checked>
+            <div v-for="filter in fields.filters" :key="filter.id"  class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" :id="filter.id" :value="filter.id" checked>
                 {{ filter.name }}
               </label>
             </div>

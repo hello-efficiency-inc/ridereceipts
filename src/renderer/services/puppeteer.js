@@ -177,7 +177,7 @@ export default async function () {
   ipcRenderer.send('form', FILTER_CONFIRM)
 
   await page.waitForSelector(FILTER_TRIPS)
-  if (await listenEvent('filterconfirmation') === 'true') {
+  if (await listenEvent('filterconfirmation')) {
     await page.click(FILTER_TRIPS)
 
     await page.waitFor(1000)
@@ -187,7 +187,6 @@ export default async function () {
       const elements = document.querySelectorAll('#trip-filterer > div:nth-child(1) > div > div.grid__item.three-quarters.palm-one-whole input')
       if (elements.length > 0) {
         for (let i = 0; i < elements.length; i++) {
-          console.log(document.querySelector(`label[for='${elements[i].id}']`))
           const item = {
             id: elements[i].id,
             name: document.querySelector(`label[for='${elements[i].id}']`).innerText
