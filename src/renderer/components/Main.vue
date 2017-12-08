@@ -34,7 +34,7 @@
             <label>Do you want to filter your trips ?</label>
             <div class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" value="true" checked>
+                <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" value="true">
                 Yes
               </label>
             </div>
@@ -51,7 +51,7 @@
             <label>Please choose a month you want to retrieve invoices from.</label>
             <div v-for="filter in fields.filters" :key="filter.id"  class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" :id="filter.id" :value="filter.id" checked>
+                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" :id="filter.id" :value="filter.id">
                 {{ filter.name }}
               </label>
             </div>
@@ -62,7 +62,7 @@
             <label>Do you want to download invoices ?</label>
             <div class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" id="download" value="true" checked>
+                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" id="download" value="true">
                Yes
               </label>
             </div>
