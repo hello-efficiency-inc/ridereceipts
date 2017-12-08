@@ -82,7 +82,7 @@ export default async function () {
   switch (platform) {
     case 'darwin':
       exec = `${useDataDir.path()}/chrome-mac/Chromium.app/Contents/MacOS/Chromium`
-      //  exec = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      //  exec = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
       break
     case 'linux':
       exec = `${useDataDir.path()}/chrome-linux/chrome`

@@ -17,7 +17,7 @@
 > Simple automation desktop app to download and organize your tax invoices from Uber.
 
 
-![screenshot](/appscreen.png)
+![screenshot](/uberrun.gif)
 
 ## Why
 
