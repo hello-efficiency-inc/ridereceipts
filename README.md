@@ -70,3 +70,6 @@ npm run lint
 ## Support / Contribution
 
 Please feel free to give suggestion or report bug by [creating issue](https://github.com/break-enter/uberrun/issues) or letting me know on twitter [@mrgodhani](https://twitter.com/mrgodhani).
+
+## License
+[MIT](https://github.com/break-enter/uberrun/blob/master/LICENSE)
