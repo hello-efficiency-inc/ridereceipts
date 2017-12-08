@@ -43,6 +43,14 @@ You might also be halted by Uber's rate limiting. So please try to use this appl
 
 This app doesn't store any credentials anywhere. This application is fully without database and it is solely automating on chromium browser as you type.
 
+## Features
+
+- [x] Categorized by User Account
+- [x] Categorized by Year and Month
+- [x] Invoice File name by Month, Date and Timestamp
+- [x] Filter by specific Month available on Uber
+- [ ] Configurable Path to Save Invoices
+
 ## Developer Notes
 
 #### Build Setup
