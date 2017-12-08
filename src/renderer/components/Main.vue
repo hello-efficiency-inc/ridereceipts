@@ -13,13 +13,13 @@
       <transition name="fade">
         <div class="jumbotron form--container" v-if="form === 'EMAIL'" key="email">
           <div class="form-group">
-            <label for="email">Please enter your email address.</label>
+            <label for="email">Please enter your Uber account email address.</label>
             <input type="email" class="form-control form-control-lg"  @keyup.enter="submitForm()" v-model="fields.email" id="email" aria-describedby="emai" placeholder="Enter email">
           </div>
         </div>
          <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
-            <label for="password">Please enter your password.</label>
+            <label for="password">Please enter your Uber account password.</label>
             <input type="password" class="form-control form-control-lg" @keyup.enter="submitForm()" id="password" v-model="fields.password" aria-describedby="password" placeholder="Enter Password">
           </div>
         </div>
@@ -51,7 +51,7 @@
             <label>Please choose a month you want to retrieve invoices from.</label>
             <div v-for="filter in fields.filters" :key="filter.id"  class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" :id="filter.id" :value="filter.id" checked>
+                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" :id="filter.id" :value="filter.id" checked>
                 {{ filter.name }}
               </label>
             </div>
@@ -62,13 +62,13 @@
             <label>Do you want to download invoices ?</label>
             <div class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" name="filter" id="yes" value="true" checked>
+                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" id="download" value="true" checked>
                Yes
               </label>
             </div>
             <div class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" name="filter" id="no" value="false">
+                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" id="download" value="false">
                 No
               </label>
             </div>

@@ -147,7 +147,8 @@ export default async function () {
   // Login Account
   await page.click(EMAIL_SELECTOR)
   ipcRenderer.send('form', EMAIL)
-  await page.keyboard.type(await listenEvent('emaildata'), {delay: 50})
+  const accountEmail = await listenEvent('emaildata')
+  await page.keyboard.type(accountEmail, {delay: 50})
   await page.click(NEXT_BUTTON)
   await page.waitFor(1000)
 
@@ -276,7 +277,7 @@ export default async function () {
     ipcRenderer.send('invoiceTotal', DETAIL_ITEMS.length)
 
     for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
-      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/`)})
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${accountEmail}/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/`)})
       await page.goto(`https://riders.uber.com/trips/${DETAIL_ITEMS[i].trip_uid}`, {waitUntil: 'networkidle2'})
 
       const progress = i === (DETAIL_ITEMS.length - 1) ? _.ceil(_.divide(i + 1, DETAIL_ITEMS.length) * 100) : _.ceil(_.divide(i, DETAIL_ITEMS.length) * 100)
@@ -297,7 +298,7 @@ export default async function () {
     }
 
     for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
-      const invoiceFilePath = `${documentDir.path()}/Uber Invoice/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`
+      const invoiceFilePath = `${documentDir.path()}/Uber Invoice/${accountEmail}/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`
       if (jetpack.exists(invoiceFilePath)) {
         jetpack.rename(invoiceFilePath, `${DETAIL_ITEMS[i].invoice_date}.pdf`)
       }
