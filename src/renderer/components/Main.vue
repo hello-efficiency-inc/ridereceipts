@@ -141,8 +141,8 @@ export default {
         verification_code: null,
         filters: [],
         filter_option: null,
-        filter_confirm: true,
-        download_invoice: true,
+        filter_confirm: null,
+        download_invoice: null,
         invoice_count: null
       },
       percent: null,
