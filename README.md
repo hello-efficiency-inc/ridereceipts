@@ -35,9 +35,13 @@ In order to make app work please download [Chromium](https://download-chromium.a
 
 ## Limitation
 
-Currently program would grab invoices whatever is available on Uber's site. Invoices that are "*expired*" or has "*Request invoice*" option would be skipped from downloading.
+Currently program would grab invoices whatever is available on Uber's site. Invoices that are "*expired*", *cancelled* or has "*Request invoice*" option would be skipped from downloading.
 
 You might also be halted by Uber's rate limiting. So please try to use this application in certain amount of gap.
+
+## Note
+
+This app doesn't store any credentials anywhere. This application is fully without database and it is solely automating on chromium browser as you type.
 
 ## Developer Notes
 

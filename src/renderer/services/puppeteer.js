@@ -105,7 +105,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -223,7 +223,7 @@ export default async function () {
 
     // Loop Until next button is disabled
     while (await page.$(NEXT_PAGINATION_INACTIVE_BUTTON) === null) {
-      await page.waitFor(1000)
+      await page.waitFor(800)
 
       // Evaluate list of detail links
       const list = await evaluateList(page)
@@ -240,7 +240,7 @@ export default async function () {
     await page.waitFor(1000)
 
     if (await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
-      await page.waitFor(1 * 1000)
+      await page.waitFor(1 * 800)
 
       // Evaluate list of detail links
       const list = await evaluateList(page)
@@ -262,7 +262,7 @@ export default async function () {
       if (tripItem.length > 0) {
         DETAIL_ITEMS.push(tripItem[0])
       }
-      await page.waitFor(1000)
+      await page.waitFor(800)
     }
 
     DETAIL_ITEMS.map((item) => {
