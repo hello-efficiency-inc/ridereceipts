@@ -80,6 +80,12 @@ npm run lint
 
 ```
 
+*Open Source projects used*
+
+- [Electron Vue](https://github.com/SimulatedGREG/electron-vue)
+- [Google Puppeteer](https://github.com/GoogleChrome/puppeteer)
+- [Bootstrap](https://getbootstrap.com/)
+
 ## Credits
 
 - Adi Ofir ([@breakenterTo](https://twitter.com/breakenterTo)) for logo and all design related contributions.
