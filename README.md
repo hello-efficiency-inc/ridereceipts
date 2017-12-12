@@ -23,6 +23,8 @@
 
 MacOS - [https://github.com/break-enter/uberrun/releases](https://github.com/break-enter/uberrun/releases)
 
+Chromium - See Requirement below
+
 Linux and Windows build coming soon
 
 ## Why
