@@ -19,6 +19,11 @@
 
 ![screenshot](/uberrun.gif)
 
+### Download
+
+MacOS - [https://github.com/break-enter/uberrun/releases](https://github.com/break-enter/uberrun/releases)
+Linux and Windows build coming soon
+
 ## Why
 
 For businesses and sole proprietors it is sometimes pain to download invoices for their taxes from Uber with their current user interface. They have to manually go each trip and download it.
@@ -35,7 +40,7 @@ In order to make app work please download [Chromium](https://download-chromium.a
 
 ## Limitation
 
-Currently program would grab invoices whatever is available on Uber's site. Invoices that are "*expired*", *cancelled* or has "*Request invoice*" option would be skipped from downloading.
+Currently program would grab invoices whatever is available on Uber's site. Invoices that are "*expired*", *cancelled*, Uber Eats or has "*Request invoice*" option would be skipped from downloading.
 
 You might also be halted by Uber's rate limiting. So please try to use this application in certain amount of gap.
 
@@ -49,6 +54,7 @@ This app doesn't store any credentials anywhere. This application is fully witho
 - [x] Categorized by Year and Month
 - [x] Invoice File name by Month, Date and Timestamp
 - [x] Filter by specific Month available on Uber
+- [ ] Including Uber eats invoice
 - [ ] Configurable Path to Save Invoices
 
 ## Developer Notes
