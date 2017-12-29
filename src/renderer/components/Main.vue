@@ -1,31 +1,38 @@
 <template>
   <div>
-     <div class="splash" v-if="form === null">
-      <img id="logo" src="static/uber-run.svg" alt="Uber Run">
-      <spinner></spinner>
+    <transition name="fade">
+    <div class="splash" v-if="form === null">
+      <div class="wrap-content">
+        <img id="logo" src="static/uber-run.svg" alt="Uber Run">
+        <p>Download your Uber invoices automatically.</p>
+        <br/>
+        <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started">Get Started</button></p>
+        <spinner v-if="loading"></spinner>
+      </div>
     </div>
+  </transition>
     <div class="wrapper" v-if="form !== null">
-     <nav class="navbar navbar-light bg-transparent">
-       <div class="navbar-brand">
-         <img src="static/uber-run.svg" alt="Uber Run" width="80">
+      <nav class="navbar navbar-light bg-transparent">
+        <div class="navbar-brand">
+          <img src="static/uber-run.svg" alt="Uber Run" width="100">
         </div>
       </nav>
       <transition name="fade">
         <div class="jumbotron form--container" v-if="form === 'EMAIL'" key="email">
           <div class="form-group">
-            <label for="email">Please enter your Uber account email address.</label>
+            <label for="email">Enter the email address associated with your Uber account</label>
             <input type="email" class="form-control form-control-lg"  @keyup.enter="submitForm()" v-model="fields.email" id="email" aria-describedby="emai" placeholder="Enter email">
           </div>
         </div>
-         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
+        <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
-            <label for="password">Please enter your Uber account password.</label>
+            <label for="password">Enter the password for your Uber account</label>
             <input type="password" class="form-control form-control-lg" @keyup.enter="submitForm()" id="password" v-model="fields.password" aria-describedby="password" placeholder="Enter Password">
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
           <div class="form-group">
-            <label for="verification">Please enter your verification code that is sent to you via SMS</label>
+            <label for="verification">Enter the Uber verification code sent to you via SMS</label>
             <input type="text" class="form-control form-control-lg" @keyup.enter="submitForm()" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
           </div>
         </div>
@@ -63,7 +70,7 @@
             <div class="form-check">
               <label class="form-check-label">
                 <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" id="download" value="true">
-               Yes
+                Yes
               </label>
             </div>
             <div class="form-check">
@@ -106,7 +113,7 @@
           <div class="form-group">
             <label>
               Oops! seems like you don't have chromium installed. Please download it from
-          <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a> and place the extracted folder on your desktop.
+              <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a> and place the extracted folder on your desktop.
             </label>
           </div>
         </div>
@@ -114,13 +121,13 @@
       <div class="submit-container" v-if="!disableButton">
         <div class="container">
           <div class="row">
-              <div class="col-md-12">
-                <div class="continue-btn float-right">
-                  <button type="button" v-if="!errorButton" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit">Continue</button>
-                  <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit">Start Again</button>
-                </div>
+            <div class="col-md-12">
+              <div class="continue-btn float-right">
+                <button type="button" v-if="!errorButton" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit">Continue</button>
+                <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit">Start Again</button>
               </div>
-           </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -135,6 +142,7 @@ export default {
   data () {
     return {
       form: null,
+      loading: false,
       fields: {
         email: null,
         password: null,
@@ -154,8 +162,8 @@ export default {
     Spinner
   },
   mounted () {
-    puppeteer()
     this.$electron.ipcRenderer.on('form', (event, data) => {
+      this.loading = false
       this.form = data
     })
     this.$electron.ipcRenderer.on('filters', (event, data) => {
@@ -198,6 +206,7 @@ export default {
   methods: {
     startAgain () {
       this.fields = {}
+      this.loading = true
       puppeteer()
     },
     openInvoiceFolder () {
@@ -243,10 +252,30 @@ export default {
   align-items: center;
   flex-direction: column;
   min-height: 100vh;
+  text-align: center;
+
+  .wrap-content {
+    width: 360px;
+  }
 
   img {
     height: 180px;
     margin-bottom: 40px;
+  }
+
+  p {
+    font-size: 25px;
+    color: #2c32c4;
+  }
+
+  .btn-started {
+    background: #d800d0;
+    color: white;
+    border-radius: 30px;
+    padding-left: 25px;
+    padding-right: 25px;
+    text-transform: uppercase;
+    font-size: 16px;
   }
 }
 
@@ -271,10 +300,12 @@ export default {
   padding: 3.5rem 8rem;
 
   label:not(.form-check-label) {
-    font-size: 3em;
+    font-size: 2.5em;
+    text-align: center;
     font-weight: 700;
-    margin-bottom: 15px;
-    line-height: 1.3;
+    margin-bottom: 35px;
+    line-height: 1.2;
+    color: black;
   }
 
   .form-check-label {
@@ -288,16 +319,18 @@ export default {
     border-bottom: 2px solid rgba(0, 0, 0, 02);
     background-color: transparent;
     border-radius: 0px;
-    font-size: 2.5em;
-    color: #0B1E4E;
+    font-size: 2em;
+    color: black;
     text-overflow: ellipsis;
     font-weight: bold;
+    border-image:  linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
+    border-image-slice: 1;
 
     &:focus {
       box-shadow: none;
       background: none;
       outline: none;
-     }
+    }
   }
 
   p.invoice-link {
