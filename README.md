@@ -47,7 +47,7 @@ Uber Run works on both Mac and PC. Please note we built this on Mac, so it may s
 
 ## Limitation
 
-Uber Run can only download the invoices that exist in your Uber account. Invoices that are cancelled, have not been issued, or have a *Request Invoice* button as in UberEATS will not download.
+Uber Run can only download the invoices that exist in your Uber account. Invoices that are cancelled, have not been issued, or have a "*Request Invoice*" button as in UberEATS will not download.
 
 Since Uber Run scrapes your user account on the website, you may be halted by Uber's rate limiting. Please do not run the app more than once in the same hour. If your IP address gets banned, don’t panic, this is only temporary and you’ll be able to access Uber’s website again in an hour or so. We recommend downloading all the invoices you need in one go. After all, that’s why we built it!
 
