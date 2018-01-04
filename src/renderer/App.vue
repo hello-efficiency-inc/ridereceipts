@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 export default {
   name: 'uberrun'
 }
@@ -12,6 +14,7 @@ export default {
 
 <style lang="scss">
 @import 'node_modules/bootstrap/scss/bootstrap';
+@import url('https://use.fontawesome.com/releases/v5.0.2/css/all.css');
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700');
 
 $font-family-sans-serif: 'Source Sans Pro';

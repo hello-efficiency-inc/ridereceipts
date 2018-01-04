@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
 import { remote } from 'electron'
@@ -6,11 +7,12 @@ import jetpack from 'fs-jetpack'
 
 import './helpers/external_links.js'
 
+Vue.use(BootstrapVue)
 const app = remote.app
 const documentDir = jetpack.cwd(app.getPath('documents'))
 
-if (!jetpack.exists(documentDir.path('Uber Invoice'))) {
-  jetpack.dir(documentDir.path('Uber Invoice'))
+if (!jetpack.exists(documentDir.path('Uber Run'))) {
+  jetpack.dir(documentDir.path('Uber Run'))
 }
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))

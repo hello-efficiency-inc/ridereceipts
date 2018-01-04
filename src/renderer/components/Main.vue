@@ -26,7 +26,7 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
-            <label for="password">Enter the password for your Uber account</label>
+            <label for="password">Enter the password for your Uber<br/>account <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation script that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
             <input type="password" class="form-control form-control-lg" @keyup.enter="submitForm()" id="password" v-model="fields.password" aria-describedby="password" placeholder="Enter Password">
           </div>
         </div>
@@ -56,12 +56,10 @@
         <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
           <div class="form-group">
             <label>Please choose a month you want to retrieve invoices from.</label>
-            <div v-for="filter in fields.filters" :key="filter.id"  class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" :id="filter.id" :value="filter.id">
-                {{ filter.name }}
-              </label>
-            </div>
+            <label v-for="filter in fields.filters" :key="filter.id" class="form-check-label">
+              <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" :value="filter.id">
+              {{ filter.name }}
+            </label>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'DOWNLOAD_INVOICE'" key="downloadinvoice">
@@ -83,25 +81,24 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'GENERATE_LINKS'" key="generatelinks">
           <div class="form-group">
-            <label>Grabbing all invoice links from the website. Please wait ...</label>
+            <label>Checking your Uber account for all available invoices within the time frame you selected. Please wait.</label>
             <br/>
             <spinner></spinner>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'INVOICE_COUNT'" key="invoicecounts">
           <div class="form-group">
-            <label>We found {{ fields.invoice_count }} invoices ! 🎉 🎉 🎉</label>
+            <label>{{ downloadingMessage }}</label>
             <br/>
             <div class="progress" style="height: 30px;">
               <div class="progress-bar" role="progressbar" :style="{ width: percent + '%' }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
-            <p>Downloading invoices please wait ...</p>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'DOWNLOADED'" key="downloaded">
           <div class="form-group">
-            <label>Awesome downloaded all invoices ! 🎉 🎉 🎉</label>
-            <p class="invoice-link">To view all downloaded invoices <a href="" @click.stop.prevent="openInvoiceFolder()">Click here</a></p>
+            <label>Success ! All invoices have been<br/> downloaded for you.</label>
+            <p class="text-center"><button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started">View Invoices</button></p>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'ERROR'" :key="error">
@@ -150,9 +147,9 @@ export default {
         filters: [],
         filter_option: null,
         filter_confirm: null,
-        download_invoice: null,
-        invoice_count: null
+        download_invoice: null
       },
+      downloadingMessage: null,
       percent: null,
       downloaded: false,
       dir_cleanup: false
@@ -167,10 +164,10 @@ export default {
       this.form = data
     })
     this.$electron.ipcRenderer.on('filters', (event, data) => {
-      this.fields.filters = data
+      this.setFilter(data)
     })
     this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
-      this.fields.invoice_count = data
+      this.downloadMessage(data)
     })
     this.$electron.ipcRenderer.on('progress', (event, data) => {
       this.percent = data
@@ -182,6 +179,9 @@ export default {
   },
   computed: {
     disableButton () {
+      if (this.form === 'DOWNLOADED') {
+        return true
+      }
       if (this.form === 'GENERATE_LINKS') {
         return true
       }
@@ -191,9 +191,6 @@ export default {
       return false
     },
     errorButton () {
-      if (this.form === 'DOWNLOADED') {
-        return true
-      }
       if (this.form === 'ERROR') {
         return true
       }
@@ -204,6 +201,32 @@ export default {
     }
   },
   methods: {
+    setFilter (data) {
+      this.fields.filters = data
+    },
+    downloadMessage (count) {
+      if (count > 76) {
+        this.downloadingMessage = `Wow this could take a while ! Let Uber Run do its thing and we'll let you know once your ${count} are in order.`
+      } else if (count > 56 && count <= 76) {
+        this.downloadingMessage = `Whoa ${count} invoices! Put your feet up and relax. This will take a while, my friend.`
+      } else if (count > 46 && count <= 56) {
+        this.downloadingMessage = `You have ${count} invoices. Give the little robot some time to download and organize them for you.`
+      } else if (count > 36 && count <= 46) {
+        this.downloadingMessage = `Whoa someone's been busy! You have ${count} invoices. Downloading now.`
+      } else if (count > 26 && count <= 36) {
+        this.downloadingMessage = `You have ${count} invoices. Downloading and organizing them for you now, Sweet deal, huh ?`
+      } else if (count > 16 && count <= 26) {
+        this.downloadingMessage = `You have ${count} invoices. Pour yourself a drink and relax. We got this.`
+      } else if (count > 11 && count <= 16) {
+        this.downloadingMessage = `You have ${count} invoices!\nRun, Uber Run!`
+      } else if (count > 6 && count <= 11) {
+        this.downloadingMessage = `You have ${count} invoices!\nThis should download fairly quickly.`
+      } else if (count > 0 && count <= 6) {
+        this.downloadingMessage = `Running this app for just ${count} invoices?\nThat's okay, we won't judge ;)`
+      } else {
+        this.downloadingMessage = `You have 0 invoices within the time frame you selected.`
+      }
+    },
     startAgain () {
       this.fields = {}
       this.loading = true
@@ -211,7 +234,7 @@ export default {
     },
     openInvoiceFolder () {
       const documentDir = jetpack.cwd(this.$electron.remote.app.getPath('documents'))
-      this.$electron.shell.openItem(documentDir.path('Uber Invoice'))
+      this.$electron.shell.openItem(documentDir.path('Uber Run'))
     },
     submitForm () {
       switch (this.form) {
@@ -267,16 +290,16 @@ export default {
     font-size: 25px;
     color: #2c32c4;
   }
+}
 
-  .btn-started {
-    background: #d800d0;
-    color: white;
-    border-radius: 30px;
-    padding-left: 25px;
-    padding-right: 25px;
-    text-transform: uppercase;
-    font-size: 16px;
-  }
+.btn-started {
+  background: #d800d0;
+  color: white;
+  border-radius: 30px;
+  padding-left: 25px;
+  padding-right: 25px;
+  text-transform: uppercase;
+  font-size: 16px;
 }
 
 .bg-transparent {
@@ -309,6 +332,8 @@ export default {
   }
 
   .form-check-label {
+    display: block;
+    margin-bottom: 10px;
     font-size: 1.3em;
     line-height: 1.3em;
   }
@@ -336,6 +361,14 @@ export default {
   p.invoice-link {
     font-size: 1.5em;
   }
+}
+
+.progress {
+  border-radius: 1rem;
+}
+
+.progress-bar {
+  background: linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
 }
 
 .continue-btn {
@@ -367,5 +400,12 @@ export default {
       font-weight: 600;
     }
   }
+}
+
+.fa-question-circle {
+  color: #e3e3e3;
+  font-size: 18px;
+  top: -10px;
+  position: relative;
 }
 </style>

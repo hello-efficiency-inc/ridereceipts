@@ -181,7 +181,7 @@ export default async function () {
   if (await listenEvent('filterconfirmation') !== 'false') {
     await page.click(FILTER_TRIPS)
 
-    await page.waitFor(1000)
+    await page.waitFor(2000)
     // Fetch list of available filters
     const filterList = await page.evaluate(() => {
       let data = []
@@ -205,8 +205,7 @@ export default async function () {
 
     const FILTER_ITEM = `label[for=${filterSelected}]`
 
-    await page.waitFor(1000)
-
+    await page.waitFor(2000)
     await page.click(FILTER_ITEM)
     await page.click(SUBMIT_FILTER)
   }
@@ -263,7 +262,7 @@ export default async function () {
       if (tripItem.length > 0) {
         DETAIL_ITEMS.push(tripItem[0])
       }
-      await page.waitFor(800)
+      await page.waitFor(1000)
     }
 
     DETAIL_ITEMS.map((item) => {
@@ -273,14 +272,16 @@ export default async function () {
       return item
     })
 
+    const uniqItems = _.uniqBy(DETAIL_ITEMS, 'invoice_date')
+
     ipcRenderer.send('form', INVOICE_COUNT)
-    ipcRenderer.send('invoiceTotal', DETAIL_ITEMS.length)
+    ipcRenderer.send('invoiceTotal', uniqItems.length)
 
-    for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
-      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Invoice/${accountEmail}/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/`)})
-      await page.goto(`https://riders.uber.com/trips/${DETAIL_ITEMS[i].trip_uid}`, {waitUntil: 'networkidle2'})
+    for (let i = 0; i < uniqItems.length; ++i) {
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/`)})
+      await page.goto(`https://riders.uber.com/trips/${uniqItems[i].trip_uid}`, {waitUntil: 'networkidle2'})
 
-      const progress = i === (DETAIL_ITEMS.length - 1) ? _.ceil(_.divide(i + 1, DETAIL_ITEMS.length) * 100) : _.ceil(_.divide(i, DETAIL_ITEMS.length) * 100)
+      const progress = i === (uniqItems.length - 1) ? _.ceil(_.divide(i + 1, uniqItems.length) * 100) : _.ceil(_.divide(i, uniqItems.length) * 100)
 
       // Check if request button is hidden
       const invoiceRequest = await page.evaluate(() => {
@@ -289,18 +290,18 @@ export default async function () {
 
       // Check if request invoice button is hidden. Then go ahead download it.
       if (invoiceRequest) {
-        await page.waitFor(1 * 2000)
+        await page.waitFor(1 * 3000)
         await page.click(DOWNLOAD_INVOICE_TRIP)
       }
 
       ipcRenderer.send('progress', progress)
-      await page.waitFor(1000)
+      await page.waitFor(2000)
     }
 
-    for (let i = 0; i < DETAIL_ITEMS.length; ++i) {
-      const invoiceFilePath = `${documentDir.path()}/Uber Invoice/${accountEmail}/${DETAIL_ITEMS[i].year}/${DETAIL_ITEMS[i].month}/invoice-${DETAIL_ITEMS[i].invoice_number}.pdf`
+    for (let i = 0; i < uniqItems.length; ++i) {
+      const invoiceFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/invoice-${uniqItems[i].invoice_number}.pdf`
       if (jetpack.exists(invoiceFilePath)) {
-        jetpack.rename(invoiceFilePath, `${DETAIL_ITEMS[i].invoice_date}.pdf`)
+        jetpack.rename(invoiceFilePath, `${uniqItems[i].invoice_date}.pdf`)
       }
     }
 
