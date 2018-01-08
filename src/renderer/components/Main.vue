@@ -36,45 +36,37 @@
             <input type="text" class="form-control form-control-lg" @keyup.enter="submitForm()" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'FILTER_CONFIRM'" key="filterconfirm">
-          <div class="form-group">
-            <label>Do you want to filter your trips ?</label>
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" value="true">
-                Yes
-              </label>
-            </div>
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_confirm" name="filter" value="false">
-                No
-              </label>
-            </div>
-          </div>
-        </div>
         <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
           <div class="form-group">
-            <label>Please choose a month you want to retrieve invoices from.</label>
-            <label v-for="filter in fields.filters" :key="filter.id" class="form-check-label">
-              <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" :value="filter.id">
-              {{ filter.name }}
-            </label>
-          </div>
-        </div>
-        <div class="jumbotron form--container" v-if="form === 'DOWNLOAD_INVOICE'" key="downloadinvoice">
-          <div class="form-group">
-            <label>Do you want to download invoices ?</label>
+            <label>Which invoices would you like to <br/> download ? <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a Request Invoice button (as in UberEats) will not be included'" title="Limitations"></i></label>
             <div class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" id="download" value="true">
-                Yes
+                <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="previousyear">
+                Previous Year
               </label>
             </div>
             <div class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" @keyup.enter="submitForm()" v-model="fields.download_invoice" type="radio" id="download" value="false">
-                No
+                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="currentyear">
+                Current Year
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="lastthreemonths">
+                Last 3 Months
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="lastmonth">
+                Last Month
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="all">
+                All
               </label>
             </div>
           </div>
@@ -144,10 +136,7 @@ export default {
         email: null,
         password: null,
         verification_code: null,
-        filters: [],
-        filter_option: null,
-        filter_confirm: null,
-        download_invoice: null
+        filter_option: null
       },
       downloadingMessage: null,
       percent: null,
@@ -162,9 +151,6 @@ export default {
     this.$electron.ipcRenderer.on('form', (event, data) => {
       this.loading = false
       this.form = data
-    })
-    this.$electron.ipcRenderer.on('filters', (event, data) => {
-      this.setFilter(data)
     })
     this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
       this.downloadMessage(data)
@@ -201,9 +187,6 @@ export default {
     }
   },
   methods: {
-    setFilter (data) {
-      this.fields.filters = data
-    },
     downloadMessage (count) {
       if (count > 76) {
         this.downloadingMessage = `Wow this could take a while ! Let Uber Run do its thing and we'll let you know once your ${count} are in order.`
@@ -247,14 +230,9 @@ export default {
         case 'VERIFICATION':
           this.$electron.ipcRenderer.send('code', this.fields.verification_code)
           break
-        case 'FILTER_CONFIRM':
-          this.$electron.ipcRenderer.send('filter_confirm', this.fields.filter_confirm)
-          break
         case 'FILTER_OPTION':
           this.$electron.ipcRenderer.send('filter_option', this.fields.filter_option)
           break
-        case 'DOWNLOAD_INVOICE':
-          this.$electron.ipcRenderer.send('download_invoice', this.fields.download_invoice)
       }
     }
   }

@@ -86,16 +86,8 @@ ipcMain.on('code', (event, data) => {
   event.sender.send('codedata', data)
 })
 
-ipcMain.on('filter_confirm', (event, data) => {
-  event.sender.send('filterconfirmation', data)
-})
-
 ipcMain.on('filter_option', (event, data) => {
-  event.sender.send('monthdata', data)
-})
-
-ipcMain.on('download_invoice', (event, data) => {
-  event.sender.send('downloadconfirmation', data)
+  event.sender.send('filteroption', data)
 })
 
 ipcMain.on('filters', (event, data) => {
