@@ -189,7 +189,7 @@ export default {
   methods: {
     downloadMessage (count) {
       if (count > 76) {
-        this.downloadingMessage = `Wow this could take a while ! Let Uber Run do its thing and we'll let you know once your ${count} are in order.`
+        this.downloadingMessage = `Wow this could take a while! Let Uber Run do its thing and we'll let you know once your ${count} invoices are in order.`
       } else if (count > 56 && count <= 76) {
         this.downloadingMessage = `Whoa ${count} invoices! Put your feet up and relax. This will take a while, my friend.`
       } else if (count > 46 && count <= 56) {
@@ -197,15 +197,17 @@ export default {
       } else if (count > 36 && count <= 46) {
         this.downloadingMessage = `Whoa someone's been busy! You have ${count} invoices. Downloading now.`
       } else if (count > 26 && count <= 36) {
-        this.downloadingMessage = `You have ${count} invoices. Downloading and organizing them for you now, Sweet deal, huh ?`
+        this.downloadingMessage = `You have ${count} invoices. Downloading and organizing them for you now. Sweet deal, huh?`
       } else if (count > 16 && count <= 26) {
         this.downloadingMessage = `You have ${count} invoices. Pour yourself a drink and relax. We got this.`
       } else if (count > 11 && count <= 16) {
         this.downloadingMessage = `You have ${count} invoices!\nRun, Uber Run!`
       } else if (count > 6 && count <= 11) {
-        this.downloadingMessage = `You have ${count} invoices!\nThis should download fairly quickly.`
-      } else if (count > 0 && count <= 6) {
+        this.downloadingMessage = `You have ${count} invoices! This should download fairly quickly.`
+      } else if (count > 1 && count <= 6) {
         this.downloadingMessage = `Running this app for just ${count} invoices?\nThat's okay, we won't judge ;)`
+      } else if (count === 1) {
+        this.downloadingMessage = `Running this app for just ${count} invoice?\nThat's okay, we won't judge ;)`
       } else {
         this.downloadingMessage = `You have 0 invoices within the time frame you selected.`
       }
