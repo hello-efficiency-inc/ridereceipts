@@ -74,6 +74,7 @@ export default async function () {
   // Selectors Needed
   const EMAIL_SELECTOR = '#useridInput'
   const PASSWORD_SELECTOR = '#password'
+  const EMAIL_ERROR = '#error-caption'
   const SMS_SELECTOR = '#verificationCode'
   const NEXT_BUTTON = '#app-body > div > div:nth-child(1) > form > button'
   const VERIFY_BUTTON = '#app-body > div > div > form > button'
