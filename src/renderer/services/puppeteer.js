@@ -16,17 +16,31 @@ const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
 const ERROR = 'ERROR'
 
-// Desktop User Agents
-const desktopAgents = ['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0.1 Safari/602.2.14',
-  'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36',
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36',
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
+// function getLast3Months () {
+//   var monthNames = [
+//     'January',
+//     'February',
+//     'March',
+//     'April',
+//     'May',
+//     'June',
+//     'July',
+//     'August',
+//     'September',
+//     'October',
+//     'November',
+//     'December'
+//   ]
+//
+//   const today = new Date()
+//   let last3Months = []
+//
+//   for (let i = 0; i < 3; i++) {
+//     last3Months.push(monthNames[(today.getMonth() - i)] + ' - ' + today.getFullYear())
+//   }
+//
+//   return last3Months
+// }
 
 // Listen to Event Once
 async function listenEvent (eventname) {
@@ -102,7 +116,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -111,7 +125,6 @@ export default async function () {
   })
 
   const page = await browser.newPage()
-  await page.setUserAgent(desktopAgents[Math.floor(Math.random() * desktopAgents.length)])
 
   // Launch Page
   await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com', {waitUntil: 'domcontentloaded'})
@@ -178,8 +191,9 @@ export default async function () {
 
   const filterOption = await listenEvent('filteroption')
   const currentYear = moment().format('YYYY')
-  const previousYear = moment().substract(1, 'years').format('YYYY')
+  const previousYear = moment().subtract(1, 'years').format('YYYY')
   const month = moment().subtract(1, 'month').add(1, 'day').format('MMMM')
+  // const last3Months = getLast3Months()
 
   await page.waitFor(1000)
 
@@ -255,6 +269,9 @@ export default async function () {
   // If filter option chosen is Last Month
   if (filterOption === 'lastmonth') {
     uniqItems = _.uniqBy(_.filter(DETAIL_ITEMS, ['month', month]), 'invoice_date')
+  }
+
+  if (filterOption === 'lastthreemonths') {
   }
 
   ipcRenderer.send('form', INVOICE_COUNT)

@@ -40,4 +40,27 @@ body {
   text-shadow: none
 }
 
+.popover {
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+  border: 1px solid #E4E4E4;
+  width: 370px;
+  max-width: 100%;
+  top:30px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 15px;
+  border-radius: 0;
+  font-size: 14px;
+}
+
+.popover-header {
+  padding-top: 20px;
+  padding-bottom: 0px;
+  font-family: 'Nunito', sans-serif;
+  background: none !important;
+  border-bottom: 0px;
+  font-weight: 800;
+  color: black;
+}
+
 </style>

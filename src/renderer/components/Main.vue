@@ -7,7 +7,7 @@
         <p>Download your Uber invoices automatically.</p>
         <br/>
         <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started">Get Started</button></p>
-        <spinner v-if="loading"></spinner>
+        <spinner size="large" v-if="loading"></spinner>
       </div>
     </div>
   </transition>
@@ -26,13 +26,13 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
-            <label for="password">Enter the password for your Uber<br/>account <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation script that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
+            <label for="password">Enter the password for your Uber<br/>account <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
             <input type="password" class="form-control form-control-lg" @keyup.enter="submitForm()" id="password" v-model="fields.password" aria-describedby="password" placeholder="Password">
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
           <div class="form-group">
-            <label for="verification">Enter the Uber verification code sent to you via SMS</label>
+            <label for="verification">Enter the Uber verification code sent to you via SMS <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
             <input type="text" class="form-control form-control-lg" @keyup.enter="submitForm()" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
           </div>
         </div>
@@ -85,6 +85,7 @@
             <div class="progress" style="height: 30px;">
               <div class="progress-bar" role="progressbar" :style="{ width: percent + '%' }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
+            <p class="progress-tip text-center"><i class="far fa-2x fa-question-circle" v-b-popover.hover.top="'We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script.'" title="Speed"></i></p>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'DOWNLOADED'" key="downloaded">
@@ -433,7 +434,10 @@ export default {
   position: relative;
 }
 
-  .popover-header {
-    background: none !important;
-  }
+.progress-tip {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+}
+
 </style>
