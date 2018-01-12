@@ -11,7 +11,6 @@ const PASSWORD = 'PASSWORD'
 const VERIFICATION = 'VERIFICATION'
 const CHROME_NOT_FOUND = 'CHROME_NOT_FOUND'
 const FILTER_OPTION = 'FILTER_OPTION'
-const DOWNLOAD_INVOICE = 'DOWNLOAD_INVOICE'
 const INVOICE_COUNT = 'INVOICE_COUNT'
 const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
@@ -44,7 +43,7 @@ async function evaluateList (page) {
   // Evaluate list of detail links
   const list = await page.evaluate(() => {
     const data = []
-    const detailElement = document.querySelectorAll('#trips-table div.flexbox__item.one-third.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a')
+    const detailElement = document.querySelectorAll('#trips-table div > div.flexbox__item.one-half.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a')
 
     for (let i = 0; i < detailElement.length; ++i) {
       const tripId = detailElement[i].href.split('/')
@@ -57,115 +56,6 @@ async function evaluateList (page) {
   return list
 }
 
-async function generateLinks (page, email, filter, data) {
-  const NEXT_PAGINATION = '#trips-pagination > div:nth-child(2) > a'
-  const NEXT_PAGINATION_INACTIVE_BUTTON = '#trips-pagination > div:nth-child(2) > div.btn--inactive'
-  const INACTIVE_PREVIOUS_BUTTON = '.btn--inactive.pagination__previous'
-  const INACTIVE_NEXT_BUTTON = '.btn--inactive.pagination__next'
-  const DOWNLOAD_INVOICE_TRIP = '#data-invoice-btn-download'
-  const documentDir = jetpack.cwd(remote.app.getPath('documents'))
-
-  await page.waitFor(1000)
-
-  const DETAIL_LISTS = []
-
-  ipcRenderer.send('form', GENERATE_LINKS)
-
-  // Loop Until next button is disabled
-  while (await page.$(NEXT_PAGINATION_INACTIVE_BUTTON) === null) {
-    await page.waitFor(800)
-
-    // Evaluate list of detail links
-    const list = await evaluateList(page)
-
-    DETAIL_LISTS.push(list)
-
-    if (await page.$(NEXT_PAGINATION) !== null) {
-      await page.click(NEXT_PAGINATION)
-    } else {
-      continue
-    }
-  }
-
-  await page.waitFor(1000)
-
-  if (await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
-    await page.waitFor(1 * 800)
-
-    // Evaluate list of detail links
-    const list = await evaluateList(page)
-
-    DETAIL_LISTS.push(list)
-  }
-
-  // Final list of invoice object links
-  const DETAIL_ITEMS = []
-
-  // Go through each link and store JSON Details
-  for (let i = 0; i < _.flattenDeep(DETAIL_LISTS).length; ++i) {
-    await page.goto(_.flattenDeep(DETAIL_LISTS)[i], { waitUntil: 'domcontentloaded' })
-    const tripItem = await page.evaluate(() => {
-      const element = document.querySelector('body')
-      return JSON.parse(element.innerHTML)
-    })
-    // Check if the data is there. If it is then push it to array
-    if (tripItem.length > 0) {
-      DETAIL_ITEMS.push(tripItem[0])
-    }
-    await page.waitFor(1000)
-  }
-
-  DETAIL_ITEMS.map((item) => {
-    item.year = moment(item.invoice_date).format('YYYY')
-    item.month = moment(item.invoice_date).format('MMMM')
-    item.invoice_date = moment(item.invoice_date).tz('America/Toronto').format('MMMM-DD-YYYY_hh-mm-a')
-    return item
-  })
-
-  let uniqItems
-
-  if (filter === 'currentyear' || filter === 'previousyear') {
-    uniqItems = _.uniqBy(_.filter(DETAIL_ITEMS, ['year', data]), 'invoice_date')
-  } else if (filter === 'lastmonth') {
-    uniqItems = _.uniqBy(_.filter(DETAIL_ITEMS, ['month', data]), 'invoice_date')
-  } else {
-    uniqItems = _.uniqBy(DETAIL_ITEMS, 'invoice_date')
-  }
-
-  ipcRenderer.send('form', INVOICE_COUNT)
-  ipcRenderer.send('invoiceTotal', uniqItems.length)
-
-  for (let i = 0; i < uniqItems.length; ++i) {
-    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Run/${email}/${uniqItems[i].year}/${uniqItems[i].month}/`)})
-    await page.goto(`https://riders.uber.com/trips/${uniqItems[i].trip_uid}`, {waitUntil: 'networkidle2'})
-
-    const progress = i === (uniqItems.length - 1) ? _.ceil(_.divide(i + 1, uniqItems.length) * 100) : _.ceil(_.divide(i, uniqItems.length) * 100)
-
-    // Check if request button is hidden
-    const invoiceRequest = await page.evaluate(() => {
-      return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden')
-    })
-
-    // Check if request invoice button is hidden. Then go ahead download it.
-    if (invoiceRequest) {
-      await page.waitFor(1 * 3000)
-      await page.click(DOWNLOAD_INVOICE_TRIP)
-    }
-
-    ipcRenderer.send('progress', progress)
-    await page.waitFor(2000)
-  }
-
-  for (let i = 0; i < uniqItems.length; ++i) {
-    const invoiceFilePath = `${documentDir.path()}/Uber Run/${email}/${uniqItems[i].year}/${uniqItems[i].month}/invoice-${uniqItems[i].invoice_number}.pdf`
-    if (jetpack.exists(invoiceFilePath)) {
-      jetpack.rename(invoiceFilePath, `${uniqItems[i].invoice_date}.pdf`)
-    }
-  }
-
-  ipcRenderer.send('form', DOWNLOADED)
-}
-
 export default async function () {
   // Selectors Needed
   const EMAIL_SELECTOR = '#useridInput'
@@ -174,7 +64,13 @@ export default async function () {
   const NEXT_BUTTON = '#app-body > div > div:nth-child(1) > form > button'
   const VERIFY_BUTTON = '#app-body > div > div > form > button'
   const FILTER_TRIPS = '#slide-menu-content > div > div.flexbox__item.flexbox__item--expand > div > div > div.flexbox__item.four-fifths.page-content > div.hidden--palm > div > div > div.flexbox__item.one-third.text--left > a'
+  const NEXT_PAGINATION = '#trips-pagination > div:nth-child(2) > a'
+  const NEXT_PAGINATION_INACTIVE_BUTTON = '#trips-pagination > div:nth-child(2) > div.btn--inactive'
+  const INACTIVE_PREVIOUS_BUTTON = '.btn--inactive.pagination__previous'
+  const INACTIVE_NEXT_BUTTON = '.btn--inactive.pagination__next'
+  const DOWNLOAD_INVOICE_TRIP = '#data-invoice-btn-download'
   const useDataDir = jetpack.cwd(remote.app.getAppPath()).cwd(remote.app.getPath('desktop'))
+  const documentDir = jetpack.cwd(remote.app.getPath('documents'))
   const platform = os.platform()
 
   let exec
@@ -206,7 +102,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -281,28 +177,118 @@ export default async function () {
   await page.waitForSelector(FILTER_TRIPS)
 
   const filterOption = await listenEvent('filteroption')
-  const currentTime = new Date()
-  const currentYear = currentTime.getFullYear()
-  const previousYear = currentTime.getFullYear() - 1
+  const currentYear = moment().format('YYYY')
+  const previousYear = moment().substract(1, 'years').format('YYYY')
+  const month = moment().subtract(1, 'month').add(1, 'day').format('MMMM')
 
-  switch (filterOption) {
-    case 'currentyear':
-      await generateLinks(page, accountEmail, 'currentyear', currentYear)
-      break
-    case 'previousyear':
-      await generateLinks(page, accountEmail, 'previousyear', previousYear)
-      break
-    case 'lastmonth':
-      const month = moment().subtract(1, 'month').add(1, 'day').format('MMMM')
-      await generateLinks(page, accountEmail, 'lastmonth', month)
-      break
-    case 'lastthreemonths':
-      break
-    case 'all':
-      break
+  await page.waitFor(1000)
+
+  const DETAIL_LISTS = []
+
+  ipcRenderer.send('form', GENERATE_LINKS)
+
+  // Loop Until next button is disabled
+  while (await page.$(NEXT_PAGINATION_INACTIVE_BUTTON) === null) {
+    await page.waitFor(1000)
+
+    // Evaluate list of detail links
+    const list = await evaluateList(page)
+
+    DETAIL_LISTS.push(list)
+
+    if (await page.$(NEXT_PAGINATION) !== null) {
+      await page.click(NEXT_PAGINATION)
+    } else {
+      continue
+    }
   }
 
-  ipcRenderer.send('form', DOWNLOAD_INVOICE)
+  await page.waitFor(1000)
+
+  if (await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
+    await page.waitFor(1000)
+
+    // Evaluate list of detail links
+    const list = await evaluateList(page)
+
+    DETAIL_LISTS.push(list)
+  }
+
+  // Final list of invoice object links
+  const DETAIL_ITEMS = []
+
+  // Go through each link and store JSON Details
+  for (let i = 0; i < _.flattenDeep(DETAIL_LISTS).length; ++i) {
+    await page.goto(_.flattenDeep(DETAIL_LISTS)[i], { waitUntil: 'domcontentloaded' })
+    const tripItem = await page.evaluate(() => {
+      const element = document.querySelector('body')
+      return JSON.parse(element.innerHTML)
+    })
+    // Check if the data is there. If it is then push it to array
+    if (tripItem.length > 0) {
+      DETAIL_ITEMS.push(tripItem[0])
+      await page.waitFor(400)
+    } else {
+      await page.waitFor(800)
+    }
+  }
+
+  DETAIL_ITEMS.map((item) => {
+    item.year = moment(item.invoice_date).format('YYYY')
+    item.month = moment(item.invoice_date).format('MMMM')
+    item.invoice_date = moment(item.invoice_date).tz('America/Toronto').format('MMMM-DD-YYYY_hh-mm-a')
+    return item
+  })
+
+  let uniqItems
+
+  // If Filter Option chosen is Current Year
+  if (filterOption === 'currentyear') {
+    uniqItems = _.uniqBy(_.filter(DETAIL_ITEMS, ['year', currentYear]), 'invoice_date')
+  }
+
+  // If Filter Option chosen is Last Year
+  if (filterOption === 'previousyear') {
+    uniqItems = _.uniqBy(_.filter(DETAIL_ITEMS, ['year', previousYear]), 'invoice_date')
+  }
+
+  // If filter option chosen is Last Month
+  if (filterOption === 'lastmonth') {
+    uniqItems = _.uniqBy(_.filter(DETAIL_ITEMS, ['month', month]), 'invoice_date')
+  }
+
+  ipcRenderer.send('form', INVOICE_COUNT)
+  ipcRenderer.send('invoiceTotal', uniqItems.length)
+
+  for (let i = 0; i < uniqItems.length; ++i) {
+    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/`)})
+    await page.goto(`https://riders.uber.com/trips/${uniqItems[i].trip_uid}`, {waitUntil: 'networkidle2'})
+
+    const progress = i === (uniqItems.length - 1) ? _.ceil(_.divide(i + 1, uniqItems.length) * 100) : _.ceil(_.divide(i, uniqItems.length) * 100)
+
+    // Check if request button is hidden
+    const invoiceRequest = await page.evaluate(() => {
+      return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden')
+    })
+
+    // Check if request invoice button is hidden. Then go ahead download it.
+    if (invoiceRequest) {
+      await page.waitFor(1 * 3000)
+      await page.click(DOWNLOAD_INVOICE_TRIP)
+    }
+
+    ipcRenderer.send('progress', progress)
+    await page.waitFor(2000)
+  }
+
+  for (let i = 0; i < uniqItems.length; ++i) {
+    const invoiceFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/invoice-${uniqItems[i].invoice_number}.pdf`
+    if (jetpack.exists(invoiceFilePath)) {
+      jetpack.rename(invoiceFilePath, `${uniqItems[i].invoice_date}.pdf`)
+    }
+  }
+
+  ipcRenderer.send('form', DOWNLOADED)
 
   await page.waitFor(1000)
 

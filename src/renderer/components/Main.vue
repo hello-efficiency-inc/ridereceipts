@@ -113,7 +113,7 @@
             <div class="col-md-12">
               <div class="continue-btn float-right">
                 <button type="button" v-if="!errorButton" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
-                <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit">Start Again</button>
+                <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit-start">Start Again<img class="arrow" src="static/next-arrow.svg"></button>
               </div>
             </div>
           </div>
@@ -372,6 +372,32 @@ export default {
   }
   p {
     margin-top: 5px;
+  }
+
+  .btn--submit-start {
+    position: absolute;
+    font-size: 24px;
+    right: 10px;
+    /* Rounded button: */
+    background: #FFFFFF;
+    border-radius: 100px;
+    height: 52px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 0px;
+    font-weight: 800;
+    color: black;
+    text-transform: uppercase;
+
+    &:hover {
+      box-shadow: 1px 1px 4px 2px rgba(160,160,160,0.50);
+    }
+
+    .arrow {
+      margin-left: 10px;
+      top: -1px;
+      position:relative;
+    }
   }
 
   .btn--submit {
