@@ -15,9 +15,9 @@ export default {
 <style lang="scss">
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import url('https://use.fontawesome.com/releases/v5.0.2/css/all.css');
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700');
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,600,700,800');
 
-$font-family-sans-serif: 'Source Sans Pro';
+$font-family-sans-serif: 'Nunito';
 $blue: #0B1E4E;
 
 html {
@@ -27,11 +27,17 @@ html {
 
 body {
   color: #0B1E4E;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 1em;
-  font-weight: 600;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+::selection {
+  background-color: rgba(215,0,208,0.75);
+  color: white;
+  text-shadow: none
+}
+
 </style>

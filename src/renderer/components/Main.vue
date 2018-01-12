@@ -21,13 +21,13 @@
         <div class="jumbotron form--container" v-if="form === 'EMAIL'" key="email">
           <div class="form-group">
             <label for="email">Enter the email address associated with your Uber account</label>
-            <input type="email" class="form-control form-control-lg"  @keyup.enter="submitForm()" v-model="fields.email" id="email" aria-describedby="emai" placeholder="Enter email">
+            <input type="email" class="form-control form-control-lg"  @keyup.enter="submitForm()" v-model="fields.email" id="email" aria-describedby="emai" placeholder="Email Address">
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
             <label for="password">Enter the password for your Uber<br/>account <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation script that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
-            <input type="password" class="form-control form-control-lg" @keyup.enter="submitForm()" id="password" v-model="fields.password" aria-describedby="password" placeholder="Enter Password">
+            <input type="password" class="form-control form-control-lg" @keyup.enter="submitForm()" id="password" v-model="fields.password" aria-describedby="password" placeholder="Password">
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
@@ -38,36 +38,36 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
           <div class="form-group">
-            <label>Which invoices would you like to <br/> download ? <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a Request Invoice button (as in UberEats) will not be included'" title="Limitations"></i></label>
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="previousyear">
-                Previous Year
-              </label>
-            </div>
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="currentyear">
-                Current Year
-              </label>
-            </div>
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="lastthreemonths">
-                Last 3 Months
-              </label>
-            </div>
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="lastmonth">
-                Last Month
-              </label>
-            </div>
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="all">
-                All
-              </label>
+            <label>Which invoices would you like to <br/> download ? <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a Request Invoice button (as in UberEats) will not be included'" title="Note"></i></label>
+            <div class="row">
+              <div class="col">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="previousyear">
+                    Previous Year
+                  </label>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="currentyear">
+                    Current Year
+                  </label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="lastthreemonths">
+                    Last 3 Months
+                  </label>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="lastmonth">
+                    Last Month
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="continue-btn float-right">
-                <button type="button" v-if="!errorButton" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit">Continue</button>
+                <button type="button" v-if="!errorButton" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
                 <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit">Start Again</button>
               </div>
             </div>
@@ -276,10 +276,16 @@ export default {
   background: #d800d0;
   color: white;
   border-radius: 30px;
-  padding-left: 25px;
-  padding-right: 25px;
+  width: 162px;
+  height: 52px;
   text-transform: uppercase;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 700;
+
+  &:hover {
+    background: #0012B9;
+    color: white;
+  }
 }
 
 .bg-transparent {
@@ -303,22 +309,30 @@ export default {
   padding: 3.5rem 8rem;
 
   label:not(.form-check-label) {
-    font-size: 2.5em;
+    font-size: 36px;
     text-align: center;
-    font-weight: 700;
+    font-weight: 800;
     margin-bottom: 35px;
-    line-height: 1.2;
+    line-height: 42px;
     color: black;
   }
 
   .form-check-label {
     display: block;
     margin-bottom: 10px;
-    font-size: 1.3em;
-    line-height: 1.3em;
+    font-size: 24px;
+    line-height: 32px;
+    color: black;
+    padding-left: 15px;
+  }
+
+  input[type="radio"] {
+    left: 20px;
+    top: 3px;
   }
 
   input {
+    padding-left: 0;
     outline: none;
     border: none;
     border-bottom: 2px solid rgba(0, 0, 0, 02);
@@ -326,12 +340,13 @@ export default {
     border-radius: 0px;
     font-size: 2em;
     color: black;
+    caret-color: #0012B9;
     text-overflow: ellipsis;
-    font-weight: bold;
-    border-image:  linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
-    border-image-slice: 1;
+    transition: all 0.5s ease;
 
     &:focus {
+      border-image:  linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
+      border-image-slice: 1;
       box-shadow: none;
       background: none;
       outline: none;
@@ -361,23 +376,26 @@ export default {
 
   .btn--submit {
     position: absolute;
-    padding: 0.6em 1.5em;
-    border-radius: 40px;
+    font-size: 24px;
     right: 10px;
+    /* Rounded button: */
+    background: #FFFFFF;
+    border-radius: 100px;
+    height: 52px;
+    width: 178px;
+    border: 0px;
+    font-weight: 800;
+    color: black;
+    text-transform: uppercase;
 
-    &:after {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      line-height: 2;
-      background: transparent;
-      text-align: center;
-      color: black;
-      content: 'or press ENTER';
-      font-size: 0.85em;
-      pointer-events: none;
-      font-weight: 600;
+    &:hover {
+      box-shadow: 1px 1px 4px 2px rgba(160,160,160,0.50);
+    }
+
+    .arrow {
+      margin-left: 10px;
+      top: -1px;
+      position:relative;
     }
   }
 }
@@ -388,4 +406,8 @@ export default {
   top: -10px;
   position: relative;
 }
+
+  .popover-header {
+    background: none !important;
+  }
 </style>
