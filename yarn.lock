@@ -1517,8 +1517,8 @@ builder-util@4.1.1:
     tunnel-agent "^0.6.0"
 
 builder-util@^4.1.0:
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-4.1.3.tgz#1280359b8c51b9e4ddade6e05615ede563dceda7"
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-4.1.4.tgz#d0c9544b6355d98ee6d2605d1fee3bcb55555d3e"
   dependencies:
     "7zip-bin" "^2.3.4"
     bluebird-lst "^1.0.5"
@@ -1533,7 +1533,7 @@ builder-util@^4.1.0:
     semver "^5.4.1"
     source-map-support "^0.5.0"
     stat-mode "^0.2.2"
-    temp-file "^3.1.0"
+    temp-file "^3.1.1"
     tunnel-agent "^0.6.0"
 
 builtin-modules@^1.0.0, builtin-modules@^1.1.1:
@@ -1955,7 +1955,7 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@2.12.x, commander@~2.12.1:
+commander@2.12.x:
   version "2.12.2"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.2.tgz#0f5946c427ed9ec0d91a46bb9def53e54650e555"
 
@@ -1971,7 +1971,7 @@ commander@2.9.0, commander@2.9.x:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
-commander@^2.9.0:
+commander@^2.9.0, commander@~2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
 
@@ -7372,9 +7372,9 @@ tar@^2.0.0, tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-temp-file@^3.0.0, temp-file@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/temp-file/-/temp-file-3.1.0.tgz#d2b3ec52e1b7835248737f2b1815348e86cf8f8b"
+temp-file@^3.0.0, temp-file@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/temp-file/-/temp-file-3.1.1.tgz#8823649aa4e8a6e419eb71b601a2e4d472b0f24f"
   dependencies:
     async-exit-hook "^2.0.1"
     bluebird-lst "^1.0.5"
@@ -7552,10 +7552,10 @@ uglify-js@2.6.x:
     yargs "~3.10.0"
 
 uglify-js@3.3.x:
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.3.5.tgz#4c4143dfe08e8825746675cc49a6874a933b543e"
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.3.6.tgz#3ca624e713f1981df455d72a02ab6ffe632b5d2d"
   dependencies:
-    commander "~2.12.1"
+    commander "~2.13.0"
     source-map "~0.6.1"
 
 uglify-js@^2.8.29:
