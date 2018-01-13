@@ -21,13 +21,32 @@
         <div class="jumbotron form--container" v-if="form === 'EMAIL'" key="email">
           <div class="form-group">
             <label for="email">Enter the email address associated with your Uber account</label>
-            <input type="email" class="form-control form-control-lg"  @keyup.enter="submitForm()" v-model="fields.email" id="email" aria-describedby="emai" placeholder="Email Address">
+            <b-form-input id="email"
+              v-model.trim="fields.email"
+              type="email"
+              :state="emailError"
+              @keyup.enter="submitForm()"
+              aria-describedby="email emailFeeback"
+              placeholder="Email Address"></b-form-input>
+              <b-form-invalid-feedback id="emailFeedback">
+                Oops! There is no account associated with this email address.
+              </b-form-invalid-feedback>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
             <label for="password">Enter the password for your Uber<br/>account <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
-            <input type="password" class="form-control form-control-lg" @keyup.enter="submitForm()" id="password" v-model="fields.password" aria-describedby="password" placeholder="Password">
+            <b-form-input
+              id="password"
+              v-model.trim="fields.password"
+              type="password"
+              :state="passError"
+              @keyup.enter="submitForm()"
+              aria-describedby="password passwordFeeback"
+              placeholder="Password"></b-form-input>
+              <b-form-invalid-feedback id="passwordFeedback">
+                Oops! That is not the correct password. Unfortunately you will have to start again.
+              </b-form-invalid-feedback>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
@@ -94,7 +113,7 @@
             <p class="text-center"><button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started">View Invoices</button></p>
           </div>
         </div>
-        <div class="jumbotron form--container" v-if="form === 'ERROR'" :key="error">
+        <div class="jumbotron form--container" v-if="form === 'ERROR'" key="error">
           <div class="form-group">
             <label>Oops seems like your IP Address is banned temporary. Please try again later.</label>
           </div>
@@ -139,6 +158,8 @@ export default {
         verification_code: null,
         filter_option: null
       },
+      emailError: true,
+      passError: true,
       downloadingMessage: null,
       percent: null,
       downloaded: false,
@@ -150,8 +171,19 @@ export default {
   },
   mounted () {
     this.$electron.ipcRenderer.on('form', (event, data) => {
+      this.emailError = true
       this.loading = false
-      this.form = data
+      if (data !== 'error-email' && data !== 'error-pass') {
+        this.form = data
+      }
+
+      if (data === 'error-email') {
+        this.emailError = false
+      }
+
+      if (data === 'error-pass') {
+        this.passError = false
+      }
     })
     this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
       this.downloadMessage(data)
@@ -178,6 +210,12 @@ export default {
       return false
     },
     errorButton () {
+      if (!this.passError) {
+        return true
+      }
+      if (!this.emailError) {
+        return true
+      }
       if (this.form === 'ERROR') {
         return true
       }

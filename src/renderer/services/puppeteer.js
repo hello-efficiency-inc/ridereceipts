@@ -14,7 +14,9 @@ const FILTER_OPTION = 'FILTER_OPTION'
 const INVOICE_COUNT = 'INVOICE_COUNT'
 const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
-const ERROR = 'ERROR'
+// const ERROR = 'ERROR'
+const ERROR_EMAIL = 'error-email'
+const ERROR_PASS = 'error-pass'
 
 // function getLast3Months () {
 //   var monthNames = [
@@ -52,6 +54,15 @@ async function listenEvent (eventname) {
   return data
 }
 
+async function evaluateError (page) {
+  const errorCheck = await page.evaluate(() => {
+    const error = document.querySelector('#error-caption')
+    return error !== null
+  })
+
+  return errorCheck
+}
+
 // Grab list
 async function evaluateList (page) {
   // Evaluate list of detail links
@@ -74,7 +85,6 @@ export default async function () {
   // Selectors Needed
   const EMAIL_SELECTOR = '#useridInput'
   const PASSWORD_SELECTOR = '#password'
-  const EMAIL_ERROR = '#error-caption'
   const SMS_SELECTOR = '#verificationCode'
   const NEXT_BUTTON = '#app-body > div > div:nth-child(1) > form > button'
   const VERIFY_BUTTON = '#app-body > div > div > form > button'
@@ -117,7 +127,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -163,21 +173,37 @@ export default async function () {
   await page.click(NEXT_BUTTON)
   await page.waitFor(1000)
 
-  const emailVisibility = await page.evaluate(() => {
-    const display = document.querySelector('#username')
-    return display !== null
-  })
+  // const emailVisibility = await page.evaluate(() => {
+  //   const display = document.querySelector('#username')
+  //   return display !== null
+  // })
+  //
+  const emailError = await evaluateError(page)
 
-  if (!emailVisibility) {
-    ipcRenderer.send('form', ERROR)
+  console.log(emailError)
+
+  if (emailError) {
+    ipcRenderer.send('form', ERROR_EMAIL)
     await browser.close()
   }
+
+  // if (!emailVisibility) {
+  //   ipcRenderer.send('form', ERROR)
+  //   await browser.close()
+  // }
 
   await page.waitForSelector(PASSWORD_SELECTOR)
   await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)
   await page.keyboard.type(await listenEvent('passdata'), {delay: 100})
   await page.click(NEXT_BUTTON)
+
+  await page.waitFor(1000)
+
+  if (await evaluateError) {
+    ipcRenderer.send('form', ERROR_PASS)
+    await browser.close()
+  }
 
   await page.waitForSelector(PASSWORD_SELECTOR, { hidden: true })
   await page.click(SMS_SELECTOR)
