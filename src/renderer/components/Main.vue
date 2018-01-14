@@ -1,17 +1,19 @@
 <template>
   <div>
     <transition name="fade">
-    <div class="splash" v-if="form === null">
-      <div class="wrap-content">
-        <img id="logo" src="static/uber-run.svg" alt="Uber Run">
-        <p>Download your Uber invoices automatically.</p>
-        <br/>
-        <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Get Started</button></p>
-        <p class="offline" v-if="!online">You are currently offline. Please get online in order to use this app</p>
-        <spinner size="large" v-if="loading"></spinner>
+      <div class="splash" v-if="form === null">
+        <div class="wrap-content">
+          <img id="logo" src="static/uber-run.svg" alt="Uber Run">
+          <p>Download your Uber invoices automatically.</p>
+          <br/>
+          <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Get Started</button></p>
+          <p class="offline" v-if="!online">You are currently offline. Please get online in order to use this app</p>
+          <div class="loading" v-if="loading">
+            <div class="inner"></div>
+          </div>
+        </div>
       </div>
-    </div>
-  </transition>
+    </transition>
     <form v-on:submit.prevent="submitForm" class="wrapper" v-if="form !== null">
       <nav class="navbar navbar-light bg-transparent">
         <div class="navbar-brand">
@@ -23,31 +25,31 @@
           <div class="form-group">
             <label for="email">Enter the email address associated with your Uber account</label>
             <b-form-input id="email"
-              v-model.trim="fields.email"
-              type="email"
-              :readonly="!emailError"
-              :state="emailError"
-              aria-describedby="email emailFeeback"
-              placeholder="Email Address"></b-form-input>
-              <b-form-invalid-feedback id="emailFeedback">
-                Oops! There is no account associated with this email address.
-              </b-form-invalid-feedback>
+            v-model.trim="fields.email"
+            type="email"
+            :readonly="!emailError"
+            :state="emailError"
+            aria-describedby="email emailFeeback"
+            placeholder="Email Address"></b-form-input>
+            <b-form-invalid-feedback id="emailFeedback">
+              Oops! There is no account associated with this email address.
+            </b-form-invalid-feedback>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
             <label for="password">Enter the password for your Uber<br/>account <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
             <b-form-input
-              id="password"
-              v-model.trim="fields.password"
-              type="password"
-              :readonly="!passError"
-              :state="passError"
-              aria-describedby="password passwordFeeback"
-              placeholder="Password"></b-form-input>
-              <b-form-invalid-feedback id="passwordFeedback">
-                Oops! That is not the correct password. Unfortunately you will have to start again.
-              </b-form-invalid-feedback>
+            id="password"
+            v-model.trim="fields.password"
+            type="password"
+            :readonly="!passError"
+            :state="passError"
+            aria-describedby="password passwordFeeback"
+            placeholder="Password"></b-form-input>
+            <b-form-invalid-feedback id="passwordFeedback">
+              Oops! That is not the correct password. Unfortunately you will have to start again.
+            </b-form-invalid-feedback>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
@@ -95,7 +97,9 @@
           <div class="form-group">
             <label>Checking your Uber account for all available invoices within the time frame you selected. Please wait.</label>
             <br/>
-            <spinner size="large"></spinner>
+            <div class="loading">
+              <div class="inner"></div>
+            </div>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'INVOICE_COUNT'" key="invoicecounts">
@@ -498,4 +502,87 @@ export default {
   left: 50%;
 }
 
+/* Loading indicator */
+.loading {
+  position: relative;
+  margin:0 auto;
+  width: 62px;    /* diameter */
+  height: 62px;    /* diameter */
+}
+.inner, .loading:after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+/* Mask */
+.loading:after {
+  content:" ";
+  margin: 10%;    /* stroke width */
+  border-radius: 100%;
+  background: #fff;    /* container background */
+}
+/* Spinning gradients */
+.inner {
+  animation-duration: 1s;    /* speed */
+  -webkit-animation-duration: 1s;    /* speed */
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  -webkit-animation-timing-function: linear;
+}
+.inner {
+  animation-name: rotate-inner;
+  -webkit-animation-name: rotate-inner;
+}
+/* Halfs */
+.inner:before, .inner:after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  content:" ";
+}
+/* Left half */
+.inner:before {
+  left: 0;
+  right: 50%;
+  border-radius: 72px 0 0 72px;    /* diameter */
+}
+/* Right half */
+.inner:after {
+  left: 50%;
+  right: 0;
+  border-radius: 0 72px 72px 0;    /* diameter */
+}
+/* Half gradients */
+.inner:before {
+  background-image: linear-gradient(to bottom, #0029DD 0%, #D700D0 100%);
+}
+.inner:after {
+    background-image: linear-gradient(to bottom, #ffffff 0%, #D8D8D8 100%);
+}
+
+/* Spinning animations */
+
+@keyframes rotate-inner {
+  0% {
+    transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotate-inner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
 </style>
