@@ -40,6 +40,10 @@ body {
   text-shadow: none
 }
 
+.vue-simple-spinner {
+  border-color: #d800d0 rgb(238, 238, 238) rgb(238, 238, 238) !important;
+}
+
 .popover {
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
   border: 1px solid #E4E4E4;

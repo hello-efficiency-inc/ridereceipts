@@ -6,7 +6,8 @@
         <img id="logo" src="static/uber-run.svg" alt="Uber Run">
         <p>Download your Uber invoices automatically.</p>
         <br/>
-        <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started">Get Started</button></p>
+        <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Get Started</button></p>
+        <p class="offline" v-if="!online">You are currently offline. Please get online in order to use this app</p>
         <spinner size="large" v-if="loading"></spinner>
       </div>
     </div>
@@ -109,8 +110,10 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'DOWNLOADED'" key="downloaded">
           <div class="form-group">
-            <label>Success ! All invoices have been<br/> downloaded for you.</label>
-            <p class="text-center"><button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started">View Invoices</button></p>
+            <label v-if="invoiceCount > 0">Success ! All invoices have been<br/> downloaded for you.</label>
+            <p v-if="invoiceCount > 0" class="text-center"><button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started">View Invoices</button></p>
+            <label v-if="invoiceCount === 0">{{ downloadingMessage }}</label>
+            <p v-if="invoiceCount === 0" class="text-center"><button type="button" @click.stop.prevent="startAgain()" class="btn btn-lg btn-started">Start Again</button></p>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'ERROR'" key="error">
@@ -158,6 +161,8 @@ export default {
         verification_code: null,
         filter_option: null
       },
+      invoiceCount: null,
+      online: true,
       emailError: true,
       passError: true,
       downloadingMessage: null,
@@ -170,6 +175,13 @@ export default {
     Spinner
   },
   mounted () {
+    this.$electron.ipcRenderer.on('onlinestatus', (event, data) => {
+      if (data === 'offline') {
+        this.online = false
+      } else {
+        this.online = true
+      }
+    })
     this.$electron.ipcRenderer.on('form', (event, data) => {
       this.emailError = true
       this.passError = true
@@ -187,6 +199,7 @@ export default {
       }
     })
     this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
+      this.invoiceCount = data
       this.downloadMessage(data)
     })
     this.$electron.ipcRenderer.on('progress', (event, data) => {
@@ -249,6 +262,7 @@ export default {
       } else if (count === 1) {
         this.downloadingMessage = `Running this app for just ${count} invoice?\nThat's okay, we won't judge ;)`
       } else {
+        this.form = 'DOWNLOADED'
         this.downloadingMessage = `You have 0 invoices within the time frame you selected.`
       }
     },
@@ -306,6 +320,11 @@ export default {
     margin-bottom: 40px;
   }
 
+  p.offline {
+    font-size: 20px;
+    color: red;
+  }
+
   p {
     font-size: 25px;
     color: #2c32c4;
@@ -322,7 +341,7 @@ export default {
   font-size: 15px;
   font-weight: 700;
 
-  &:hover {
+  &:hover:enabled {
     background: #0012B9;
     color: white;
   }

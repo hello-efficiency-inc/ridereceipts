@@ -62,6 +62,10 @@ app.on('activate', () => {
   }
 })
 
+ipcMain.on('online-status-changed', (event, status) => {
+  event.sender.send('onlinestatus', status)
+})
+
 ipcMain.on('form', (event, status) => {
   event.sender.send('form', status)
 })
