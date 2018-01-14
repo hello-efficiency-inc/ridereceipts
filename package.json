@@ -64,8 +64,7 @@
     "sass-loader": "^6.0.6",
     "vue": "^2.5.9",
     "vue-electron": "^1.0.6",
-    "vue-router": "^3.0.1",
-    "vue-simple-spinner": "^1.2.8"
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

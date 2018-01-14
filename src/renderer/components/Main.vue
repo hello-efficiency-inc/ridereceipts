@@ -182,6 +182,8 @@ export default {
     this.$electron.ipcRenderer.on('onlinestatus', (event, data) => {
       if (data === 'offline') {
         this.online = false
+        this.emailError = false
+        this.passError = false
       } else {
         this.online = true
       }
@@ -223,6 +225,9 @@ export default {
         return true
       }
       if (this.form === 'INVOICE_COUNT') {
+        return true
+      }
+      if (!this.online) {
         return true
       }
       return false

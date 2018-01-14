@@ -260,7 +260,7 @@ export default async function () {
       DETAIL_ITEMS.push(tripItem[0])
       await page.waitFor(400)
     } else {
-      await page.waitFor(800)
+      await page.waitFor(700)
     }
   }
 
