@@ -11,7 +11,7 @@
       </div>
     </div>
   </transition>
-    <div class="wrapper" v-if="form !== null">
+    <form v-on:submit.prevent="submitForm" class="wrapper" v-if="form !== null">
       <nav class="navbar navbar-light bg-transparent">
         <div class="navbar-brand">
           <img src="static/uber-run.svg" alt="Uber Run" width="100">
@@ -24,8 +24,8 @@
             <b-form-input id="email"
               v-model.trim="fields.email"
               type="email"
+              :readonly="!emailError"
               :state="emailError"
-              @keyup.enter="submitForm()"
               aria-describedby="email emailFeeback"
               placeholder="Email Address"></b-form-input>
               <b-form-invalid-feedback id="emailFeedback">
@@ -40,8 +40,8 @@
               id="password"
               v-model.trim="fields.password"
               type="password"
+              :readonly="!passError"
               :state="passError"
-              @keyup.enter="submitForm()"
               aria-describedby="password passwordFeeback"
               placeholder="Password"></b-form-input>
               <b-form-invalid-feedback id="passwordFeedback">
@@ -52,7 +52,7 @@
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
           <div class="form-group">
             <label for="verification">Enter the Uber verification code sent to you via SMS <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
-            <input type="text" class="form-control form-control-lg" @keyup.enter="submitForm()" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
+            <input type="text" class="form-control form-control-lg" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
@@ -62,13 +62,13 @@
               <div class="col">
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input class="form-check-input" type="radio"  @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="previousyear">
+                    <input class="form-check-input" type="radio"  v-model="fields.filter_option" name="filter" value="previousyear">
                     Previous Year
                   </label>
                 </div>
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="currentyear">
+                    <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" value="currentyear">
                     Current Year
                   </label>
                 </div>
@@ -76,13 +76,13 @@
               <div class="col">
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="lastthreemonths">
+                    <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" value="lastthreemonths">
                     Last 3 Months
                   </label>
                 </div>
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input class="form-check-input" type="radio" @keyup.enter="submitForm()" v-model="fields.filter_option" name="filter" value="lastmonth">
+                    <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" value="lastmonth">
                     Last Month
                   </label>
                 </div>
@@ -94,7 +94,7 @@
           <div class="form-group">
             <label>Checking your Uber account for all available invoices within the time frame you selected. Please wait.</label>
             <br/>
-            <spinner></spinner>
+            <spinner size="large"></spinner>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'INVOICE_COUNT'" key="invoicecounts">
@@ -132,14 +132,14 @@
           <div class="row">
             <div class="col-md-12">
               <div class="continue-btn float-right">
-                <button type="button" v-if="!errorButton" @keyup.enter="submitForm()" @click="submitForm()" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
+                <button type="submit" v-if="!errorButton" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
                 <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit-start">Start Again<img class="arrow" src="static/next-arrow.svg"></button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 <script>
@@ -252,9 +252,9 @@ export default {
       }
     },
     startAgain () {
-      this.fields = {}
       this.loading = true
       puppeteer()
+      this.fields = {}
     },
     openInvoiceFolder () {
       const documentDir = jetpack.cwd(this.$electron.remote.app.getPath('documents'))

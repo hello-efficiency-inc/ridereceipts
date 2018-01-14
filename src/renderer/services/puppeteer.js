@@ -18,31 +18,18 @@ const DOWNLOADED = 'DOWNLOADED'
 const ERROR_EMAIL = 'error-email'
 const ERROR_PASS = 'error-pass'
 
-// function getLast3Months () {
-//   var monthNames = [
-//     'January',
-//     'February',
-//     'March',
-//     'April',
-//     'May',
-//     'June',
-//     'July',
-//     'August',
-//     'September',
-//     'October',
-//     'November',
-//     'December'
-//   ]
-//
-//   const today = new Date()
-//   let last3Months = []
-//
-//   for (let i = 0; i < 3; i++) {
-//     last3Months.push(monthNames[(today.getMonth() - i)] + ' - ' + today.getFullYear())
-//   }
-//
-//   return last3Months
-// }
+// Calculate Last 3 Month from current month
+async function getLast3Months () {
+  let last3Months = []
+
+  for (let i = 0; i < 3; i++) {
+    const month = moment().subtract(i, 'month').add(1, 'day').format('MMMM')
+    const year = moment().subtract(i, 'month').add(1, 'day').format('YYYY')
+    last3Months.push({ 'month': month, 'year': year })
+  }
+
+  return last3Months
+}
 
 // Listen to Event Once
 async function listenEvent (eventname) {
@@ -54,6 +41,7 @@ async function listenEvent (eventname) {
   return data
 }
 
+// Evaluate Password or Email Error
 async function evaluateError (page) {
   const errorCheck = await page.evaluate(() => {
     const error = document.querySelector('#error-caption')
@@ -127,7 +115,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -169,7 +157,7 @@ export default async function () {
   await page.click(EMAIL_SELECTOR)
   ipcRenderer.send('form', EMAIL)
   const accountEmail = await listenEvent('emaildata')
-  await page.keyboard.type(accountEmail, {delay: 50})
+  await page.keyboard.type(accountEmail, {delay: 30})
   await page.click(NEXT_BUTTON)
   await page.waitFor(1000)
 
@@ -180,8 +168,7 @@ export default async function () {
   //
   const emailError = await evaluateError(page)
 
-  console.log(emailError)
-
+  // Evaluate Email Error
   if (emailError) {
     ipcRenderer.send('form', ERROR_EMAIL)
     await browser.close()
@@ -195,12 +182,15 @@ export default async function () {
   await page.waitForSelector(PASSWORD_SELECTOR)
   await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)
-  await page.keyboard.type(await listenEvent('passdata'), {delay: 100})
+  await page.keyboard.type(await listenEvent('passdata'), {delay: 30})
   await page.click(NEXT_BUTTON)
 
   await page.waitFor(1000)
 
-  if (await evaluateError) {
+  const evaluateErrorPass = await evaluateError(page)
+
+  // Evaluate Password Error
+  if (await evaluateErrorPass) {
     ipcRenderer.send('form', ERROR_PASS)
     await browser.close()
   }
@@ -208,7 +198,7 @@ export default async function () {
   await page.waitForSelector(PASSWORD_SELECTOR, { hidden: true })
   await page.click(SMS_SELECTOR)
   ipcRenderer.send('form', VERIFICATION)
-  await page.keyboard.type(await listenEvent('codedata'), { delay: 100 })
+  await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
   await page.click(VERIFY_BUTTON)
 
   await page.waitForNavigation()
@@ -220,7 +210,9 @@ export default async function () {
   const currentYear = moment().format('YYYY')
   const previousYear = moment().subtract(1, 'years').format('YYYY')
   const month = moment().subtract(1, 'month').add(1, 'day').format('MMMM')
-  // const last3Months = getLast3Months()
+  const last3Months = await getLast3Months()
+
+  console.log(last3Months)
 
   await page.waitFor(1000)
 
@@ -298,7 +290,13 @@ export default async function () {
     uniqItems = _.uniqBy(_.filter(DETAIL_ITEMS, ['month', month]), 'invoice_date')
   }
 
+  // If Filter option chosen is Last 3 Months
   if (filterOption === 'lastthreemonths') {
+    const filteredItems = _.filter(DETAIL_ITEMS, (o) => {
+      const index = _.findIndex(last3Months, { 'month': o.month, 'year': o.year })
+      return index >= 0
+    })
+    uniqItems = _.uniqBy(filteredItems, 'invoice_date')
   }
 
   ipcRenderer.send('form', INVOICE_COUNT)
