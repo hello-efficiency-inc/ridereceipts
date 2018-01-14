@@ -190,7 +190,7 @@ export default async function () {
   const evaluateErrorPass = await evaluateError(page)
 
   // Evaluate Password Error
-  if (await evaluateErrorPass) {
+  if (evaluateErrorPass) {
     ipcRenderer.send('form', ERROR_PASS)
     await browser.close()
   }
@@ -211,8 +211,6 @@ export default async function () {
   const previousYear = moment().subtract(1, 'years').format('YYYY')
   const month = moment().subtract(1, 'month').add(1, 'day').format('MMMM')
   const last3Months = await getLast3Months()
-
-  console.log(last3Months)
 
   await page.waitFor(1000)
 

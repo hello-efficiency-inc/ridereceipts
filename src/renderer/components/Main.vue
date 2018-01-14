@@ -172,6 +172,7 @@ export default {
   mounted () {
     this.$electron.ipcRenderer.on('form', (event, data) => {
       this.emailError = true
+      this.passError = true
       this.loading = false
       if (data !== 'error-email' && data !== 'error-pass') {
         this.form = data
