@@ -85,7 +85,7 @@ npm run dev
 npm run build
 
 # build electron application for cross platform
-npm run build -mwl (m - macos , w - windows & l -Linux)
+npm run build -mwl (i.e m - macos , w - windows & l - Linux)
 
 
 # lint all JS/Vue component files in `src/`
