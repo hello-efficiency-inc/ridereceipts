@@ -65,6 +65,7 @@ Simply put, using Uber Run is no different security-wise than if you were to log
 - [x] Categorized by Year and Month
 - [x] Invoices are renamed by date and timestamp. E.g. Jan-30-2018-9am.PDF
 - [x] Option to filter invoices by a specific month(s) or year(s)
+- [x] Supported on all Platforms i.e Windows, Mac & Linux
 - [ ] Automatically separate business from personal invoices
 - [ ] Includes UberEATS invoices
 - [ ] Configurable path to save invoices
