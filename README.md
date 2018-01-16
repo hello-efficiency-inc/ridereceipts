@@ -21,7 +21,7 @@
 
 ### Download
 
-MacOS - [https://github.com/break-enter/uberrun/releases](https://github.com/break-enter/uberrun/releases)
+MacOS, Windows and Linux - [https://github.com/break-enter/uberrun/releases](https://github.com/break-enter/uberrun/releases)
 
 ## Why
 
@@ -65,6 +65,7 @@ Simply put, using Uber Run is no different security-wise than if you were to log
 - [x] Categorized by Year and Month
 - [x] Invoices are renamed by date and timestamp. E.g. Jan-30-2018-9am.PDF
 - [x] Option to filter invoices by a specific month(s) or year(s)
+- [x] Supported on all Platforms i.e Windows, Mac & Linux
 - [ ] Automatically separate business from personal invoices
 - [ ] Includes UberEATS invoices
 - [ ] Configurable path to save invoices
@@ -82,6 +83,9 @@ npm run dev
 
 # build electron application for production
 npm run build
+
+# build electron application for cross platform
+npm run build -mwl (i.e m - macos , w - windows & l - Linux)
 
 
 # lint all JS/Vue component files in `src/`

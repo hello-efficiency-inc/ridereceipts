@@ -24,8 +24,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 600,
     useContentSize: true,
-    width: 1024,
-    minWidth: 1024,
+    width: 900,
+    minWidth: 900,
     minHeight: 600,
     resizable: false
   })
@@ -62,6 +62,10 @@ app.on('activate', () => {
   }
 })
 
+ipcMain.on('online-status-changed', (event, status) => {
+  event.sender.send('onlinestatus', status)
+})
+
 ipcMain.on('form', (event, status) => {
   event.sender.send('form', status)
 })
@@ -86,16 +90,8 @@ ipcMain.on('code', (event, data) => {
   event.sender.send('codedata', data)
 })
 
-ipcMain.on('filter_confirm', (event, data) => {
-  event.sender.send('filterconfirmation', data)
-})
-
 ipcMain.on('filter_option', (event, data) => {
-  event.sender.send('monthdata', data)
-})
-
-ipcMain.on('download_invoice', (event, data) => {
-  event.sender.send('downloadconfirmation', data)
+  event.sender.send('filteroption', data)
 })
 
 ipcMain.on('filters', (event, data) => {
