@@ -97,7 +97,7 @@ npm run lint
 
 ## Credits
 
-- Adi Ofir ([@breakenterTo](https://twitter.com/breakenterTo)) for logo and app design.
+- Adi Ofir ([Break and Enter](https://www.breakenter.com)) for logo and app design.
 - Meet Godhani ([@mrgodhani](https://twitter.com/mrgodhani)) for all programming.
 
 ## Support / Contribution
