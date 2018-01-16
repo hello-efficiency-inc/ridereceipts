@@ -2,7 +2,7 @@
 
 <p align="center">
 <a href="https://travis-ci.org/break-enter/uberrun">
-<img src="https://travis-ci.org/break-enter/uberrun.svg?branch=master">
+<img src="https://travis-ci.org/mrgodhani/uberrun.svg?branch=master">
 </a>
 <a href="https://codeclimate.com/github/break-enter/uberrun/maintainability">
 <img src="https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability" />
