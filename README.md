@@ -21,7 +21,7 @@
 
 ### Download
 
-MacOS - [https://github.com/break-enter/uberrun/releases](https://github.com/break-enter/uberrun/releases)
+MacOS, Windows and Linux - [https://github.com/break-enter/uberrun/releases](https://github.com/break-enter/uberrun/releases)
 
 ## Why
 
