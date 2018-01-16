@@ -150,7 +150,6 @@
   </div>
 </template>
 <script>
-import Spinner from 'vue-simple-spinner'
 import puppeteer from '../services/puppeteer'
 import jetpack from 'fs-jetpack'
 
@@ -174,9 +173,6 @@ export default {
       downloaded: false,
       dir_cleanup: false
     }
-  },
-  components: {
-    Spinner
   },
   mounted () {
     this.$electron.ipcRenderer.on('onlinestatus', (event, data) => {

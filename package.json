@@ -60,7 +60,7 @@
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",
     "popper.js": "^1.12.9",
-    "puppeteer": "^0.13.0",
+    "puppeteer": "^1.0.0",
     "sass-loader": "^6.0.6",
     "vue": "^2.5.9",
     "vue-electron": "^1.0.6",
