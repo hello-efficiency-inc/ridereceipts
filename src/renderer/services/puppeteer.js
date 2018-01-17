@@ -14,7 +14,6 @@ const FILTER_OPTION = 'FILTER_OPTION'
 const INVOICE_COUNT = 'INVOICE_COUNT'
 const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
-// const ERROR = 'ERROR'
 const ERROR_EMAIL = 'error-email'
 const ERROR_PASS = 'error-pass'
 
@@ -22,7 +21,7 @@ const ERROR_PASS = 'error-pass'
 async function getLast3Months () {
   let last3Months = []
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i <= 3; i++) {
     const month = moment().subtract(i, 'month').add(1, 'day').format('MMMM')
     const year = moment().subtract(i, 'month').add(1, 'day').format('YYYY')
     last3Months.push({ 'month': month, 'year': year })

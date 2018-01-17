@@ -52,9 +52,19 @@ body {
   top:30px;
   padding-left: 16px;
   padding-right: 16px;
-  padding-bottom: 15px;
+  padding-bottom: 0px;
   border-radius: 0;
   font-size: 14px;
+
+  p {
+    margin-bottom: 5px;
+  }
+
+  a {
+    font-weight: 800;
+    color: #0012B9;
+    margin-bottom: 0;
+  }
 }
 
 .popover-header {

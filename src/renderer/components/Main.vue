@@ -38,7 +38,14 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
-            <label for="password">Enter the password for your Uber<br/>account <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
+            <label for="password">Enter the password for your Uber<br/>account <i id="user-password" class="far fa-2x fa-question-circle"></i></label>
+            <b-popover target="user-password" triggers="click" placement="bottom">
+               <template slot="title">Security</template>
+               Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.
+               <br/>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+            </b-popover>
+            <b-input-group>
             <b-form-input
             id="password"
             v-model.trim="fields.password"
@@ -47,6 +54,10 @@
             :state="passError"
             aria-describedby="password passwordFeeback"
             placeholder="Password"></b-form-input>
+            <b-input-group-button slot="right">
+              <img class="password-lock" src="/static/password-lock.svg">
+            </b-input-group-button>
+           </b-input-group>
             <b-form-invalid-feedback id="passwordFeedback">
               Oops! That is not the correct password. Unfortunately you will have to start again.
             </b-form-invalid-feedback>
@@ -54,13 +65,26 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
           <div class="form-group">
-            <label for="verification">Enter the Uber verification code sent to you via SMS <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.'" title="Security"></i></label>
+            <label for="verification">Enter the Uber verification code sent to you via SMS <i id="verification-code" class="far fa-2x fa-question-circle"></i></label>
+            <b-popover target="verification-code" triggers="click" placement="bottom">
+               <template slot="title">Security</template>
+               Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.
+               <br/>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+            </b-popover>
             <input type="text" class="form-control form-control-lg" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
           <div class="form-group">
-            <label>Which invoices would you like to <br/> download ? <i class="far fa-2x fa-question-circle" v-b-popover.hover.bottom="'Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a Request Invoice button (as in UberEats) will not be included'" title="Note"></i></label>
+            <label>Which invoices would you like to <br/> download ? <i id="filter-option" class="far fa-2x fa-question-circle"></i></label>
+            <b-popover target="filter-option" triggers="click" placement="bottom">
+               <template slot="title">Note</template>
+               Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a Request Invoice button (as in UberEats) will not be included
+               <br/>
+               <br/>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+            </b-popover>
             <div class="row">
               <div class="col">
                 <div class="form-check">
@@ -109,7 +133,13 @@
             <div class="progress" style="height: 30px;">
               <div class="progress-bar" role="progressbar" :style="{ width: percent + '%' }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
-            <p class="progress-tip text-center"><i class="far fa-2x fa-question-circle" v-b-popover.hover.top="'We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script.'" title="Speed"></i></p>
+            <p class="progress-tip text-center"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
+            <b-popover target="progress-tip" triggers="hover focus" placement="top">
+               <template slot="title">Speed</template>
+               We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script.
+               <br/>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+            </b-popover>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'DOWNLOADED'" key="downloaded">
@@ -300,12 +330,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.fa-question-circle {
+  cursor: pointer;
+}
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
 }
 
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0
+}
+
+.password-lock {
+  position: absolute;
+  top: 20px;
+  right: 0px;
 }
 
 .splash {
