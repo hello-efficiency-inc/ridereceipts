@@ -1,16 +1,16 @@
 <p align="center"><img src="/uber-run.png" alt="Uber Run" width="150"></p>
 
 <p align="center">
-<a href="https://travis-ci.org/break-enter/uberrun">
+<a href="https://travis-ci.org/mrgodhani/uberrun">
 <img src="https://travis-ci.org/mrgodhani/uberrun.svg?branch=master">
 </a>
-<a href="https://codeclimate.com/github/break-enter/uberrun/maintainability">
+<a href="https://codeclimate.com/github/mrgodhani/uberrun/maintainability">
 <img src="https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability" />
 </a>
-<a href="https://david-dm.org/break-enter/uberrun">
-<img src="https://david-dm.org/break-enter/uberrun.svg" />
+<a href="https://david-dm.org/mrgodhani/uberrun">
+<img src="https://david-dm.org/mrgodhani/uberrun.svg" />
 </a>
-<a href="https://david-dm.org/break-enter/uberrun?type=dev" title="devDependencies status"><img src="https://david-dm.org/break-enter/uberrun/dev-status.svg"/></a>
+<a href="https://david-dm.org/mrgodhani/uberrun?type=dev" title="devDependencies status"><img src="https://david-dm.org/mrgodhani/uberrun/dev-status.svg"/></a>
 </p>
 
 
