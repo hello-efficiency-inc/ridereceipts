@@ -5,7 +5,7 @@
 <img src="https://travis-ci.org/mrgodhani/uberrun.svg?branch=master">
 </a>
 <a href="https://codeclimate.com/github/mrgodhani/uberrun/maintainability">
-<img src="https://api.codeclimate.com/v1/badges/a176f7fdd72bd288291f/maintainability" />
+<img src="https://api.codeclimate.com/v1/badges/b1b6cc14751a2e62aa4b/maintainability" />
 </a>
 <a href="https://david-dm.org/mrgodhani/uberrun">
 <img src="https://david-dm.org/mrgodhani/uberrun.svg" />
