@@ -41,7 +41,7 @@
             <label for="password">Enter the password for your Uber<br/>account <i id="user-password" class="far fa-2x fa-question-circle"></i></label>
             <b-popover target="user-password" triggers="click" placement="bottom">
                <template slot="title">Security</template>
-               Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.
+               Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
             </b-popover>
@@ -68,7 +68,7 @@
             <label for="verification">Enter the Uber verification code sent to you via SMS <i id="verification-code" class="far fa-2x fa-question-circle"></i></label>
             <b-popover target="verification-code" triggers="click" placement="bottom">
                <template slot="title">Security</template>
-               Uber Run is an automation app that tells the Chromium browser to downlod your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is a secure as logging into your Uber account through your browser.
+               Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
             </b-popover>
@@ -80,7 +80,7 @@
             <label>Which invoices would you like to <br/> download ? <i id="filter-option" class="far fa-2x fa-question-circle"></i></label>
             <b-popover target="filter-option" triggers="click" placement="bottom">
                <template slot="title">Note</template>
-               Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a Request Invoice button (as in UberEats) will not be included
+               Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a “Request Invoice” button (as in Uber Eats) will not be included.
                <br/>
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
@@ -136,7 +136,7 @@
             <p class="progress-tip text-center"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
             <b-popover target="progress-tip" triggers="hover focus" placement="top">
                <template slot="title">Speed</template>
-               We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script.
+               We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script. 
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
             </b-popover>
@@ -371,8 +371,9 @@ export default {
   }
 
   p {
-    font-size: 25px;
-    color: #2c32c4;
+    font-size: 20px;
+    line-height: 26px;
+    color: #0A11BA;
   }
 }
 
@@ -517,6 +518,10 @@ export default {
     font-weight: 800;
     color: black;
     text-transform: uppercase;
+
+    &:focus {
+      background: #FFFFFF;
+    }
 
     &:hover {
       box-shadow: 1px 1px 4px 2px rgba(160,160,160,0.50);
