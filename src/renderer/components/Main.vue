@@ -90,13 +90,13 @@
                 <div class="form-check">
                   <label class="form-check-label">
                     <input class="form-check-input" type="radio"  v-model="fields.filter_option" name="filter" value="previousyear">
-                    Previous Year
+                    Previous year
                   </label>
                 </div>
                 <div class="form-check">
                   <label class="form-check-label">
                     <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" value="currentyear">
-                    Current Year
+                    Current year
                   </label>
                 </div>
               </div>
@@ -104,13 +104,13 @@
                 <div class="form-check">
                   <label class="form-check-label">
                     <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" value="lastthreemonths">
-                    Last 3 Months
+                    Last 3 months
                   </label>
                 </div>
                 <div class="form-check">
                   <label class="form-check-label">
                     <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" value="lastmonth">
-                    Last Month
+                    Last month
                   </label>
                 </div>
               </div>
