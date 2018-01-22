@@ -19,7 +19,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "uberrun",
+    "productName": "Uber Run",
     "appId": "org.breakenter.uberrun",
     "directories": {
       "output": "build"

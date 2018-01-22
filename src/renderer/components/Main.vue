@@ -55,7 +55,7 @@
             aria-describedby="password passwordFeeback"
             placeholder="Password"></b-form-input>
             <b-input-group-button slot="right">
-              <img class="password-lock" src="/static/password-lock.svg">
+              <img class="password-lock" src="static/password-lock.svg">
             </b-input-group-button>
            </b-input-group>
             <b-form-invalid-feedback id="passwordFeedback">
@@ -144,7 +144,7 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'DOWNLOADED'" key="downloaded">
           <div class="form-group">
-            <label v-if="invoiceCount > 0">Success ! All invoices have been<br/> downloaded for you.</label>
+            <label v-if="invoiceCount > 0">Success! All invoices have been<br/> downloaded for you.</label>
             <p v-if="invoiceCount > 0" class="text-center"><button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started">View Invoices</button></p>
             <label v-if="invoiceCount === 0">{{ downloadingMessage }}</label>
             <p v-if="invoiceCount === 0" class="text-center"><button type="button" @click.stop.prevent="startAgain()" class="btn btn-lg btn-started">Start Again</button></p>
