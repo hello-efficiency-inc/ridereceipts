@@ -59,6 +59,8 @@ Uber Run does not store your login credentials, personal information or any othe
 
 Simply put, using Uber Run is no different security-wise than if you were to log into your Uber account manually through your regular browser. By using Uber Run, you’re essentially telling the browser to do this for you automatically.
 
+Since this is not available on App Store. You might need to override your security in order to open app. Please follow instruction as mentioned over [here](https://support.apple.com/kb/PH25088?locale=en_US).
+
 ## Features
 
 - [x] Categorized by User Account
