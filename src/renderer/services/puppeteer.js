@@ -257,9 +257,9 @@ export default async function () {
     // Check if the data is there. If it is then push it to array
     if (tripItem.length > 0) {
       DETAIL_ITEMS.push(tripItem[0])
-      await page.waitFor(400)
+      await page.waitFor(200)
     } else {
-      await page.waitFor(700)
+      await page.waitFor(600)
     }
   }
 

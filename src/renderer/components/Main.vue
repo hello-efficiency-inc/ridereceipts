@@ -17,7 +17,7 @@
     <form v-on:submit.prevent="submitForm" class="wrapper" v-if="form !== null">
       <nav class="navbar navbar-light bg-transparent">
         <div class="navbar-brand">
-          <img src="static/uber-run.svg" alt="Uber Run" width="100">
+          <img src="static/uber-run.svg" alt="Uber Run" width="110">
         </div>
       </nav>
       <transition name="fade">
@@ -130,7 +130,7 @@
           <div class="form-group">
             <label>{{ downloadingMessage }}</label>
             <br/>
-            <div class="progress" style="height: 30px;">
+            <div class="progress">
               <div class="progress-bar" role="progressbar" :style="{ width: percent + '%' }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <p class="progress-tip text-center"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
@@ -165,7 +165,7 @@
         </div>
       </transition>
       <div class="submit-container" v-if="!disableButton">
-        <div class="container">
+        <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
               <div class="continue-btn float-right">
@@ -331,6 +331,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 
+.navbar-brand {
+  img {
+    margin-left: 5px;
+    margin-top: 5px;
+  }
+}
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
 }
@@ -408,7 +415,7 @@ export default {
   align-items: center;
   background: white;
   min-height: 70vh;
-  padding: 3.5rem 8rem;
+  padding: 3.5rem 9rem;
 
   label:not(.form-check-label) {
     font-size: 36px;
@@ -440,7 +447,8 @@ export default {
     border-bottom: 2px solid rgba(0, 0, 0, 02);
     background-color: transparent;
     border-radius: 0px;
-    font-size: 2em;
+    padding-bottom: 0;
+    font-size: 1.9em;
     color: black;
     caret-color: #0012B9;
     text-overflow: ellipsis;
@@ -461,6 +469,8 @@ export default {
 }
 
 .progress {
+  background-color: #D9D9D9;
+  height: 16px;
   border-radius: 1rem;
 }
 
