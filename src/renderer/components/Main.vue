@@ -136,7 +136,7 @@
             <p class="progress-tip text-center"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
             <b-popover target="progress-tip" triggers="hover focus" placement="top">
                <template slot="title">Speed</template>
-               We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script. 
+               We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script.
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
             </b-popover>
@@ -330,9 +330,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.fa-question-circle {
-  cursor: pointer;
-}
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
@@ -536,10 +533,11 @@ export default {
 }
 
 .fa-question-circle {
-  color: #e3e3e3;
+  color: #898989;
   font-size: 18px;
   top: -10px;
   position: relative;
+  cursor: pointer;
 }
 
 .progress-tip {
