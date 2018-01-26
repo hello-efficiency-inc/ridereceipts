@@ -124,6 +124,13 @@
             <div class="loading">
               <div class="inner"></div>
             </div>
+            <p class="progress-tip text-center"><i id="progress-checking" class="far fa-2x fa-question-circle"></i></p>
+            <b-popover target="progress-checking" triggers="hover focus" placement="top">
+               <template slot="title">Speed</template>
+               We purposely check for invoices slowly to prevent the Uber website from knowing you are running a script.
+               <br/>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+            </b-popover>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'INVOICE_COUNT'" key="invoicecounts">

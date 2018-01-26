@@ -44,6 +44,18 @@ body {
   border-color: #d800d0 rgb(238, 238, 238) rgb(238, 238, 238) !important;
 }
 
+.bs-popover-bottom {
+  top: 2px !important;
+}
+
+.popover .arrow {
+  margin: 0.04rem 0.3rem;
+}
+
+.bs-popover-bottom .arrow::after, .bs-popover-auto[x-placement^="bottom"] .arrow::after {
+  z-index:50000;
+}
+
 .popover {
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
   border: 1px solid #E4E4E4;
