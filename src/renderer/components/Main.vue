@@ -125,7 +125,7 @@
               <div class="inner"></div>
             </div>
             <p class="progress-tip text-center"><i id="progress-checking" class="far fa-2x fa-question-circle"></i></p>
-            <b-popover target="progress-checking" triggers="hover focus" placement="top">
+            <b-popover target="progress-checking" triggers="click" placement="top">
                <template slot="title">Speed</template>
                We purposely check for invoices slowly to prevent the Uber website from knowing you are running a script.
                <br/>
@@ -141,7 +141,7 @@
               <div class="progress-bar" role="progressbar" :style="{ width: percent + '%' }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <p class="progress-tip text-center"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
-            <b-popover target="progress-tip" triggers="hover focus" placement="top">
+            <b-popover target="progress-tip" triggers="click" placement="top">
                <template slot="title">Speed</template>
                We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script.
                <br/>

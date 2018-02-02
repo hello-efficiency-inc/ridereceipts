@@ -52,6 +52,10 @@ body {
   margin: 0.04rem 0.3rem;
 }
 
+.bs-popover-bottom .arrow::before, .bs-popover-auto[x-placement^="bottom"] .arrow::before {
+    border-bottom-color: rgba(0, 0, 0, 0.10);
+}
+
 .bs-popover-bottom .arrow::after, .bs-popover-auto[x-placement^="bottom"] .arrow::after {
   z-index:50000;
 }
@@ -66,7 +70,9 @@ body {
   padding-right: 16px;
   padding-bottom: 0px;
   border-radius: 0;
+  font-weight: 400;
   font-size: 14px;
+  font-family: 'Nunito', sans-serif;
 
   p {
     margin-bottom: 5px;
@@ -74,6 +80,7 @@ body {
 
   a {
     font-weight: 800;
+    font-size: 12px;
     color: #0012B9;
     margin-bottom: 0;
   }

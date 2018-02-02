@@ -27,7 +27,7 @@ MacOS, Windows and Linux - [https://github.com/mrgodhani/uberrun/releases](https
 
 Uber Run is essential for anyone who relies on Uber for business travel. Whether you’re self-employed or get reimbursed by your employer for travel, you’ll likely need proper tax invoices for accounting purposes.
 
-This was a major pain-point for us every year around tax season. Since the current Uber website does not allow you to download all of your invoices for the year at once, you have to manually download, rename, and organize each of your invoices. So you’re either doing it one-by-one, or if you have a business profile, you still have to download them one month at a time. Uber’s monthly business travel report is great for keeping track of your trips, but these aren’t actual invoices.
+This was a major pain point for us every year around tax season. Since the current Uber website does not allow you to download all of your invoices for the year at once, you have to manually download, rename, and organize each of your invoices. So you’re either doing it one by one, or if you have a business profile, you still have to download them one month at a time. Uber’s monthly business travel report is great for keeping track of your trips, but these aren’t actual invoices.
 
 We created Uber Run to address this painfully inefficient process, and now we’re sharing it with everyone who could benefit from this time-saving tool.
 
@@ -47,7 +47,7 @@ Uber Run works on both Mac and PC. Please note we built this on Mac, so it may s
 
 ## Limitation
 
-Uber Run can only download the invoices that exist in your Uber account. Invoices that are cancelled, have not been issued, or have a "*Request Invoice*" button as in UberEATS will not download.
+Uber Run can only download the invoices that exist in your Uber account. Invoices that are cancelled, have not been issued, or have a "Request Invoice" button as in UberEATS, and travel in certain countries will not download.
 
 Since Uber Run scrapes your user account on the website, you may be halted by Uber's rate limiting. Please do not run the app more than once in the same hour. If your IP address gets banned, don’t panic, this is only temporary and you’ll be able to access Uber’s website again in an hour or so. We recommend downloading all the invoices you need in one go. After all, that’s why we built it!
 
@@ -59,7 +59,7 @@ Uber Run does not store your login credentials, personal information or any othe
 
 Simply put, using Uber Run is no different security-wise than if you were to log into your Uber account manually through your regular browser. By using Uber Run, you’re essentially telling the browser to do this for you automatically.
 
-Since this is not available on App Store. You might need to override your security in order to open app. Please follow instruction as mentioned over [here](https://support.apple.com/kb/PH25088?locale=en_US).
+For Mac users: Since Uber Run is not available in the App Store, you may need to override your security settings in order to open it. Please follow these [instructions](https://support.apple.com/kb/PH25088?locale=en_US).
 
 ## Features
 
@@ -69,7 +69,6 @@ Since this is not available on App Store. You might need to override your securi
 - [x] Option to filter invoices by a specific month(s) or year(s)
 - [x] Supported on all Platforms i.e Windows, Mac & Linux
 - [ ] Automatically separate business from personal invoices
-- [ ] Includes UberEATS invoices
 - [ ] Configurable path to save invoices
 
 ## Developer Notes
