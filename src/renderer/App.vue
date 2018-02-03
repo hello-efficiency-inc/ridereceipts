@@ -68,7 +68,8 @@ body {
   top:30px;
   padding-left: 16px;
   padding-right: 16px;
-  padding-bottom: 0px;
+  padding-bottom: 10px;
+  padding-top: 10px;
   border-radius: 0;
   font-weight: 400;
   font-size: 14px;
@@ -78,11 +79,15 @@ body {
     margin-bottom: 5px;
   }
 
+  p.text-right {
+        margin-top: 15px;
+            margin-bottom: 5px;
+  }
+
   a {
     font-weight: 800;
     font-size: 12px;
     color: #0012B9;
-    margin-bottom: 0;
   }
 }
 
@@ -94,6 +99,11 @@ body {
   border-bottom: 0px;
   font-weight: 800;
   color: black;
+}
+
+.input-group {
+  width: 80%;
+  margin: 0 auto;
 }
 
 </style>

@@ -47,13 +47,14 @@
             </b-popover>
             <b-input-group>
             <b-form-input
-            id="password"
-            v-model.trim="fields.password"
-            type="password"
-            :readonly="!passError"
-            :state="passError"
-            aria-describedby="password passwordFeeback"
-            placeholder="Password"></b-form-input>
+              id="password"
+              v-model.trim="fields.password"
+              type="password"
+              :readonly="!passError"
+              :state="passError"
+              aria-describedby="password passwordFeeback"
+              placeholder="Password">
+            </b-form-input>
             <b-input-group-button slot="right">
               <img class="password-lock" src="static/password-lock.svg">
             </b-input-group-button>
@@ -339,7 +340,11 @@ export default {
 <style lang="scss" scoped>
 
 .navbar-brand {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   img {
+    width: 115px;
+    height: auto;
     margin-left: 5px;
     margin-top: 5px;
   }
@@ -410,8 +415,8 @@ export default {
 
 .submit-container {
   position: absolute;
-  width: 100%;
-  bottom: 0;
+  width: 96%;
+  bottom: 10px;
   height: 100px;
   padding-top: 10px;
 }
@@ -428,8 +433,10 @@ export default {
     font-size: 36px;
     text-align: center;
     font-weight: 800;
-    margin-bottom: 35px;
+    margin-bottom: 42px;
+    margin-top: -5px;
     line-height: 42px;
+
     color: black;
   }
 
@@ -460,6 +467,8 @@ export default {
     caret-color: #0012B9;
     text-overflow: ellipsis;
     transition: all 0.5s ease;
+    width: 80%;
+    margin: 0 auto;
 
     &:focus {
       border-image:  linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
@@ -479,6 +488,8 @@ export default {
   background-color: #D9D9D9;
   height: 16px;
   border-radius: 1rem;
+  width: 80%;
+  margin: 10px auto;
 }
 
 .progress-bar {
