@@ -43,7 +43,7 @@ Since Electron is not 100% headless, we're using [Google Puppeteer](https://gith
 
 Uber Run requires Chromium to operate. Please download [Chromium](https://download-chromium.appspot.com/) and extract folder on your desktop.
 
-Uber Run works on both Mac and PC. Please note we built this on Mac, so it may still have some kinks to iron out on PC.
+Uber Run works on both Mac and PC. Please note we built this on Mac, so it may still have some details to iron out on PC.
 
 ## Limitation
 
@@ -53,7 +53,7 @@ Since Uber Run scrapes your user account on the website, you may be halted by Ub
 
 Currently Uber Run cannot distinguish between business and personal invoices. Our recommended workaround is to use Uber’s monthly business travel report to cross reference with all of the invoices from Uber Run and delete the ones you don’t intend to claim for your taxes or company reimbursement. Uber Run automatically renames all of your invoices by the date and time of the trip, and organizes them by month in folders, so it’s easier to tell what’s what.
 
-## Note
+## Security
 
 Uber Run does not store your login credentials, personal information or any other data. This application operates without a database and it is solely automating on the Chromium browser as you type.
 

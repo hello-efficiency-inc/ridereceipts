@@ -43,7 +43,7 @@
                <template slot="title">Security</template>
                Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#note">Learn more</a></p>
             </b-popover>
             <b-input-group>
             <b-form-input
@@ -71,7 +71,7 @@
                <template slot="title">Security</template>
                Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#note">Learn more</a></p>
             </b-popover>
             <input type="text" class="form-control form-control-lg" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
           </div>
@@ -84,7 +84,7 @@
                Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a “Request Invoice” button (as in Uber Eats) will not be included.
                <br/>
                <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#note">Learn more</a></p>
             </b-popover>
             <div class="row">
               <div class="col">
@@ -130,7 +130,7 @@
                <template slot="title">Speed</template>
                We purposely check for invoices slowly to prevent the Uber website from knowing you are running a script.
                <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#limitation">Learn more</a></p>
             </b-popover>
           </div>
         </div>
@@ -146,7 +146,7 @@
                <template slot="title">Speed</template>
                We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script.
                <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun">Learn more</a></p>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#limitation">Learn more</a></p>
             </b-popover>
           </div>
         </div>
