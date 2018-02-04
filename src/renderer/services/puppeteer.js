@@ -16,6 +16,7 @@ const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
 const ERROR_EMAIL = 'error-email'
 const ERROR_PASS = 'error-pass'
+const ERROR_VERI = 'error-veri'
 
 // Calculate Last 3 Month from current month
 async function getLast3Months () {
@@ -114,7 +115,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -200,7 +201,17 @@ export default async function () {
   await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
   await page.click(VERIFY_BUTTON)
 
-  await page.waitForNavigation()
+  await page.waitFor(1000)
+
+  const evaluateErrorVeri = await evaluateError(page)
+
+  if (evaluateErrorVeri) {
+    ipcRenderer.send('form', ERROR_VERI)
+    await browser.close()
+  }
+
+  // await page.waitFor(1000)
+
   ipcRenderer.send('form', FILTER_OPTION)
 
   await page.waitForSelector(FILTER_TRIPS)

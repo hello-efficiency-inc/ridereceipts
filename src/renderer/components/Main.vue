@@ -29,7 +29,7 @@
             type="email"
             :readonly="!emailError"
             :state="emailError"
-            aria-describedby="email emailFeeback"
+            aria-describedby="email emailFeedback"
             placeholder="Email Address"></b-form-input>
             <b-form-invalid-feedback id="emailFeedback">
               Oops! There is no account associated with this email address.
@@ -39,11 +39,11 @@
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
             <label for="password">Enter the password for your Uber<br/>account <i id="user-password" class="far fa-2x fa-question-circle"></i></label>
-            <b-popover target="user-password" triggers="click" placement="bottom">
+            <b-popover target="user-password" triggers="click focus" placement="bottom">
                <template slot="title">Security</template>
                Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#note">Learn more</a></p>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
             </b-popover>
             <b-input-group>
             <b-form-input
@@ -58,22 +58,33 @@
             <b-input-group-button slot="right">
               <img class="password-lock" src="static/password-lock.svg">
             </b-input-group-button>
-           </b-input-group>
             <b-form-invalid-feedback id="passwordFeedback">
               Oops! That is not the correct password. Unfortunately you will have to start again.
             </b-form-invalid-feedback>
+           </b-input-group>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
           <div class="form-group">
             <label for="verification">Enter the Uber verification code sent to you via SMS <i id="verification-code" class="far fa-2x fa-question-circle"></i></label>
-            <b-popover target="verification-code" triggers="click" placement="bottom">
+            <b-popover target="verification-code" triggers="click focus" placement="bottom">
                <template slot="title">Security</template>
                Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#note">Learn more</a></p>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
             </b-popover>
-            <input type="text" class="form-control form-control-lg" id="verification" v-model="fields.verification_code" aria-describedby="verification" placeholder="Verification code">
+            <b-form-input
+              id="verification"
+              v-model.trim="fields.verification_code"
+              type="text"
+              size="4"
+              :readonly="!veriError"
+              :state="veriError"
+              aria-describedby="verification verificationFeeback"
+              placeholder="Verification code"></b-form-input>
+              <b-form-invalid-feedback id="verificationFeedback">
+                Oops! That is not the correct verification code. Unfortunately you will have to start again.
+              </b-form-invalid-feedback>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
@@ -84,7 +95,7 @@
                Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a “Request Invoice” button (as in Uber Eats) will not be included.
                <br/>
                <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#note">Learn more</a></p>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
             </b-popover>
             <div class="row">
               <div class="col">
@@ -206,6 +217,7 @@ export default {
       online: true,
       emailError: true,
       passError: true,
+      veriError: true,
       downloadingMessage: null,
       percent: null,
       downloaded: false,
@@ -218,6 +230,7 @@ export default {
         this.online = false
         this.emailError = false
         this.passError = false
+        this.veriError = false
       } else {
         this.online = true
       }
@@ -225,8 +238,9 @@ export default {
     this.$electron.ipcRenderer.on('form', (event, data) => {
       this.emailError = true
       this.passError = true
+      this.veriError = true
       this.loading = false
-      if (data !== 'error-email' && data !== 'error-pass') {
+      if (data !== 'error-email' && data !== 'error-pass' && data !== 'error-veri') {
         this.form = data
       }
 
@@ -236,6 +250,10 @@ export default {
 
       if (data === 'error-pass') {
         this.passError = false
+      }
+
+      if (data === 'error-veri') {
+        this.veriError = false
       }
     })
     this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
@@ -271,6 +289,9 @@ export default {
         return true
       }
       if (!this.emailError) {
+        return true
+      }
+      if (!this.veriError) {
         return true
       }
       if (this.form === 'ERROR') {

@@ -106,4 +106,9 @@ body {
   margin: 0 auto;
 }
 
+.invalid-feedback {
+  width: 80%;
+  margin:10px auto;
+}
+
 </style>
