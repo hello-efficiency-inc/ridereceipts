@@ -45,7 +45,7 @@ Uber Run requires Chromium to operate. Please download [Chromium](https://downlo
 
 Uber Run works on both Mac and PC. Please note we built this on Mac, so it may still have some details to iron out on PC.
 
-## Limitation
+## Limitations
 
 Uber Run can only download the invoices that exist in your Uber account. Invoices that are cancelled, have not been issued, or have a "Request Invoice" button (as in Uber Eats, and travel in certain countries) will not download.
 
