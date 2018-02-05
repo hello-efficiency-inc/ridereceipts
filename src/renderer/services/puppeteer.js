@@ -115,7 +115,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -210,7 +210,7 @@ export default async function () {
     await browser.close()
   }
 
-  // await page.waitFor(1000)
+  await page.waitForNavigation()
 
   ipcRenderer.send('form', FILTER_OPTION)
 
