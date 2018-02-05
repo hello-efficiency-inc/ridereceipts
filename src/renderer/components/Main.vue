@@ -39,13 +39,12 @@
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
             <label for="password">Enter the password for your Uber<br/>account <i id="user-password" class="far fa-2x fa-question-circle"></i></label>
-            <b-popover target="user-password" triggers="click focus" placement="bottom">
+            <b-popover  ref="popover" target="user-password" triggers="click focus" placement="bottom">
                <template slot="title">Security</template>
                Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
             </b-popover>
-            <b-input-group>
             <b-form-input
               id="password"
               v-model.trim="fields.password"
@@ -55,19 +54,16 @@
               aria-describedby="password passwordFeeback"
               placeholder="Password">
             </b-form-input>
-            <b-input-group-button slot="right">
-              <img class="password-lock" src="static/password-lock.svg">
-            </b-input-group-button>
+            <img class="password-lock" src="static/password-lock.svg">
             <b-form-invalid-feedback id="passwordFeedback">
               Oops! That is not the correct password. Unfortunately you will have to start again.
             </b-form-invalid-feedback>
-           </b-input-group>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
           <div class="form-group">
             <label for="verification">Enter the Uber verification code sent to you via SMS <i id="verification-code" class="far fa-2x fa-question-circle"></i></label>
-            <b-popover target="verification-code" triggers="click focus" placement="bottom">
+            <b-popover ref="popover" target="verification-code" triggers="click focus" placement="bottom">
                <template slot="title">Security</template>
                Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
@@ -90,7 +86,7 @@
         <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
           <div class="form-group">
             <label>Which invoices would you like to <br/> download ? <i id="filter-option" class="far fa-2x fa-question-circle"></i></label>
-            <b-popover target="filter-option" triggers="click" placement="bottom">
+            <b-popover ref="popover" target="filter-option" triggers="click" placement="bottom">
                <template slot="title">Note</template>
                Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a “Request Invoice” button (as in Uber Eats) will not be included.
                <br/>
@@ -137,7 +133,7 @@
               <div class="inner"></div>
             </div>
             <p class="progress-tip text-center"><i id="progress-checking" class="far fa-2x fa-question-circle"></i></p>
-            <b-popover target="progress-checking" triggers="click" placement="top">
+            <b-popover ref="popover" target="progress-checking" triggers="click" placement="top">
                <template slot="title">Speed</template>
                We purposely check for invoices slowly to prevent the Uber website from knowing you are running a script.
                <br/>
@@ -153,7 +149,7 @@
               <div class="progress-bar" role="progressbar" :style="{ width: percent + '%' }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <p class="progress-tip text-center"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
-            <b-popover target="progress-tip" triggers="click" placement="top">
+            <b-popover  ref="popover" target="progress-tip" triggers="click" placement="top">
                <template slot="title">Speed</template>
                We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script.
                <br/>
@@ -381,8 +377,8 @@ export default {
 
 .password-lock {
   position: absolute;
-  top: 20px;
-  right: 0px;
+  top: 62%;
+  left: 72%;
 }
 
 .splash {
