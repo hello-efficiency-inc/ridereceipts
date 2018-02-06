@@ -376,9 +376,10 @@ export default {
 }
 
 .password-lock {
-  position: absolute;
-  top: 62%;
-  left: 72%;
+  position: relative;
+    top: -35px;
+    bottom: 0;
+    left: 87%;
 }
 
 .splash {
@@ -673,5 +674,9 @@ export default {
   100% {
     -webkit-transform: rotate(360deg);
   }
+}
+
+#passwordFeedback {
+  margin-top: -20px;
 }
 </style>

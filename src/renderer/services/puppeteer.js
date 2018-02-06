@@ -41,6 +41,14 @@ async function listenEvent (eventname) {
   return data
 }
 
+const customWaitFor = function (timeToWait) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(true)
+    }, timeToWait)
+  })
+}
+
 // Evaluate Password or Email Error
 async function evaluateError (page) {
   const errorCheck = await page.evaluate(() => {
@@ -115,7 +123,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -185,7 +193,7 @@ export default async function () {
   await page.keyboard.type(await listenEvent('passdata'), {delay: 30})
   await page.click(NEXT_BUTTON)
 
-  await page.waitFor(1000)
+  await customWaitFor(1500)
 
   const evaluateErrorPass = await evaluateError(page)
 
@@ -195,24 +203,28 @@ export default async function () {
     await browser.close()
   }
 
-  await page.waitForSelector(PASSWORD_SELECTOR, { hidden: true })
   await page.click(SMS_SELECTOR)
   ipcRenderer.send('form', VERIFICATION)
   await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
   await page.click(VERIFY_BUTTON)
 
-  await page.waitFor(1000)
+  await customWaitFor(1500)
 
-  const evaluateErrorVeri = await evaluateError(page)
+  const checkInput = await page.evaluate(() => {
+    const error = document.querySelector('#verificationCode')
+    return error !== null
+  })
 
-  if (evaluateErrorVeri) {
-    ipcRenderer.send('form', ERROR_VERI)
-    await browser.close()
+  if (checkInput) {
+    const evaluateErrorVeri = await evaluateError(page)
+
+    if (evaluateErrorVeri) {
+      ipcRenderer.send('form', ERROR_VERI)
+      await browser.close()
+    }
+  } else {
+    ipcRenderer.send('form', FILTER_OPTION)
   }
-
-  await page.waitForNavigation()
-
-  ipcRenderer.send('form', FILTER_OPTION)
 
   await page.waitForSelector(FILTER_TRIPS)
 
