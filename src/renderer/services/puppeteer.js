@@ -123,7 +123,7 @@ export default async function () {
   }
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     timeout: 0,
     executablePath: exec,
     args: [
