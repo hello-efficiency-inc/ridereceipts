@@ -208,25 +208,10 @@ export default async function () {
   await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
   await page.click(VERIFY_BUTTON)
 
-  await customWaitFor(1500)
-
-  const checkInput = await page.evaluate(() => {
-    const error = document.querySelector('#verificationCode')
-    return error !== null
-  })
-
-  if (checkInput) {
-    const evaluateErrorVeri = await evaluateError(page)
-
-    if (checkInput && evaluateErrorVeri) {
-      ipcRenderer.send('form', ERROR_VERI)
-      await browser.close()
-    }
-  } else {
-    ipcRenderer.send('form', FILTER_OPTION)
-  }
+  await page.waitFor(1500)
 
   await page.waitForSelector(FILTER_TRIPS)
+  ipcRenderer.send('form', FILTER_OPTION)
 
   const filterOption = await listenEvent('filteroption')
   const currentYear = moment().format('YYYY')
