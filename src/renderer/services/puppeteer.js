@@ -218,7 +218,7 @@ export default async function () {
   if (checkInput) {
     const evaluateErrorVeri = await evaluateError(page)
 
-    if (evaluateErrorVeri) {
+    if (checkInput && evaluateErrorVeri) {
       ipcRenderer.send('form', ERROR_VERI)
       await browser.close()
     }
