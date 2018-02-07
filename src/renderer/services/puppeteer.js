@@ -16,7 +16,7 @@ const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
 const ERROR_EMAIL = 'error-email'
 const ERROR_PASS = 'error-pass'
-const ERROR_VERI = 'error-veri'
+// const ERROR_VERI = 'error-veri'
 
 // Calculate Last 3 Month from current month
 async function getLast3Months () {
