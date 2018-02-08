@@ -26,7 +26,7 @@
             <label for="email">Enter the email address associated with your Uber account</label>
             <b-form-input id="email"
             v-model.trim="fields.email"
-            type="email"
+            type="text"
             :readonly="!emailError"
             :state="emailError"
             aria-describedby="email emailFeedback"
@@ -39,12 +39,6 @@
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
             <label for="password">Enter the password for your Uber<br/>account <i id="user-password" class="far fa-2x fa-question-circle"></i></label>
-            <b-popover  ref="popover" target="user-password" triggers="click focus" placement="bottom">
-               <template slot="title">Security</template>
-               Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
-               <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
-            </b-popover>
             <b-form-input
               id="password"
               v-model.trim="fields.password"
@@ -56,9 +50,16 @@
             </b-form-input>
             <img class="password-lock" src="static/password-lock.svg">
             <b-form-invalid-feedback id="passwordFeedback">
-              Oops! That is not the correct password. Unfortunately you will have to start again because the app does not store any information.
+              Oops! That is not the correct password. Unfortunately you will have to start again because the app does
+              not store any information.
             </b-form-invalid-feedback>
           </div>
+          <b-popover  ref="popover" target="user-password" triggers="click focus" placement="bottom">
+             <template slot="title">Security</template>
+             Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
+             <br/>
+             <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
+          </b-popover>
         </div>
         <div class="jumbotron form--container" v-if="form === 'VERIFICATION'" key="verification">
           <div class="form-group">
@@ -387,7 +388,7 @@ export default {
   position: relative;
     top: -35px;
     bottom: 0;
-    left: 87.1%;
+    left: 86.7%;
 }
 
 .splash {
@@ -461,6 +462,7 @@ export default {
 
   label:not(.form-check-label) {
     font-size: 36px;
+    width: 100%;
     text-align: center;
     font-weight: 800;
     margin-bottom: 42px;
