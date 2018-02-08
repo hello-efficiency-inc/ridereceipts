@@ -208,6 +208,7 @@ export default async function () {
   await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
   await page.click(VERIFY_BUTTON)
 
+<<<<<<< HEAD
   await customWaitFor(1000)
 
   // const checkInput = await page.evaluate(() => {
@@ -225,6 +226,9 @@ export default async function () {
   // } else {
   //   ipcRenderer.send('form', FILTER_OPTION)
   // }
+=======
+  await page.waitFor(1500)
+>>>>>>> 4d8e391884f774fe0e1856d7a0f8b80095920c14
 
   await page.waitForSelector(FILTER_TRIPS)
   ipcRenderer.send('form', FILTER_OPTION)
