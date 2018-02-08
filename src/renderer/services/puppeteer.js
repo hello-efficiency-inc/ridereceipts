@@ -208,27 +208,7 @@ export default async function () {
   await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
   await page.click(VERIFY_BUTTON)
 
-<<<<<<< HEAD
-  await customWaitFor(1000)
-
-  // const checkInput = await page.evaluate(() => {
-  //   const error = document.querySelector('#verificationCode')
-  //   return error !== null
-  // })
-  //
-  // if (checkInput) {
-  //   const evaluateErrorVeri = await evaluateError(page)
-  //
-  //   if (checkInput && evaluateErrorVeri) {
-  //     ipcRenderer.send('form', ERROR_VERI)
-  //     await browser.close()
-  //   }
-  // } else {
-  //   ipcRenderer.send('form', FILTER_OPTION)
-  // }
-=======
   await page.waitFor(1500)
->>>>>>> 4d8e391884f774fe0e1856d7a0f8b80095920c14
 
   await page.waitForSelector(FILTER_TRIPS)
   ipcRenderer.send('form', FILTER_OPTION)
