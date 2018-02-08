@@ -16,7 +16,7 @@ const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
 const ERROR_EMAIL = 'error-email'
 const ERROR_PASS = 'error-pass'
-const ERROR_VERI = 'error-veri'
+// const ERROR_VERI = 'error-veri'
 
 // Calculate Last 3 Month from current month
 async function getLast3Months () {
@@ -208,25 +208,26 @@ export default async function () {
   await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
   await page.click(VERIFY_BUTTON)
 
-  await customWaitFor(1500)
+  await customWaitFor(1000)
 
-  const checkInput = await page.evaluate(() => {
-    const error = document.querySelector('#verificationCode')
-    return error !== null
-  })
-
-  if (checkInput) {
-    const evaluateErrorVeri = await evaluateError(page)
-
-    if (checkInput && evaluateErrorVeri) {
-      ipcRenderer.send('form', ERROR_VERI)
-      await browser.close()
-    }
-  } else {
-    ipcRenderer.send('form', FILTER_OPTION)
-  }
+  // const checkInput = await page.evaluate(() => {
+  //   const error = document.querySelector('#verificationCode')
+  //   return error !== null
+  // })
+  //
+  // if (checkInput) {
+  //   const evaluateErrorVeri = await evaluateError(page)
+  //
+  //   if (checkInput && evaluateErrorVeri) {
+  //     ipcRenderer.send('form', ERROR_VERI)
+  //     await browser.close()
+  //   }
+  // } else {
+  //   ipcRenderer.send('form', FILTER_OPTION)
+  // }
 
   await page.waitForSelector(FILTER_TRIPS)
+  ipcRenderer.send('form', FILTER_OPTION)
 
   const filterOption = await listenEvent('filteroption')
   const currentYear = moment().format('YYYY')

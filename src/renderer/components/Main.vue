@@ -56,7 +56,7 @@
             </b-form-input>
             <img class="password-lock" src="static/password-lock.svg">
             <b-form-invalid-feedback id="passwordFeedback">
-              Oops! That is not the correct password. Unfortunately you will have to start again.
+              Oops! That is not the correct password. Unfortunately you will have to start again because the app does not store any information.
             </b-form-invalid-feedback>
           </div>
         </div>
@@ -79,7 +79,7 @@
               aria-describedby="verification verificationFeeback"
               placeholder="Verification code"></b-form-input>
               <b-form-invalid-feedback id="verificationFeedback">
-                Oops! That is not the correct verification code. Unfortunately you will have to start again.
+                Oops! That is not the correct verification code. Unfortunately you will have to start again because the app does not store any information.
               </b-form-invalid-feedback>
           </div>
         </div>
@@ -91,7 +91,7 @@
                Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a “Request Invoice” button (as in Uber Eats) will not be included.
                <br/>
                <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
+               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#limitations">Learn more</a></p>
             </b-popover>
             <div class="row">
               <div class="col">
@@ -236,6 +236,15 @@ export default {
       this.passError = true
       this.veriError = true
       this.loading = false
+
+      if (data === 'EMAIL') {
+        this.fields = {
+          email: null,
+          password: null,
+          verification_code: null,
+          filter_option: null
+        }
+      }
       if (data !== 'error-email' && data !== 'error-pass' && data !== 'error-veri') {
         this.form = data
       }
@@ -329,7 +338,6 @@ export default {
     startAgain () {
       this.loading = true
       puppeteer()
-      this.fields = {}
     },
     openInvoiceFolder () {
       const documentDir = jetpack.cwd(this.$electron.remote.app.getPath('documents'))
@@ -368,7 +376,7 @@ export default {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s
+  transition: opacity .3s
 }
 
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
@@ -379,7 +387,7 @@ export default {
   position: relative;
     top: -35px;
     bottom: 0;
-    left: 87%;
+    left: 87.1%;
 }
 
 .splash {
@@ -420,6 +428,10 @@ export default {
   text-transform: uppercase;
   font-size: 15px;
   font-weight: 700;
+
+  &:focus:enabled {
+    background: white;
+  }
 
   &:hover:enabled {
     background: #0012B9;
@@ -537,6 +549,9 @@ export default {
     color: black;
     text-transform: uppercase;
 
+    &:focus {
+      background: #fff;
+    }
     &:hover {
       box-shadow: 1px 1px 4px 2px rgba(160,160,160,0.50);
     }
