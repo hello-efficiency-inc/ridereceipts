@@ -12,6 +12,7 @@
 </a>
 <a href="https://david-dm.org/mrgodhani/uberrun?type=dev" title="devDependencies status"><img src="https://david-dm.org/mrgodhani/uberrun/dev-status.svg"/></a>
 </p>
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](uberrunapp@gmail.com)
 
 
 > Simple automation desktop app to download and organize your tax invoices from Uber.
