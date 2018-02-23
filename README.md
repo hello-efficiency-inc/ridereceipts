@@ -11,11 +11,10 @@
 <img src="https://david-dm.org/mrgodhani/uberrun.svg" />
 </a>
 <a href="https://david-dm.org/mrgodhani/uberrun?type=dev" title="devDependencies status"><img src="https://david-dm.org/mrgodhani/uberrun/dev-status.svg"/></a>
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5GHVYY9WEL78Y">
+ <img src="https://img.shields.io/badge/Donate-PayPal-green.svg"/>
+</a>
 </p>
-
-
-
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5GHVYY9WEL78Y)
 
 > Simple automation desktop app to download and organize your tax invoices from Uber.
 
