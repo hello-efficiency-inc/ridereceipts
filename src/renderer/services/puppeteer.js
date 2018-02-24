@@ -133,6 +133,12 @@ export default async function () {
 
   const page = await browser.newPage()
 
+  await page.setViewport({
+    width: 1440,
+    height: 990,
+    deviceScaleFactor: 2
+  })
+
   // Launch Page
   await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com', {waitUntil: 'domcontentloaded'})
 
@@ -267,14 +273,15 @@ export default async function () {
       DETAIL_ITEMS.push(tripItem[0])
       await page.waitFor(200)
     } else {
-      await page.waitFor(600)
+      await page.waitFor(300)
     }
   }
 
   DETAIL_ITEMS.map((item) => {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone // Get User's Timezone by Location
     item.year = moment(item.invoice_date).format('YYYY')
     item.month = moment(item.invoice_date).format('MMMM')
-    item.invoice_date = moment(item.invoice_date).tz('America/Toronto').format('MMMM-DD-YYYY_hh-mm-a')
+    item.invoice_date = moment(item.invoice_date).tz(timezone).format('MMMM-DD-YYYY_hh-mm-a')
     return item
   })
 
@@ -308,7 +315,7 @@ export default async function () {
   ipcRenderer.send('invoiceTotal', uniqItems.length)
 
   for (let i = 0; i < uniqItems.length; ++i) {
-    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/`)})
+    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Invoices`)})
     await page.goto(`https://riders.uber.com/trips/${uniqItems[i].trip_uid}`, {waitUntil: 'networkidle2'})
 
     const progress = i === (uniqItems.length - 1) ? _.ceil(_.divide(i + 1, uniqItems.length) * 100) : _.ceil(_.divide(i, uniqItems.length) * 100)
@@ -320,18 +327,33 @@ export default async function () {
 
     // Check if request invoice button is hidden. Then go ahead download it.
     if (invoiceRequest) {
-      await page.waitFor(1 * 3000)
+      await page.waitFor(1 * 2500)
+      // Download as pdf of the page to keep record of trip with map
+      if (!jetpack.exists(documentDir.path(`${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Receipts/`))) {
+        jetpack.dir(documentDir.path(`${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Receipts/`))
+      }
+      await page.emulateMedia('screen')
+      const receiptFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Receipts/receipt-${uniqItems[i].invoice_number}.pdf`
+      await page.pdf({
+        path: receiptFilePath,
+        width: '1440px',
+        height: '900px',
+        printBackground: true,
+        pageRanges: '1'
+      })
       await page.click(DOWNLOAD_INVOICE_TRIP)
     }
 
     ipcRenderer.send('progress', progress)
-    await page.waitFor(2000)
+    await page.waitFor(1500)
   }
 
   for (let i = 0; i < uniqItems.length; ++i) {
-    const invoiceFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/invoice-${uniqItems[i].invoice_number}.pdf`
-    if (jetpack.exists(invoiceFilePath)) {
+    const invoiceFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Invoices/invoice-${uniqItems[i].invoice_number}.pdf`
+    const receiptFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Receipts/receipt-${uniqItems[i].invoice_number}.pdf`
+    if (jetpack.exists(invoiceFilePath) && jetpack.exists(receiptFilePath)) {
       jetpack.rename(invoiceFilePath, `${uniqItems[i].invoice_date}.pdf`)
+      jetpack.rename(receiptFilePath, `${uniqItems[i].invoice_date}.pdf`)
     }
   }
 

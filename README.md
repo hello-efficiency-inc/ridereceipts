@@ -73,6 +73,7 @@ For Mac users: Since Uber Run is not available in the App Store, you may need to
 - [x] Invoices are renamed by date and timestamp. E.g. Jan-30-2018-9am.PDF
 - [x] Option to filter invoices by a specific month(s) or year(s)
 - [x] Supported on all Platforms i.e Windows, Mac & Linux
+- [x] Take pdf screenshot of receipts of your trip page.
 - [ ] Automatically separate business from personal invoices
 - [ ] Configurable path to save invoices
 
