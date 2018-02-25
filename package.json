@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
-    "build": "cross-env node .electron-vue/build.js && electron-builder",
+    "build": "cross-env PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -20,7 +20,7 @@
   },
   "build": {
     "productName": "Uber Run",
-    "appId": "org.breakenter.uberrun",
+    "appId": "org.mrgodhani.uberrun",
     "directories": {
       "output": "build"
     },
@@ -43,12 +43,21 @@
       ]
     },
     "mac": {
+      "publish": [
+        "github"
+      ],
       "icon": "build/icons/icon.icns"
     },
     "win": {
+      "publish": [
+        "github"
+      ],
       "icon": "build/icons/icon.ico"
     },
     "linux": {
+      "publish": [
+        "github"
+      ],
       "icon": "build/icons"
     }
   },
@@ -86,6 +95,7 @@
     "electron-builder": "^20.2.0",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
+    "electron-updater": "^2.20.1",
     "eslint": "^4.4.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-friendly-formatter": "^3.0.0",

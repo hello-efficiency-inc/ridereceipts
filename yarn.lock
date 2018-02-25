@@ -1517,7 +1517,7 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-builder-util-runtime@4.0.5, builder-util-runtime@^4.0.5:
+builder-util-runtime@4.0.5, builder-util-runtime@^4.0.5, builder-util-runtime@~4.0.3:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-4.0.5.tgz#5340cf9886b9283ea6e5b20dc09b5e3e461aef62"
   dependencies:
@@ -2781,6 +2781,20 @@ electron-publish@20.2.0:
 electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.30:
   version "1.3.34"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.34.tgz#d93498f40391bb0c16a603d8241b9951404157ed"
+
+electron-updater@^2.20.1:
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-2.20.1.tgz#3d2714a3e472fbf198f6053daf8fd12209101aa2"
+  dependencies:
+    bluebird-lst "^1.0.5"
+    builder-util-runtime "~4.0.3"
+    electron-is-dev "^0.3.0"
+    fs-extra-p "^4.5.0"
+    js-yaml "^3.10.0"
+    lazy-val "^1.0.3"
+    lodash.isequal "^4.5.0"
+    semver "^5.5.0"
+    source-map-support "^0.5.2"
 
 electron@^1.8.2:
   version "1.8.2"
@@ -4881,6 +4895,10 @@ lodash.isarguments@^3.0.0:
 lodash.isarray@^3.0.0:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.isarray/-/lodash.isarray-3.0.4.tgz#79e4eb88c36a8122af86f844aa9bcd851b5fbb55"
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
 
 lodash.isfunction@^3.0.8:
   version "3.0.9"
@@ -7093,7 +7111,7 @@ source-map-support@^0.4.15:
   dependencies:
     source-map "^0.5.6"
 
-source-map-support@^0.5.3:
+source-map-support@^0.5.2, source-map-support@^0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.3.tgz#2b3d5fff298cfa4d1afd7d4352d569e9a0158e76"
   dependencies:
