@@ -1,7 +1,7 @@
 {
   "name": "uberrun",
   "version": "1.2.0",
-  "author": "Meet Godhani <meet@breakenter.com>",
+  "author": "Meet Godhani <meetgodhani23@gmail.com>",
   "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
