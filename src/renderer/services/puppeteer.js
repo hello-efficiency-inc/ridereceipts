@@ -315,7 +315,7 @@ export default async function () {
   ipcRenderer.send('invoiceTotal', uniqItems.length)
 
   for (let i = 0; i < uniqItems.length; ++i) {
-    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Invoices`)})
+    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`)})
     await page.goto(`https://riders.uber.com/trips/${uniqItems[i].trip_uid}`, {waitUntil: 'networkidle2'})
 
     const progress = i === (uniqItems.length - 1) ? _.ceil(_.divide(i + 1, uniqItems.length) * 100) : _.ceil(_.divide(i, uniqItems.length) * 100)
@@ -329,11 +329,11 @@ export default async function () {
     if (invoiceRequest) {
       await page.waitFor(1 * 2500)
       // Download as pdf of the page to keep record of trip with map
-      if (!jetpack.exists(documentDir.path(`${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Receipts/`))) {
-        jetpack.dir(documentDir.path(`${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Receipts/`))
+      if (!jetpack.exists(documentDir.path(`${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))) {
+        jetpack.dir(documentDir.path(`${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))
       }
       await page.emulateMedia('screen')
-      const receiptFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Receipts/receipt-${uniqItems[i].invoice_number}.pdf`
+      const receiptFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/receipt-${uniqItems[i].invoice_date}.pdf`
       await page.pdf({
         path: receiptFilePath,
         width: '1440px',
@@ -349,11 +349,9 @@ export default async function () {
   }
 
   for (let i = 0; i < uniqItems.length; ++i) {
-    const invoiceFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Invoices/invoice-${uniqItems[i].invoice_number}.pdf`
-    const receiptFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/Receipts/receipt-${uniqItems[i].invoice_number}.pdf`
-    if (jetpack.exists(invoiceFilePath) && jetpack.exists(receiptFilePath)) {
+    const invoiceFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/invoice-${uniqItems[i].invoice_number}.pdf`
+    if (jetpack.exists(invoiceFilePath)) {
       jetpack.rename(invoiceFilePath, `${uniqItems[i].invoice_date}.pdf`)
-      jetpack.rename(receiptFilePath, `${uniqItems[i].invoice_date}.pdf`)
     }
   }
 

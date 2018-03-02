@@ -7,6 +7,7 @@
           <p>Download your Uber invoices automatically.</p>
           <br/>
           <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Get Started</button></p>
+          <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Settings</button></p>
           <p class="offline" v-if="!online">You are currently offline. Please get online in order to use this app</p>
           <div class="loading" v-if="loading">
             <div class="inner"></div>
