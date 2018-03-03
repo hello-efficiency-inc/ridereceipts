@@ -4,6 +4,7 @@ import App from './App'
 import router from './router'
 import { remote } from 'electron'
 import jetpack from 'fs-jetpack'
+import Store from 'electron-store'
 
 import './helpers/external_links.js'
 
@@ -17,6 +18,10 @@ if (!jetpack.exists(documentDir.path('Uber Run'))) {
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
+
+const store = new Store()
+
+Vue.prototype.$electronstore = store
 
 /* eslint-disable no-new */
 new Vue({

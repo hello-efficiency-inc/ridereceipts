@@ -1,14 +1,50 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <transition name="fade">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
 <script>
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import jetpack from 'fs-jetpack'
+import os from 'os'
 
 export default {
-  name: 'uberrun'
+  name: 'uberrun',
+  mounted () {
+    const documentDir = jetpack.cwd(this.$electron.remote.app.getPath('documents'))
+    const platform = os.platform()
+    const useDataDir = jetpack.cwd(this.$electron.remote.app.getAppPath()).cwd(this.$electron.remote.app.getPath('desktop'))
+
+    let exec
+    switch (platform) {
+      case 'darwin':
+        exec = `${useDataDir.path()}/chrome-mac/Chromium.app/Contents/MacOS/Chromium`
+        break
+      case 'linux':
+        exec = `${useDataDir.path()}/chrome-linux/chrome`
+        break
+      case 'win32':
+        if (os.arch() === 'x64') {
+          exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
+        }
+        exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
+        break
+      case 'win64':
+        exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
+        break
+    }
+
+    if (!this.$electronstore.get('invoicePath')) {
+      this.$electronstore.set('invoicePath', `${documentDir.path()}/Uber Run/`)
+    }
+
+    if (!this.$electronstore.get('chromePath')) {
+      this.$electronstore.set('chromePath', exec)
+    }
+  }
 }
 </script>
 
@@ -111,4 +147,10 @@ body {
   margin:10px auto;
 }
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s ease-in;
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
 </style>

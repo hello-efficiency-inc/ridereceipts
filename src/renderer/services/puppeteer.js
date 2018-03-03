@@ -1,9 +1,9 @@
 import puppeteer from 'puppeteer'
 import jetpack from 'fs-jetpack'
-import os from 'os'
 import _ from 'lodash'
 import moment from 'moment-timezone'
-import { remote, ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron'
+import Store from 'electron-store'
 
 const PAGE_CLOSE = 'PAGE_CLOSE'
 const EMAIL = 'EMAIL'
@@ -16,7 +16,6 @@ const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
 const ERROR_EMAIL = 'error-email'
 const ERROR_PASS = 'error-pass'
-// const ERROR_VERI = 'error-veri'
 
 // Calculate Last 3 Month from current month
 async function getLast3Months () {
@@ -77,6 +76,18 @@ async function evaluateList (page) {
   return list
 }
 
+// Launch Puppeteer
+async function launch (puppeteer, exec) {
+  return puppeteer.launch({
+    headless: true,
+    timeout: 0,
+    executablePath: exec,
+    args: [
+      '--disable-gpu'
+    ]
+  })
+}
+
 export default async function () {
   // Selectors Needed
   const EMAIL_SELECTOR = '#useridInput'
@@ -90,31 +101,9 @@ export default async function () {
   const INACTIVE_PREVIOUS_BUTTON = '.btn--inactive.pagination__previous'
   const INACTIVE_NEXT_BUTTON = '.btn--inactive.pagination__next'
   const DOWNLOAD_INVOICE_TRIP = '#data-invoice-btn-download'
-  const useDataDir = jetpack.cwd(remote.app.getAppPath()).cwd(remote.app.getPath('desktop'))
-  const documentDir = jetpack.cwd(remote.app.getPath('documents'))
-  const platform = os.platform()
-
-  let exec
-
-  // Get Executable Path by Platform
-  switch (platform) {
-    case 'darwin':
-      exec = `${useDataDir.path()}/chrome-mac/Chromium.app/Contents/MacOS/Chromium`
-      //  exec = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
-      break
-    case 'linux':
-      exec = `${useDataDir.path()}/chrome-linux/chrome`
-      break
-    case 'win32':
-      if (os.arch() === 'x64') {
-        exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
-      }
-      exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
-      break
-    case 'win64':
-      exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
-      break
-  }
+  const store = new Store()
+  const documentDir = jetpack.cwd(store.get('invoicePath'))
+  let exec = store.get('chromePath')
 
   // If executable path not found then throw error
   if (!jetpack.exists(exec)) {
@@ -122,14 +111,8 @@ export default async function () {
     return
   }
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    timeout: 0,
-    executablePath: exec,
-    args: [
-      '--disable-gpu'
-    ]
-  })
+  const browser = await launch(puppeteer, exec)
+  store.set('processPID', browser.process().pid) // Store process ID to kill when app quits
 
   const page = await browser.newPage()
 
@@ -175,11 +158,6 @@ export default async function () {
   await page.click(NEXT_BUTTON)
   await page.waitFor(1000)
 
-  // const emailVisibility = await page.evaluate(() => {
-  //   const display = document.querySelector('#username')
-  //   return display !== null
-  // })
-  //
   const emailError = await evaluateError(page)
 
   // Evaluate Email Error
@@ -187,11 +165,6 @@ export default async function () {
     ipcRenderer.send('form', ERROR_EMAIL)
     await browser.close()
   }
-
-  // if (!emailVisibility) {
-  //   ipcRenderer.send('form', ERROR)
-  //   await browser.close()
-  // }
 
   await page.waitForSelector(PASSWORD_SELECTOR)
   await page.click(PASSWORD_SELECTOR)
@@ -315,7 +288,7 @@ export default async function () {
   ipcRenderer.send('invoiceTotal', uniqItems.length)
 
   for (let i = 0; i < uniqItems.length; ++i) {
-    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`)})
+    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`)})
     await page.goto(`https://riders.uber.com/trips/${uniqItems[i].trip_uid}`, {waitUntil: 'networkidle2'})
 
     const progress = i === (uniqItems.length - 1) ? _.ceil(_.divide(i + 1, uniqItems.length) * 100) : _.ceil(_.divide(i, uniqItems.length) * 100)
@@ -329,11 +302,11 @@ export default async function () {
     if (invoiceRequest) {
       await page.waitFor(1 * 2500)
       // Download as pdf of the page to keep record of trip with map
-      if (!jetpack.exists(documentDir.path(`${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))) {
-        jetpack.dir(documentDir.path(`${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))
+      if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))) {
+        jetpack.dir(documentDir.path(`${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))
       }
       await page.emulateMedia('screen')
-      const receiptFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/receipt-${uniqItems[i].invoice_date}.pdf`
+      const receiptFilePath = `${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/receipt-${uniqItems[i].invoice_date}.pdf`
       await page.pdf({
         path: receiptFilePath,
         width: '1440px',
@@ -349,7 +322,7 @@ export default async function () {
   }
 
   for (let i = 0; i < uniqItems.length; ++i) {
-    const invoiceFilePath = `${documentDir.path()}/Uber Run/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/invoice-${uniqItems[i].invoice_number}.pdf`
+    const invoiceFilePath = `${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/invoice-${uniqItems[i].invoice_number}.pdf`
     if (jetpack.exists(invoiceFilePath)) {
       jetpack.rename(invoiceFilePath, `${uniqItems[i].invoice_date}.pdf`)
     }
@@ -359,5 +332,6 @@ export default async function () {
 
   await page.waitFor(1000)
 
+  store.delete('browserEndpoint')
   await browser.close()
 }

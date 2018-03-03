@@ -2,6 +2,8 @@
 
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import fkill from 'fkill'
+import Store from 'electron-store'
 
 let myWindow = null
 
@@ -54,6 +56,16 @@ app.on('ready', createWindow)
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
+  }
+})
+
+app.on('quit', () => {
+  const store = new Store()
+  if (store.has('processPID')) {
+    fkill(store.get('processPID', {
+      force: true
+    }))
+    store.delete('processPID')
   }
 })
 

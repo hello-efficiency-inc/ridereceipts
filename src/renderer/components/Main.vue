@@ -1,20 +1,18 @@
 <template>
   <div>
-    <transition name="fade">
-      <div class="splash" v-if="form === null">
-        <div class="wrap-content">
-          <img id="logo" src="static/uber-run.svg" alt="Uber Run">
-          <p>Download your Uber invoices automatically.</p>
-          <br/>
-          <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Get Started</button></p>
-          <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Settings</button></p>
-          <p class="offline" v-if="!online">You are currently offline. Please get online in order to use this app</p>
-          <div class="loading" v-if="loading">
-            <div class="inner"></div>
-          </div>
+    <div class="splash" v-if="form === null">
+      <div class="wrap-content">
+        <img id="logo" src="static/uber-run.svg" alt="Uber Run">
+        <p>Download your Uber invoices automatically.</p>
+        <br/>
+        <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Get Started</button></p>
+        <p><router-link v-if="!loading" to="/settings" class="btn btn-lg btn-started" tag="button">Settings</router-link></p>
+        <p class="offline" v-if="!online">You are currently offline. Please get online in order to use this app</p>
+        <div class="loading" v-if="loading">
+          <div class="inner"></div>
         </div>
       </div>
-    </transition>
+    </div>
     <form v-on:submit.prevent="submitForm" class="wrapper" v-if="form !== null">
       <nav class="navbar navbar-light bg-transparent">
         <div class="navbar-brand">
