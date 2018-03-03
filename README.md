@@ -75,7 +75,7 @@ For Mac users: Since Uber Run is not available in the App Store, you may need to
 - [x] Supported on all Platforms i.e Windows, Mac & Linux
 - [x] Take pdf screenshot of receipts of your trip page.
 - [ ] Automatically separate business from personal invoices
-- [ ] Configurable path to save invoices
+- [x] Configurable path to save invoices
 
 ## Developer Notes
 
