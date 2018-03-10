@@ -63,11 +63,28 @@ async function evaluateList (page) {
   // Evaluate list of detail links
   const list = await page.evaluate(() => {
     const data = []
-    const detailElement = document.querySelectorAll('#trips-table div > div.flexbox__item.one-half.lap-one-half.separated--left.soft-double--left.hidden--palm > div.trip-info-tools > ul > li:nth-child(2) > a')
+    const rowData = document.querySelectorAll('tr.hard')
 
-    for (let i = 0; i < detailElement.length; ++i) {
-      const tripId = detailElement[i].href.split('/')
-      data.push(`https://riders.uber.com/get_invoices?q={"trip_uuid": "${tripId[4]}"}`)
+    for (let i = 0; i < rowData.length; ++i) {
+      // Check for dark section
+      const darkSection = rowData[i].childNodes[0].querySelector('div.flexbox__item.one-half.palm-one-whole.lap-one-half.align--top > div.section--dark')
+      // Check for Fare Breakdown
+      const fareBreakDown = rowData[i].childNodes[0].querySelector('h3').innerText
+      // Check for Trip Link
+      const tripLink = rowData[i].childNodes[0].querySelector('div.flexbox__item.one-half.lap-one-half.separated--left.soft-double--left.hidden--palm > div > ul > li:nth-child(2) > a').href
+      let timeDate
+
+      if (darkSection !== null) {
+        timeDate = rowData[i].childNodes[0].querySelector('div.flexbox__item.one-half.palm-one-whole.lap-one-half').querySelector('h6').innerText
+      } else {
+        timeDate = rowData[i].childNodes[0].querySelector('.trip-expand > div >  div.flexbox__item:nth-child(1) > h6').innerText
+      }
+      if (fareBreakDown !== '') { // Only include if there is amount included
+        data.push({
+          trip: tripLink,
+          time: timeDate
+        })
+      }
     }
 
     return data
@@ -220,41 +237,21 @@ export default async function () {
     }
   }
 
-  await page.waitFor(1000)
+  await page.waitFor(1500)
 
   if (await page.$(INACTIVE_NEXT_BUTTON) !== null && await page.$(INACTIVE_PREVIOUS_BUTTON) !== null) {
     await page.waitFor(1000)
 
     // Evaluate list of detail links
     const list = await evaluateList(page)
-
     DETAIL_LISTS.push(list)
   }
 
   // Final list of invoice object links
-  const DETAIL_ITEMS = []
-
-  // Go through each link and store JSON Details
-  for (let i = 0; i < _.flattenDeep(DETAIL_LISTS).length; ++i) {
-    await page.goto(_.flattenDeep(DETAIL_LISTS)[i], { waitUntil: 'domcontentloaded' })
-    const tripItem = await page.evaluate(() => {
-      const element = document.querySelector('body')
-      return JSON.parse(element.innerHTML)
-    })
-    // Check if the data is there. If it is then push it to array
-    if (tripItem.length > 0) {
-      DETAIL_ITEMS.push(tripItem[0])
-      await page.waitFor(200)
-    } else {
-      await page.waitFor(300)
-    }
-  }
-
-  DETAIL_ITEMS.map((item) => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone // Get User's Timezone by Location
-    item.year = moment(item.invoice_date).format('YYYY')
-    item.month = moment(item.invoice_date).format('MMMM')
-    item.invoice_date = moment(item.invoice_date).tz(timezone).format('MMMM-DD-YYYY_hh-mm-a')
+  const DETAIL_ITEMS = _.flattenDeep(DETAIL_LISTS).map((item) => {
+    item.year = moment(item.time).format('YYYY')
+    item.month = moment(item.time).format('MMMM')
+    item.invoice_date = moment(item.time).format('MMMM-DD-YYYY_hh-mm-a')
     return item
   })
 
@@ -272,7 +269,7 @@ export default async function () {
 
   // If filter option chosen is Last Month
   if (filterOption === 'lastmonth') {
-    uniqItems = _.uniqBy(_.filter(DETAIL_ITEMS, ['month', month]), 'invoice_date')
+    uniqItems = _.filter(DETAIL_ITEMS, { 'month': month, 'year': currentYear })
   }
 
   // If Filter option chosen is Last 3 Months
@@ -289,7 +286,7 @@ export default async function () {
 
   for (let i = 0; i < uniqItems.length; ++i) {
     await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`)})
-    await page.goto(`https://riders.uber.com/trips/${uniqItems[i].trip_uid}`, {waitUntil: 'networkidle2'})
+    await page.goto(uniqItems[i].trip, {waitUntil: 'networkidle0'})
 
     const progress = i === (uniqItems.length - 1) ? _.ceil(_.divide(i + 1, uniqItems.length) * 100) : _.ceil(_.divide(i, uniqItems.length) * 100)
 
@@ -298,22 +295,26 @@ export default async function () {
       return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden')
     })
 
+    await page.waitFor(2000)
+    // Download as pdf of the page to keep record of trip with map
+    if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))) {
+      jetpack.dir(documentDir.path(`${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))
+    }
+
+    await page.emulateMedia('print')
+    const receiptFilePath = `${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/Receipt-${uniqItems[i].invoice_date}.pdf`
+    await page.pdf({
+      path: receiptFilePath,
+      width: '1440px',
+      height: '900px',
+      format: 'A4',
+      printBackground: true,
+      pageRanges: '1'
+    })
+
     // Check if request invoice button is hidden. Then go ahead download it.
     if (invoiceRequest) {
-      await page.waitFor(1 * 2500)
-      // Download as pdf of the page to keep record of trip with map
-      if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))) {
-        jetpack.dir(documentDir.path(`${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))
-      }
-      await page.emulateMedia('screen')
-      const receiptFilePath = `${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/receipt-${uniqItems[i].invoice_date}.pdf`
-      await page.pdf({
-        path: receiptFilePath,
-        width: '1440px',
-        height: '900px',
-        printBackground: true,
-        pageRanges: '1'
-      })
+      await page.waitFor(2000)
       await page.click(DOWNLOAD_INVOICE_TRIP)
     }
 
@@ -324,7 +325,7 @@ export default async function () {
   for (let i = 0; i < uniqItems.length; ++i) {
     const invoiceFilePath = `${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/invoice-${uniqItems[i].invoice_number}.pdf`
     if (jetpack.exists(invoiceFilePath)) {
-      jetpack.rename(invoiceFilePath, `${uniqItems[i].invoice_date}.pdf`)
+      jetpack.rename(invoiceFilePath, `Invoice-${uniqItems[i].invoice_date}.pdf`)
     }
   }
 

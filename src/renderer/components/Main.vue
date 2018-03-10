@@ -3,11 +3,10 @@
     <div class="splash" v-if="form === null">
       <div class="wrap-content">
         <img id="logo" src="static/uber-run.svg" alt="Uber Run">
-        <p>Download your Uber invoices automatically.</p>
+        <p>Download your Uber invoices and receipts automatically.</p>
         <br/>
         <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Get Started</button></p>
-        <p><router-link v-if="!loading" to="/settings" class="btn btn-lg btn-started" tag="button">Settings</router-link></p>
-        <p class="offline" v-if="!online">You are currently offline. Please get online in order to use this app</p>
+        <p class="offline" v-if="!online">You are currently offline. Please get online to use this app.</p>
         <div class="loading" v-if="loading">
           <div class="inner"></div>
         </div>
@@ -55,7 +54,7 @@
           </div>
           <b-popover  ref="popover" target="user-password" triggers="click focus" placement="bottom">
              <template slot="title">Security</template>
-             Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
+             Uber Run is an automation app that tells the Chromium browser to download your invoices and receipts. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
              <br/>
              <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
           </b-popover>
@@ -65,7 +64,7 @@
             <label for="verification">Enter the Uber verification code sent to you via SMS <i id="verification-code" class="far fa-2x fa-question-circle"></i></label>
             <b-popover ref="popover" target="verification-code" triggers="click focus" placement="bottom">
                <template slot="title">Security</template>
-               Uber Run is an automation app that tells the Chromium browser to download your invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
+               Uber Run is an automation app that tells the Chromium browser to download your invoices and receipts. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
             </b-popover>
@@ -85,7 +84,7 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
           <div class="form-group">
-            <label>Which invoices would you like to <br/> download ? <i id="filter-option" class="far fa-2x fa-question-circle"></i></label>
+            <label>Which invoices/receipts would you like to <br/> download? <i id="filter-option" class="far fa-2x fa-question-circle"></i></label>
             <b-popover ref="popover" target="filter-option" triggers="click" placement="bottom">
                <template slot="title">Note</template>
                Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a “Request Invoice” button (as in Uber Eats) will not be included.
@@ -127,7 +126,7 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'GENERATE_LINKS'" key="generatelinks">
           <div class="form-group">
-            <label>Checking your Uber account for all available invoices within the time frame you selected. Please wait.</label>
+            <label>Checking your Uber account for all invoices/receipts within the time frame you selected. This could take 10 mins or more.</label>
             <br/>
             <div class="loading">
               <div class="inner"></div>
@@ -167,14 +166,14 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'ERROR'" key="error">
           <div class="form-group">
-            <label>Oops seems like your IP Address is banned temporary. Please try again later.</label>
+            <label>It seems like your IP address is temporarily banned. Please try again later.</label>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'CHROME_NOT_FOUND'" key="chromenotfound">
           <div class="form-group">
             <label>
-              Oops! seems like you don't have chromium installed. Please download it from
-              <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a> and place the extracted folder on your desktop.
+              It seems like you don't have Chromium installed. Please download it from
+              <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a>. Place the file on your desktop and unzip it.
             </label>
           </div>
         </div>
@@ -196,7 +195,6 @@
 </template>
 <script>
 import puppeteer from '../services/puppeteer'
-import jetpack from 'fs-jetpack'
 
 export default {
   data () {
@@ -311,28 +309,28 @@ export default {
   methods: {
     downloadMessage (count) {
       if (count > 76) {
-        this.downloadingMessage = `Wow this could take a while! Let Uber Run do its thing and we'll let you know once your ${count} invoices are in order.`
+        this.downloadingMessage = `Wow this could take a while! Let Uber Run do its thing and we'll let you know once your ${count} trips are in order.`
       } else if (count > 56 && count <= 76) {
-        this.downloadingMessage = `Whoa ${count} invoices! Put your feet up and relax. This will take a while, my friend.`
+        this.downloadingMessage = `Whoa ${count} trips! Put your feet up and relax. This will take a while, my friend.`
       } else if (count > 46 && count <= 56) {
-        this.downloadingMessage = `You have ${count} invoices. Give the little robot some time to download and organize them for you.`
+        this.downloadingMessage = `You have ${count} trips. Give the little robot some time to download and organize them for you.`
       } else if (count > 36 && count <= 46) {
-        this.downloadingMessage = `Whoa someone's been busy! You have ${count} invoices. Downloading now.`
+        this.downloadingMessage = `Whoa someone's been busy! You have ${count} trips. Downloading now.`
       } else if (count > 26 && count <= 36) {
-        this.downloadingMessage = `You have ${count} invoices. Downloading and organizing them for you now. Sweet deal, huh?`
+        this.downloadingMessage = `You have ${count} trips. Downloading and organizing them for you now. Sweet deal, huh?`
       } else if (count > 16 && count <= 26) {
-        this.downloadingMessage = `You have ${count} invoices. Pour yourself a drink and relax. We got this.`
+        this.downloadingMessage = `You have ${count} trips. Pour yourself a drink and relax. We got this.`
       } else if (count > 11 && count <= 16) {
-        this.downloadingMessage = `You have ${count} invoices!\nRun, Uber Run!`
+        this.downloadingMessage = `You have ${count} trips!\nRun, Uber Run!`
       } else if (count > 6 && count <= 11) {
-        this.downloadingMessage = `You have ${count} invoices! This should download fairly quickly.`
+        this.downloadingMessage = `You have ${count} trips! This should download fairly quickly.`
       } else if (count > 1 && count <= 6) {
-        this.downloadingMessage = `Running this app for just ${count} invoices?\nThat's okay, we won't judge ;)`
+        this.downloadingMessage = `Running this app for just ${count} trips?\nThat's okay, we won't judge ;)`
       } else if (count === 1) {
-        this.downloadingMessage = `Running this app for just ${count} invoice?\nThat's okay, we won't judge ;)`
+        this.downloadingMessage = `Running this app for just ${count} trip?\nThat's okay, we won't judge ;)`
       } else {
         this.form = 'DOWNLOADED'
-        this.downloadingMessage = `You have 0 invoices within the time frame you selected.`
+        this.downloadingMessage = `You have 0 trips within the time frame you selected.`
       }
     },
     startAgain () {
@@ -340,8 +338,8 @@ export default {
       puppeteer()
     },
     openInvoiceFolder () {
-      const documentDir = jetpack.cwd(this.$electron.remote.app.getPath('documents'))
-      this.$electron.shell.openItem(documentDir.path('Uber Run'))
+      const documentDir = this.$electronstore.get('invoicePath')
+      this.$electron.shell.openItem(documentDir)
     },
     submitForm () {
       switch (this.form) {
@@ -460,7 +458,7 @@ export default {
   padding: 3.5rem 9rem;
 
   label:not(.form-check-label) {
-    font-size: 36px;
+    font-size: 32px;
     width: 100%;
     text-align: center;
     font-weight: 800;
