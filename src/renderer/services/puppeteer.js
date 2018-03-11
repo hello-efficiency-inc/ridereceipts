@@ -322,9 +322,9 @@ export default async function () {
   }
 
   for (let i = 0; i < uniqItems.length; ++i) {
-    const invoiceFilePath = `${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/invoice-${uniqItems[i].invoice_number}.pdf`
-    if (jetpack.exists(invoiceFilePath)) {
-      jetpack.rename(invoiceFilePath, `Invoice-${uniqItems[i].invoice_date}.pdf`)
+    const filePath = jetpack.find(`${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/`, { matching: '*invoice*' })
+    if (filePath.length > 0) {
+      jetpack.rename(filePath[0], `Invoice-${uniqItems[i].invoice_date}.pdf`)
     }
   }
 
