@@ -479,8 +479,8 @@ export default {
   }
 
   input[type="radio"] {
-    left: 10px;
-    top: 8px;
+    margin-top: 8px;
+    margin-left: -30px;
   }
 
   input {

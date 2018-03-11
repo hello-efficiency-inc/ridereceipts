@@ -21,7 +21,7 @@ const ERROR_PASS = 'error-pass'
 async function getLast3Months () {
   let last3Months = []
 
-  for (let i = 0; i <= 3; i++) {
+  for (let i = 1; i < 4; i++) {
     const month = moment().subtract(i, 'month').add(1, 'day').format('MMMM')
     const year = moment().subtract(i, 'month').add(1, 'day').format('YYYY')
     last3Months.push({ 'month': month, 'year': year })
@@ -295,7 +295,7 @@ export default async function () {
       return document.querySelector('#data-invoice-btn-request') && document.querySelector('#data-invoice-btn-request').classList.contains('hidden')
     })
 
-    await page.waitFor(2000)
+    await page.waitFor(5000)
     // Download as pdf of the page to keep record of trip with map
     if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))) {
       jetpack.dir(documentDir.path(`${documentDir.path()}/${accountEmail}/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))
@@ -314,7 +314,6 @@ export default async function () {
 
     // Check if request invoice button is hidden. Then go ahead download it.
     if (invoiceRequest) {
-      await page.waitFor(2000)
       await page.click(DOWNLOAD_INVOICE_TRIP)
     }
 
