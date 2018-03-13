@@ -87,7 +87,7 @@
             <label>Which invoices/receipts would you like to <br/> download? <i id="filter-option" class="far fa-2x fa-question-circle"></i></label>
             <b-popover ref="popover" target="filter-option" triggers="click" placement="bottom">
                <template slot="title">Note</template>
-               Uber Run can only download the invoices that exist in your Uber account. Invoices that have not been issued, or have a “Request Invoice” button (as in Uber Eats) will not be included.
+               Uber Run can only download the invoices and/or receipts that exist in your Uber account.
                <br/>
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#limitations">Learn more</a></p>
@@ -134,7 +134,7 @@
             <p class="progress-tip text-center"><i id="progress-checking" class="far fa-2x fa-question-circle"></i></p>
             <b-popover ref="popover" target="progress-checking" triggers="click" placement="top">
                <template slot="title">Speed</template>
-               We purposely check for invoices slowly to prevent the Uber website from knowing you are running a script.
+               We purposely check your account slowly to prevent the Uber website from knowing you are running a script.
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#limitation">Learn more</a></p>
             </b-popover>
@@ -150,7 +150,7 @@
             <p class="progress-tip text-center"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
             <b-popover  ref="popover" target="progress-tip" triggers="click" placement="top">
                <template slot="title">Speed</template>
-               We purposely download the invoices slowly to prevent the Uber website from knowing you are running a script.
+               We purposely check your account slowly to prevent the Uber website from knowing you are running a script.
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#limitation">Learn more</a></p>
             </b-popover>
@@ -385,7 +385,7 @@ export default {
   position: relative;
     top: -35px;
     bottom: 0;
-    left: 86.7%;
+    left: 86%;
 }
 
 .splash {

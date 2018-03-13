@@ -171,7 +171,7 @@ export default async function () {
   await page.click(EMAIL_SELECTOR)
   ipcRenderer.send('form', EMAIL)
   const accountEmail = await listenEvent('emaildata')
-  await page.keyboard.type(accountEmail, {delay: 30})
+  await page.keyboard.type(accountEmail, {delay: 60})
   await page.click(NEXT_BUTTON)
   await page.waitFor(1000)
 
