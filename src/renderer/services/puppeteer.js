@@ -23,9 +23,9 @@ const ERROR_CAPTCHA = 'error-captcha'
 async function getLast3Months () {
   let last3Months = []
 
-  for (let i = 1; i < 4; i++) {
-    const month = moment().subtract(i, 'month').add(1, 'day').format('MMMM')
-    const year = moment().subtract(i, 'month').add(1, 'day').format('YYYY')
+  for (let i = 1; i < 4; ++i) {
+    const month = moment().subtract(i, 'month').format('MMMM')
+    const year = moment().subtract(i, 'month').format('YYYY')
     last3Months.push({ 'month': month, 'year': year })
   }
 
