@@ -30,7 +30,7 @@
             aria-describedby="email emailFeedback"
             placeholder="Email Address"></b-form-input>
             <b-form-invalid-feedback id="emailFeedback">
-              Oops! There is no account associated with this email address.
+              {{ errorMessage }}
             </b-form-invalid-feedback>
           </div>
         </div>
@@ -182,7 +182,7 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
-              <div class="continue-btn float-right">
+              <div class="continue-btn float-right" v-if="!hideButton">
                 <button type="submit" v-if="!errorButton" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
                 <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit-start">Start Again<img class="arrow" src="static/next-arrow.svg"></button>
               </div>
@@ -212,6 +212,7 @@ export default {
       emailError: true,
       passError: true,
       veriError: true,
+      captchaError: true,
       downloadingMessage: null,
       percent: null,
       downloaded: false,
@@ -243,7 +244,7 @@ export default {
           filter_option: null
         }
       }
-      if (data !== 'error-email' && data !== 'error-pass' && data !== 'error-veri') {
+      if (data !== 'error-email' && data !== 'error-pass' && data !== 'error-veri' && data !== 'error-captcha') {
         this.form = data
       }
 
@@ -253,6 +254,11 @@ export default {
 
       if (data === 'error-pass') {
         this.passError = false
+      }
+
+      if (data === 'error-captcha') {
+        this.emailError = false
+        this.captchaError = false
       }
 
       if (data === 'error-veri') {
@@ -283,6 +289,21 @@ export default {
         return true
       }
       if (!this.online) {
+        return true
+      }
+      return false
+    },
+    errorMessage () {
+      if (!this.emailError && this.captchaError) {
+        return 'Oops! There is no account associated with this email address.'
+      }
+
+      if (!this.emailError && !this.captchaError) {
+        return 'Oops! Sounds like site is asking for captcha. Please wait while we solve it for you !'
+      }
+    },
+    hideButton () {
+      if (!this.emailError && !this.captchaError) {
         return true
       }
       return false

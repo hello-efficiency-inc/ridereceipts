@@ -4,6 +4,7 @@ import _ from 'lodash'
 import moment from 'moment-timezone'
 import { ipcRenderer } from 'electron'
 import Store from 'electron-store'
+import axios from 'axios'
 
 const PAGE_CLOSE = 'PAGE_CLOSE'
 const EMAIL = 'EMAIL'
@@ -16,6 +17,7 @@ const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
 const ERROR_EMAIL = 'error-email'
 const ERROR_PASS = 'error-pass'
+const ERROR_CAPTCHA = 'error-captcha'
 
 // Calculate Last 3 Month from current month
 async function getLast3Months () {
@@ -46,6 +48,41 @@ const customWaitFor = function (timeToWait) {
       resolve(true)
     }, timeToWait)
   })
+}
+
+// Get Solved Token
+async function solveCaptcha (page) {
+  // Get Recaptcha Key
+  const siteToken = await page.evaluate(() => {
+    const jsonData = JSON.parse(document.querySelector('#json-globals').innerHTML)
+    return jsonData.state.config.recaptchaSiteKey
+  })
+
+  // Solve it!
+  let token = await axios.post('https://api.uberrun.io/solvecaptcha', { key: siteToken })
+
+  if (token.data.text === '') {
+    token = await axios.get(`https://api.uberrun.io/gettoken/${token.data.captcha}`, {
+      headers: { 'Accept': 'application/json' }
+    })
+  }
+
+  await page.evaluate((token) => {
+    document.querySelector('#g-recaptcha-response').innerHTML = token.data.text
+  }, token)
+}
+
+// Check for ReCaptcha
+async function evaluateReCaptcha (page) {
+  const checkRecaptcha = await page.evaluate(() => {
+    const captcha = document.querySelector('#login-recaptcha')
+    if (captcha !== '') {
+      return true
+    }
+    return false
+  })
+
+  return checkRecaptcha
 }
 
 // Evaluate Password or Email Error
@@ -139,6 +176,8 @@ export default async function () {
     deviceScaleFactor: 2
   })
 
+  await page.setCacheEnabled(true)
+
   // Launch Page
   await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com', {waitUntil: 'domcontentloaded'})
 
@@ -175,12 +214,18 @@ export default async function () {
   await page.click(NEXT_BUTTON)
   await page.waitFor(1000)
 
+  const reCaptcha = await evaluateReCaptcha(page)
   const emailError = await evaluateError(page)
 
-  // Evaluate Email Error
+  if (reCaptcha) {
+    ipcRenderer.send('form', ERROR_CAPTCHA)
+    await solveCaptcha(page)
+    await page.waitFor(1000)
+    await page.click('#app-body > div > div > div:nth-child(1) > form > button')
+  }
+
   if (emailError) {
     ipcRenderer.send('form', ERROR_EMAIL)
-    await browser.close()
   }
 
   await page.waitForSelector(PASSWORD_SELECTOR)
@@ -196,7 +241,6 @@ export default async function () {
   // Evaluate Password Error
   if (evaluateErrorPass) {
     ipcRenderer.send('form', ERROR_PASS)
-    await browser.close()
   }
 
   await page.click(SMS_SELECTOR)
