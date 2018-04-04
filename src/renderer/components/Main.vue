@@ -36,7 +36,7 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'CAPTCHA'" key="captcha">
           <div class="form-group">
-          <label>Verifying your account. Please wait.</label>
+          <label>Verifying your account. This takes approximately 1 minute.</label>
           <br/>
           <div class="loading">
             <div class="inner"></div>
@@ -171,6 +171,10 @@
             <p v-if="invoiceCount > 0" class="text-center"><button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started">View Invoices</button></p>
             <label v-if="invoiceCount === 0">{{ downloadingMessage }}</label>
             <p v-if="invoiceCount === 0" class="text-center"><button type="button" @click.stop.prevent="startAgain()" class="btn btn-lg btn-started">Start Again</button></p>
+            <div class="donation-msg">
+              <p class="text-center">Did you find this app useful? If so, please make a donation so we can keep maintaining Uber Run.</p>
+              <p class="text-center"><a href="https://paypal.me/UberRun" class="js-external-link">Click here to donate</a></p>
+            </div>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'ERROR'" key="error">
@@ -305,6 +309,9 @@ export default {
       return false
     },
     hideButton () {
+      if (this.form === 'error-captcha') {
+        return false
+      }
       if (!this.emailError) {
         return true
       }
@@ -720,5 +727,20 @@ export default {
 
 #passwordFeedback {
   margin-top: -20px;
+}
+
+.donation-msg {
+  margin-top: 5em;
+  width: 500px;
+
+  a {
+    color: #0012B9;
+    padding-bottom: 1px;
+    text-decoration: none;
+
+    &:hover {
+      border-bottom: 1px solid #0012B9;
+    }
+  }
 }
 </style>
