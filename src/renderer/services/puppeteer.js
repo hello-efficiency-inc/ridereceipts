@@ -17,7 +17,8 @@ const GENERATE_LINKS = 'GENERATE_LINKS'
 const DOWNLOADED = 'DOWNLOADED'
 const ERROR_EMAIL = 'error-email'
 const ERROR_PASS = 'error-pass'
-const ERROR_CAPTCHA = 'error-captcha'
+const ERROR_CAPTCHA = 'CAPTCHA'
+const ERROR_CAPTCHA_NOT_SOLVED = 'error-captcha'
 
 // Calculate Last 3 Month from current month
 async function getLast3Months () {
@@ -58,18 +59,20 @@ async function solveCaptcha (page) {
     return jsonData.state.config.recaptchaSiteKey
   })
 
+  let tokenText
+
   // Solve it!
   let token = await axios.post('https://api.uberrun.io/solvecaptcha', { key: siteToken })
 
-  if (token.data.text === '') {
-    token = await axios.get(`https://api.uberrun.io/gettoken/${token.data.captcha}`, {
-      headers: { 'Accept': 'application/json' }
-    })
-  }
+  tokenText = token.data.text
 
-  await page.evaluate((token) => {
-    document.querySelector('#g-recaptcha-response').innerHTML = token.data.text
-  }, token)
+  if (tokenText === '?' || tokenText === '') {
+    ipcRenderer.send('form', ERROR_CAPTCHA_NOT_SOLVED)
+  } else {
+    await page.evaluate((tokenText) => {
+      document.querySelector('#g-recaptcha-response').innerHTML = tokenText
+    }, tokenText)
+  }
 }
 
 // Check for ReCaptcha
@@ -228,6 +231,7 @@ export default async function () {
     ipcRenderer.send('form', ERROR_EMAIL)
   }
 
+  await page.waitFor(1000)
   await page.waitForSelector(PASSWORD_SELECTOR)
   await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)

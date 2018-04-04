@@ -30,9 +30,18 @@
             aria-describedby="email emailFeedback"
             placeholder="Email Address"></b-form-input>
             <b-form-invalid-feedback id="emailFeedback">
-              {{ errorMessage }}
+              'Oops! There is no account associated with this email address.'
             </b-form-invalid-feedback>
           </div>
+        </div>
+        <div class="jumbotron form--container" v-if="form === 'CAPTCHA'" key="captcha">
+          <div class="form-group">
+          <label>Verifying your account. Please wait.</label>
+          <br/>
+          <div class="loading">
+            <div class="inner"></div>
+          </div>
+        </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'PASSWORD'" key="password">
           <div class="form-group">
@@ -169,6 +178,11 @@
             <label>It seems like your IP address is temporarily banned. Please try again later.</label>
           </div>
         </div>
+        <div class="jumbotron form--container" v-if="form === 'error-captcha'" key="error-captcha">
+          <div class="form-group">
+            <label>Uber Run failed to verify your account. Please try again.</label>
+          </div>
+        </div>
         <div class="jumbotron form--container" v-if="form === 'CHROME_NOT_FOUND'" key="chromenotfound">
           <div class="form-group">
             <label>
@@ -212,7 +226,6 @@ export default {
       emailError: true,
       passError: true,
       veriError: true,
-      captchaError: true,
       downloadingMessage: null,
       percent: null,
       downloaded: false,
@@ -244,7 +257,7 @@ export default {
           filter_option: null
         }
       }
-      if (data !== 'error-email' && data !== 'error-pass' && data !== 'error-veri' && data !== 'error-captcha') {
+      if (data !== 'error-email' && data !== 'error-pass' && data !== 'error-veri') {
         this.form = data
       }
 
@@ -254,11 +267,6 @@ export default {
 
       if (data === 'error-pass') {
         this.passError = false
-      }
-
-      if (data === 'error-captcha') {
-        this.emailError = false
-        this.captchaError = false
       }
 
       if (data === 'error-veri') {
@@ -288,22 +296,16 @@ export default {
       if (this.form === 'INVOICE_COUNT') {
         return true
       }
+      if (this.form === 'CAPTCHA') {
+        return true
+      }
       if (!this.online) {
         return true
       }
       return false
     },
-    errorMessage () {
-      if (!this.emailError && this.captchaError) {
-        return 'Oops! There is no account associated with this email address.'
-      }
-
-      if (!this.emailError && !this.captchaError) {
-        return 'Oops! Sounds like site is asking for captcha. Please wait while we solve it for you !'
-      }
-    },
     hideButton () {
-      if (!this.emailError && !this.captchaError) {
+      if (!this.emailError) {
         return true
       }
       return false
@@ -322,6 +324,9 @@ export default {
         return true
       }
       if (this.form === 'CHROME_NOT_FOUND') {
+        return true
+      }
+      if (this.form === 'error-captcha') {
         return true
       }
       return false
