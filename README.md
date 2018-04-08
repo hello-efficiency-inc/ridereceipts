@@ -74,8 +74,9 @@ For Mac users: Since Uber Run is not available in the App Store, you may need to
 - [x] Option to filter invoices by a specific month(s) or year(s)
 - [x] Supported on all Platforms i.e Windows, Mac & Linux
 - [x] Take pdf screenshot of receipts of your trip page.
-- [ ] Automatically separate business from personal invoices
+- [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
 - [x] Configurable path to save invoices
+- [ ] Lyft Integration
 
 ## Developer Notes
 
