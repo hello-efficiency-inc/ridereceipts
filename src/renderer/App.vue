@@ -283,7 +283,7 @@ body {
     padding-left: 0;
     outline: none;
     border: none;
-    border-bottom: 2px solid rgba(0, 0, 0, 02);
+    border-bottom: 2px solid rgba(0, 0, 0, 1);
     background-color: transparent;
     border-radius: 0px;
     padding-bottom: 0;
@@ -502,6 +502,15 @@ body {
     &:hover {
       border-bottom: 1px solid #0012B9;
     }
+  }
+}
+
+.form-control.is-valid {
+  border-color: #000;
+
+  &:focus {
+    outline: 0;
+    box-shadow: none;
   }
 }
 </style>
