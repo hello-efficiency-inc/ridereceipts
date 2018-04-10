@@ -153,4 +153,355 @@ body {
 .fade-enter, .fade-leave-active {
   opacity: 0
 }
+
+.navbar-brand {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  img {
+    width: 115px;
+    height: auto;
+    margin-left: 5px;
+    margin-top: 5px;
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
+}
+
+.password-lock {
+  position: relative;
+    top: -35px;
+    bottom: 0;
+    left: 86%;
+}
+
+.splash {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  text-align: center;
+
+  .wrap-content {
+    width: 360px;
+  }
+
+  img {
+    height: 180px;
+    margin-bottom: 40px;
+  }
+
+  p.offline {
+    font-size: 20px;
+    color: red;
+  }
+
+  p {
+    font-size: 20px;
+    line-height: 26px;
+    color: #0A11BA;
+  }
+}
+
+.btn-started {
+  background: #d800d0;
+  color: white;
+  border-radius: 30px;
+  width: auto;
+  height: 52px;
+  padding-left:20px;
+  padding-right: 20px;
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 700;
+
+  &:focus:enabled {
+    background: white;
+  }
+
+  &:hover:enabled {
+    background: #0012B9;
+    color: white;
+  }
+}
+
+.bg-transparent {
+  background: transparent;
+}
+
+.submit-container {
+  position: absolute;
+  width: 96%;
+  bottom: 10px;
+  height: 100px;
+  padding-top: 10px;
+}
+
+.form--container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  min-height: 70vh;
+  padding: 3.5rem 9rem;
+
+  label:not(.form-check-label) {
+    font-size: 32px;
+    width: 100%;
+    text-align: center;
+    font-weight: 800;
+    margin-bottom: 42px;
+    margin-top: -5px;
+    line-height: 42px;
+
+    color: black;
+  }
+
+  .form-check-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 24px;
+    line-height: 32px;
+    color: black;
+    padding-left: 15px;
+  }
+
+  input[type="radio"] {
+    margin-top: 8px;
+    margin-left: -30px;
+    width: 20px;
+    height: 20px;
+  }
+
+  input {
+    padding-left: 0;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid rgba(0, 0, 0, 02);
+    background-color: transparent;
+    border-radius: 0px;
+    padding-bottom: 0;
+    font-size: 1.9em;
+    color: black;
+    caret-color: #0012B9;
+    text-overflow: ellipsis;
+    transition: all 0.5s ease;
+    width: 80%;
+    margin: 0 auto;
+
+    &:focus {
+      border-image:  linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
+      border-image-slice: 1;
+      box-shadow: none;
+      background: none;
+      outline: none;
+    }
+  }
+
+  p.invoice-link {
+    font-size: 1.5em;
+  }
+}
+
+.progress {
+  background-color: #D9D9D9;
+  height: 16px;
+  border-radius: 1rem;
+  width: 80%;
+  margin: 10px auto;
+}
+
+.progress-bar {
+  background: linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
+}
+
+.continue-btn {
+  button {
+    cursor: pointer;
+  }
+  p {
+    margin-top: 5px;
+  }
+
+  .btn--submit-start {
+    position: absolute;
+    font-size: 24px;
+    right: 10px;
+    /* Rounded button: */
+    background: #FFFFFF;
+    border-radius: 100px;
+    height: 52px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 0px;
+    font-weight: 800;
+    color: black;
+    text-transform: uppercase;
+
+    &:focus {
+      background: #fff;
+    }
+    &:hover {
+      box-shadow: 1px 1px 4px 2px rgba(160,160,160,0.50);
+    }
+
+    .arrow {
+      margin-left: 10px;
+      top: -1px;
+      position:relative;
+    }
+  }
+
+  .btn--submit {
+    position: absolute;
+    font-size: 24px;
+    right: 10px;
+    /* Rounded button: */
+    background: #FFFFFF;
+    border-radius: 100px;
+    height: 52px;
+    width: 178px;
+    border: 0px;
+    font-weight: 800;
+    color: black;
+    text-transform: uppercase;
+
+    &:focus {
+      background: #FFFFFF;
+    }
+
+    &:hover {
+      box-shadow: 1px 1px 4px 2px rgba(160,160,160,0.50);
+    }
+
+    .arrow {
+      margin-left: 10px;
+      top: -1px;
+      position:relative;
+    }
+  }
+}
+
+.fa-question-circle {
+  color: #898989;
+  font-size: 18px;
+  top: -10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.progress-tip {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+}
+
+/* Loading indicator */
+.loading {
+  position: relative;
+  margin:0 auto;
+  width: 62px;    /* diameter */
+  height: 62px;    /* diameter */
+}
+.inner, .loading:after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+/* Mask */
+.loading:after {
+  content:" ";
+  margin: 10%;    /* stroke width */
+  border-radius: 100%;
+  background: #fff;    /* container background */
+}
+/* Spinning gradients */
+.inner {
+  animation-duration: 1s;    /* speed */
+  -webkit-animation-duration: 1s;    /* speed */
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  -webkit-animation-timing-function: linear;
+}
+.inner {
+  animation-name: rotate-inner;
+  -webkit-animation-name: rotate-inner;
+}
+/* Halfs */
+.inner:before, .inner:after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  content:" ";
+}
+/* Left half */
+.inner:before {
+  left: 0;
+  right: 50%;
+  border-radius: 72px 0 0 72px;    /* diameter */
+}
+/* Right half */
+.inner:after {
+  left: 50%;
+  right: 0;
+  border-radius: 0 72px 72px 0;    /* diameter */
+}
+/* Half gradients */
+.inner:before {
+  background-image: linear-gradient(to bottom, #0029DD 0%, #D700D0 100%);
+}
+.inner:after {
+    background-image: linear-gradient(to bottom, #ffffff 0%, #D8D8D8 100%);
+}
+
+/* Spinning animations */
+
+@keyframes rotate-inner {
+  0% {
+    transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotate-inner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+#passwordFeedback {
+  margin-top: -20px;
+}
+
+.donation-msg {
+  margin-top: 5em;
+  width: 500px;
+
+  a {
+    color: #0012B9;
+    padding-bottom: 1px;
+    text-decoration: none;
+
+    &:hover {
+      border-bottom: 1px solid #0012B9;
+    }
+  }
+}
 </style>
