@@ -2,7 +2,7 @@
   <div>
     <div class="splash" v-if="form === null">
       <div class="wrap-content">
-        <img id="logo" src="static/uber-run.svg" alt="Uber Run">
+        <img id="logo" src="static/ride-receipts.svg" width="450" alt="Ride Receipts">
         <p>Download your Uber invoices and receipts automatically.</p>
         <br/>
         <p><button type="button" @click="startAgain" v-if="!loading" class="btn btn-lg btn-started" :disabled="!online">Get Started</button></p>
@@ -15,7 +15,7 @@
     <form v-on:submit.prevent="submitForm" class="wrapper" v-if="form !== null">
       <nav class="navbar navbar-light bg-transparent">
         <div class="navbar-brand">
-          <img src="static/uber-run.svg" alt="Uber Run" width="110">
+          <img src="static/ride-receipts.svg" alt="Ride Receipts" width="250">
         </div>
       </nav>
       <transition name="fade">
@@ -63,7 +63,7 @@
           </div>
           <b-popover  ref="popover" target="user-password" triggers="click focus" placement="bottom">
              <template slot="title">Security</template>
-             Uber Run is an automation app that tells the Chromium browser to download your invoices and receipts. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
+             Ride Receipts is an automation app that tells the Chromium browser to download your invoices and receipts. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
              <br/>
              <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
           </b-popover>
@@ -73,7 +73,7 @@
             <label for="verification">Enter the Uber verification code sent to you via SMS <i id="verification-code" class="far fa-2x fa-question-circle"></i></label>
             <b-popover ref="popover" target="verification-code" triggers="click focus" placement="bottom">
                <template slot="title">Security</template>
-               Uber Run is an automation app that tells the Chromium browser to download your invoices and receipts. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
+               Ride Receipts is an automation app that tells the Chromium browser to download your invoices and receipts. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
             </b-popover>
@@ -96,7 +96,7 @@
             <label>Which invoices/receipts would you like to <br/> download? <i id="filter-option" class="far fa-2x fa-question-circle"></i></label>
             <b-popover ref="popover" target="filter-option" triggers="click" placement="bottom">
                <template slot="title">Note</template>
-               Uber Run can only download the invoices and/or receipts that exist in your Uber account.
+               Ride Receipts can only download the invoices and/or receipts that exist in your Uber account.
                <br/>
                <br/>
                <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#limitations">Learn more</a></p>
@@ -172,7 +172,7 @@
             <label v-if="invoiceCount === 0">{{ downloadingMessage }}</label>
             <p v-if="invoiceCount === 0" class="text-center"><button type="button" @click.stop.prevent="startAgain()" class="btn btn-lg btn-started">Start Again</button></p>
             <div class="donation-msg">
-              <p class="text-center">Did you find this app useful? If so, please make a donation so we can keep maintaining Uber Run.</p>
+              <p class="text-center">Did you find this app useful? If so, please make a donation so we can keep maintaining Ride Receipts.</p>
               <p class="text-center"><a href="https://paypal.me/UberRun" class="js-external-link">Click here to donate</a></p>
             </div>
           </div>
@@ -184,7 +184,7 @@
         </div>
         <div class="jumbotron form--container" v-if="form === 'error-captcha'" key="error-captcha">
           <div class="form-group">
-            <label>Uber Run failed to verify your account. Please try again.</label>
+            <label>Ride Receipts failed to verify your account. Please try again.</label>
           </div>
         </div>
         <div class="jumbotron form--container" v-if="form === 'CHROME_NOT_FOUND'" key="chromenotfound">
@@ -342,7 +342,7 @@ export default {
   methods: {
     downloadMessage (count) {
       if (count > 76) {
-        this.downloadingMessage = `Wow this could take a while! Let Uber Run do its thing and we'll let you know once your ${count} trips are in order.`
+        this.downloadingMessage = `Wow this could take a while! Let Ride Receipts do its thing and we'll let you know once your ${count} trips are in order.`
       } else if (count > 56 && count <= 76) {
         this.downloadingMessage = `Whoa ${count} trips! Put your feet up and relax. This will take a while, my friend.`
       } else if (count > 46 && count <= 56) {
@@ -354,7 +354,7 @@ export default {
       } else if (count > 16 && count <= 26) {
         this.downloadingMessage = `You have ${count} trips. Pour yourself a drink and relax. We got this.`
       } else if (count > 11 && count <= 16) {
-        this.downloadingMessage = `You have ${count} trips!\nRun, Uber Run!`
+        this.downloadingMessage = `You have ${count} trips!\nRun, Ride Receipts!`
       } else if (count > 6 && count <= 11) {
         this.downloadingMessage = `You have ${count} trips! This should download fairly quickly.`
       } else if (count > 1 && count <= 6) {
@@ -399,10 +399,10 @@ export default {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   img {
-    width: 115px;
+    width: 250px;
     height: auto;
     margin-left: 5px;
-    margin-top: 5px;
+    margin-top: 10px;
   }
 }
 
@@ -430,11 +430,11 @@ export default {
   text-align: center;
 
   .wrap-content {
-    width: 360px;
+    width: 450px;
   }
 
   img {
-    height: 180px;
+    height: auto;
     margin-bottom: 40px;
   }
 
