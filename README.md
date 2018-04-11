@@ -28,6 +28,18 @@
 
 MacOS, Windows and Linux - [https://github.com/mrgodhani/uberrun/releases](https://github.com/break-enter/uberrun/releases)
 
+## Features
+
+- [x] Categorized by User Account
+- [x] Categorized by Year and Month
+- [x] Invoices are renamed by date and timestamp. E.g. Jan-30-2018-9am.PDF
+- [x] Option to filter invoices by a specific month(s) or year(s)
+- [x] Supported on all Platforms i.e Windows, Mac & Linux
+- [x] Take pdf screenshot of receipts of your trip page.
+- [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
+- [x] Configurable path to save invoices
+- [ ] Lyft Integration
+
 ## Why
 
 Uber Run is essential for anyone who relies on Uber for business travel. Whether you’re self-employed or get reimbursed by your employer for travel, you’ll likely need proper tax invoices for accounting purposes.
@@ -63,18 +75,6 @@ Uber Run does not store your login credentials, personal information or any othe
 Simply put, using Uber Run is no different security-wise than if you were to log into your Uber account manually through your regular browser. By using Uber Run, you’re essentially telling the browser to do this for you automatically.
 
 For Mac users: Since Uber Run is not available in the App Store, you may need to override your security settings in order to open it. Please follow these [instructions](https://support.apple.com/kb/PH25088?locale=en_US).
-
-## Features
-
-- [x] Categorized by User Account
-- [x] Categorized by Year and Month
-- [x] Invoices are renamed by date and timestamp. E.g. Jan-30-2018-9am.PDF
-- [x] Option to filter invoices by a specific month(s) or year(s)
-- [x] Supported on all Platforms i.e Windows, Mac & Linux
-- [x] Take pdf screenshot of receipts of your trip page.
-- [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
-- [x] Configurable path to save invoices
-- [ ] Lyft Integration
 
 ## Developer Notes
 
