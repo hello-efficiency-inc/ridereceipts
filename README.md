@@ -36,8 +36,8 @@ MacOS, Windows and Linux - [https://github.com/mrgodhani/uberrun/releases](https
 - [x] Option to filter invoices by a specific month(s) or year(s)
 - [x] Supported on all Platforms i.e Windows, Mac & Linux
 - [x] Take pdf screenshot of receipts of your trip page.
-- [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
 - [x] Configurable path to save invoices
+- [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
 - [ ] Lyft Integration
 
 ## Why
