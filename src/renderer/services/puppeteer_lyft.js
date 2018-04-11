@@ -36,12 +36,12 @@ export default async function (email, year, month, invoiceDate, html) {
 
   page.waitFor(1000)
 
-  if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/${invoiceDate}/`))) {
-    jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/${invoiceDate}/`))
+  if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/`))) {
+    jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/`))
   }
 
   await page.emulateMedia('print')
-  const receiptFilePath = `${documentDir.path()}/${email}/Lyft/${year}/${month}/${invoiceDate}/Receipt-${invoiceDate}.pdf`
+  const receiptFilePath = `${documentDir.path()}/${email}/Lyft/${year}/${month}/Receipt-${invoiceDate}.pdf`
   await page.pdf({
     path: receiptFilePath,
     format: 'A4',
