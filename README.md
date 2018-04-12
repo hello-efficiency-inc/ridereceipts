@@ -26,7 +26,7 @@
 
 ### Download
 
-MacOS, Windows and Linux - [https://github.com/mrgodhani/uberrun/releases](https://github.com/break-enter/uberrun/releases)
+MacOS, Windows and Linux - [https://github.com/ridereceipts/ridereceipts/releases](https://github.com/ridereceipts/ridereceipts/releases)
 
 ## Features
 
