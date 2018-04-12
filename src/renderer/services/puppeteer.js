@@ -66,9 +66,18 @@ async function solveCaptcha (page) {
 
   tokenText = token.data.text
 
-  if (tokenText === '?' || tokenText === '') {
+  if (tokenText === '?') {
     ipcRenderer.send('form', ERROR_CAPTCHA_NOT_SOLVED)
-  } else {
+  }
+
+  if (tokenText === '' && token.data.is_correct === true) {
+    while (tokenText === '') {
+      const getToken = await axios.get(`https://api.uberrun.io/gettoken/${token.data.captcha}`)
+      tokenText = getToken.data.text
+    }
+  }
+
+  if (tokenText) {
     await page.evaluate((tokenText) => {
       document.querySelector('#g-recaptcha-response').innerHTML = tokenText
     }, tokenText)
