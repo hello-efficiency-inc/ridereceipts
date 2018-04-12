@@ -1,4 +1,4 @@
-<p align="center"><img src="/uber-run.png" alt="Ride Receipts" width="150"></p>
+<p align="center"><img src="/ride-receipts.png" alt="Ride Receipts" width="150"></p>
 
 <p align="center">
 <a href="https://travis-ci.org/mrgodhani/uberrun">
@@ -22,7 +22,7 @@
 > Simple automation desktop app to download and organize your tax invoices from Uber.
 
 
-![screenshot](/uberrun-app.png)
+![screenshot](/ridereceipt-app.png)
 
 ### Download
 
