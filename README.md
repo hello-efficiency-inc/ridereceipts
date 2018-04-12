@@ -1,4 +1,4 @@
-<p align="center"><img src="/ride-receipts.png" alt="Ride Receipts" width="150"></p>
+<p align="center"><img src="/ride-receipts.png" alt="Ride Receipts" width="350"></p>
 
 <p align="center">
 <a href="https://travis-ci.org/mrgodhani/uberrun">
