@@ -342,7 +342,7 @@ export default async function () {
   ipcRenderer.send('invoiceTotal', uniqItems.length)
 
   for (let i = 0; i < uniqItems.length; ++i) {
-    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`${accountEmail}/${uniqItems[i].year}/Uber/${uniqItems[i].month}/${uniqItems[i].invoice_date}`)})
+    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`${accountEmail}/Uber/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`)})
     await page.goto(uniqItems[i].trip, {waitUntil: 'networkidle0'})
 
     const progress = i === (uniqItems.length - 1) ? _.ceil(_.divide(i + 1, uniqItems.length) * 100) : _.ceil(_.divide(i, uniqItems.length) * 100)
