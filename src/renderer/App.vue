@@ -38,7 +38,7 @@ export default {
     }
 
     if (!this.$electronstore.get('invoicePath')) {
-      this.$electronstore.set('invoicePath', `${documentDir.path()}/Uber Run/`)
+      this.$electronstore.set('invoicePath', `${documentDir.path()}/Ride Receipts/`)
     }
 
     if (!this.$electronstore.get('chromePath')) {
