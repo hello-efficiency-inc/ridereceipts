@@ -158,10 +158,9 @@ body {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   img {
-    width: 115px;
     height: auto;
-    margin-left: 5px;
-    margin-top: 5px;
+    margin-left: 30px;
+    margin-top: 30px;
   }
 }
 
