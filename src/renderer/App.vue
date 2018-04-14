@@ -214,8 +214,8 @@ body {
   border-radius: 30px;
   width: auto;
   height: 52px;
-  padding-left:20px;
-  padding-right: 20px;
+  padding-left:40px;
+  padding-right: 40px;
   text-transform: uppercase;
   font-size: 15px;
   font-weight: 700;
@@ -490,8 +490,12 @@ body {
 }
 
 .donation-msg {
-  margin-top: 5em;
+  margin-top: 6.5em;
   width: 500px;
+
+  p {
+    color: black;
+  }
 
   a {
     color: #0012B9;
@@ -506,6 +510,7 @@ body {
 
 .form-control.is-valid {
   border-color: #000;
+  color: black;
 
   &:focus {
     outline: 0;
