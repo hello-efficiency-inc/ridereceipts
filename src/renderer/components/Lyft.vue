@@ -92,6 +92,9 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
+              <div class="continue-btn back-btn" v-if="!hideBackButton">
+                <button type="submit" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
+              </div>
               <div class="continue-btn float-right" v-if="!hideButton">
                 <button type="submit" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
               </div>
@@ -128,6 +131,14 @@ export default {
     }
   },
   computed: {
+    hideBackButton () {
+      if (this.form === 'INVOICE_COUNT') {
+        return true
+      }
+      if (this.form === 'DOWNLOADED') {
+        return true
+      }
+    },
     hideButton () {
       if (this.form === 'LOGIN_FORM') {
         return true
@@ -197,6 +208,7 @@ export default {
         }
 
         authWindow.on('closed', () => {
+          resolve(false)
           throw new Error('Auth window was closed by user')
         })
 
@@ -323,3 +335,8 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.back-btn {
+  left: 10px;
+}
+</style>
