@@ -1,8 +1,8 @@
 <p align="center"><img src="/ride-receipts.png" alt="Ride Receipts" width="350"></p>
 
 <p align="center">
-<a href="https://travis-ci.org/mrgodhani/uberrun">
-<img src="https://travis-ci.org/mrgodhani/uberrun.svg?branch=master">
+<a href="https://travis-ci.org/ridereceipts/ridereceipts">
+<img src="https://travis-ci.org/ridereceipts/ridereceipts.svg?branch=master">
 </a>
 <a href="https://codeclimate.com/github/mrgodhani/uberrun/maintainability">
 <img src="https://api.codeclimate.com/v1/badges/b1b6cc14751a2e62aa4b/maintainability" />
@@ -19,7 +19,7 @@
 </a>
 </p>
 
-> Simple automation desktop app to download and organize your tax invoices from Uber.
+> Simple automation desktop app to download and organize your tax invoices from Uber and Lyft.
 
 
 ![screenshot](/ridereceipt-app.png)
@@ -36,13 +36,12 @@ MacOS, Windows and Linux - [https://github.com/ridereceipts/ridereceipts/release
 - [x] Option to filter invoices by a specific month(s) or year(s)
 - [x] Supported on all Platforms i.e Windows, Mac & Linux
 - [x] Take pdf screenshot of receipts of your trip page.
-- [x] Configurable path to save invoices
+- [x] Lyft Integration
 - [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
-- [ ] Lyft Integration
 
 ## Why
 
-Ride Receipts is essential for anyone who relies on Uber for business travel. Whether you’re self-employed or get reimbursed by your employer for travel, you’ll likely need proper tax invoices for accounting purposes.
+Ride Receipts is essential for anyone who relies on Uber/Lyft for business travel. Whether you’re self-employed or get reimbursed by your employer for travel, you’ll likely need proper tax invoices for accounting purposes.
 
 This was a major pain point for us every year around tax season. Since the current Uber website does not allow you to download all of your invoices for the year at once, you have to manually download, rename, and organize each of your invoices. So you’re either doing it one by one, or if you have a business profile, you still have to download them one month at a time. Uber’s monthly business travel report is great for keeping track of your trips, but these aren’t actual invoices.
 
@@ -73,8 +72,6 @@ Currently Ride Receipts cannot distinguish between business and personal invoice
 Ride Receipts does not store your login credentials, personal information or any other data. This application operates without a database and it is solely automating on the Chromium browser as you type.
 
 Simply put, using Ride Receipts is no different security-wise than if you were to log into your Uber account manually through your regular browser. By using Ride Receipts, you’re essentially telling the browser to do this for you automatically.
-
-For Mac users: Since Ride Receipts is not available in the App Store, you may need to override your security settings in order to open it. Please follow these [instructions](https://support.apple.com/kb/PH25088?locale=en_US).
 
 ## Developer Notes
 
