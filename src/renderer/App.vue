@@ -214,8 +214,8 @@ body {
   border-radius: 30px;
   width: auto;
   height: 52px;
-  padding-left:40px;
-  padding-right: 40px;
+  padding-left:45px;
+  padding-right: 45px;
   text-transform: uppercase;
   font-size: 15px;
   font-weight: 700;
