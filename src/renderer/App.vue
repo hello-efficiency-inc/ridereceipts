@@ -525,4 +525,8 @@ body {
     margin-right: 10px;
   }
 }
+.form-control:disabled, .form-control[readonly] {
+    background-color: #fff;
+    opacity: 1;
+}
 </style>

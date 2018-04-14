@@ -200,7 +200,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="continue-btn float-left" v-if="!hideBackButton">
-                <router-link :to="{ name: 'main-page' }" tag="button" class="btn btn-outline-primary btn--submit back-btn">
+                <router-link :to="{ name: 'main-page' }" class="btn btn-outline-primary btn--submit back-btn">
                   <img class="arrow" src="static/back-arrow.svg">Back
                 </router-link>
               </div>
@@ -322,9 +322,6 @@ export default {
     hideButton () {
       if (this.form === 'error-captcha') {
         return false
-      }
-      if (!this.emailError) {
-        return true
       }
       return false
     },

@@ -64,8 +64,6 @@ async function solveCaptcha (page) {
   // Solve it!
   let token = await axios.post('https://api.uberrun.io/solvecaptcha', { key: siteToken })
 
-  console.log(token)
-
   tokenText = token.data.text
 
   if (tokenText === '?') {
@@ -90,7 +88,7 @@ async function solveCaptcha (page) {
 // Check for ReCaptcha
 async function evaluateReCaptcha (page) {
   const checkRecaptcha = await page.evaluate(() => {
-    const captcha = document.querySelector('#login-recaptcha')
+    const captcha = document.querySelector('#login-recaptcha').innerHTML
     if (captcha !== '') {
       return true
     }
@@ -103,8 +101,8 @@ async function evaluateReCaptcha (page) {
 // Evaluate Password or Email Error
 async function evaluateError (page) {
   const errorCheck = await page.evaluate(() => {
-    const error = document.querySelector('#error-caption')
-    return error !== null
+    const error = document.querySelector('#error-caption').innerHTML
+    return error !== ''
   })
 
   return errorCheck
@@ -232,15 +230,21 @@ export default async function () {
   const reCaptcha = await evaluateReCaptcha(page)
   const emailError = await evaluateError(page)
 
-  if (reCaptcha) {
-    ipcRenderer.send('form', ERROR_CAPTCHA)
-    await solveCaptcha(page)
-    await page.waitFor(1000)
-    await page.click('#app-body > div > div > div:nth-child(1) > form > button')
+  if (emailError && !reCaptcha) {
+    ipcRenderer.send('form', ERROR_EMAIL)
   }
 
-  if (emailError) {
-    ipcRenderer.send('form', ERROR_EMAIL)
+  if (!emailError && reCaptcha) {
+    ipcRenderer.send('form', ERROR_CAPTCHA)
+    await solveCaptcha(page)
+    const errorCheck = await evaluateError(page)
+    if (errorCheck) {
+      await page.waitFor(1000)
+      ipcRenderer.send('form', ERROR_EMAIL)
+    } else {
+      await page.waitFor(1000)
+      await page.click('#app-body > div > div > div:nth-child(1) > form > button')
+    }
   }
 
   await page.waitFor(1000)
