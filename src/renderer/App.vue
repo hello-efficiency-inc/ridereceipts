@@ -517,4 +517,12 @@ body {
     box-shadow: none;
   }
 }
+.back-btn {
+  left: 50px !important;
+
+  img {
+    margin-left: 0 !important;
+    margin-right: 10px;
+  }
+}
 </style>

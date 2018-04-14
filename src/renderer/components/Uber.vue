@@ -199,6 +199,11 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
+              <div class="continue-btn float-left" v-if="!hideBackButton">
+                <router-link :to="{ name: 'main-page' }" tag="button" class="btn btn-outline-primary btn--submit back-btn">
+                  <img class="arrow" src="static/back-arrow.svg">Back
+                </router-link>
+              </div>
               <div class="continue-btn float-right" v-if="!hideButton">
                 <button type="submit" v-if="!errorButton" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
                 <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit-start">Start Again<img class="arrow" src="static/next-arrow.svg"></button>
@@ -307,6 +312,12 @@ export default {
         return true
       }
       return false
+    },
+    hideBackButton () {
+      if (this.form === 'EMAIL') {
+        return false
+      }
+      return true
     },
     hideButton () {
       if (this.form === 'error-captcha') {

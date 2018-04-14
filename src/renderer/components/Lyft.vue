@@ -92,8 +92,10 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
-              <div class="continue-btn back-btn" v-if="!hideBackButton">
-                <button type="submit" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
+              <div class="continue-btn float-left" v-if="!hideBackButton">
+                <router-link :to="{ name: 'main-page' }" tag="button" class="btn btn-outline-primary btn--submit back-btn">
+                  <img class="arrow" src="static/back-arrow.svg">Back
+                </router-link>
               </div>
               <div class="continue-btn float-right" v-if="!hideButton">
                 <button type="submit" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
@@ -335,8 +337,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.back-btn {
-  left: 10px;
-}
-</style>
