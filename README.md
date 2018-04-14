@@ -1,8 +1,8 @@
 <p align="center"><img src="/ride-receipts.png" alt="Ride Receipts" width="350"></p>
 
 <p align="center">
-<a href="https://travis-ci.org/mrgodhani/uberrun">
-<img src="https://travis-ci.org/mrgodhani/uberrun.svg?branch=master">
+<a href="https://travis-ci.org/ridereceipts/ridereceipts">
+<img src="https://travis-ci.org/ridereceipts/ridereceipts.svg?branch=master">
 </a>
 <a href="https://codeclimate.com/github/mrgodhani/uberrun/maintainability">
 <img src="https://api.codeclimate.com/v1/badges/b1b6cc14751a2e62aa4b/maintainability" />

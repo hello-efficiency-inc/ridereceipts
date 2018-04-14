@@ -82,7 +82,7 @@
               <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
             </p>
             <div class="donation-msg mx-auto">
-              <p class="text-center">Did you find this app useful? If so, please make a contribution so we can keep maintaining Uber Run.</p>
+              <p class="text-center">Did you find this app useful? If so, please make a contribution so we can keep maintaining Ride Receipts.</p>
               <p class="text-center"><a href="https://paypal.me/UberRun" class="js-external-link">Click here to contribute</a></p>
             </div>
           </div>
