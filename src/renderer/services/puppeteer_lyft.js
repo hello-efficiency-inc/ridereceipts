@@ -17,7 +17,7 @@ async function launch (puppeteer, exec) {
   })
 }
 
-export default async function (email, year, month, invoiceDate, html) {
+export default async function (email, headers, year, month, invoiceDate, html) {
   const store = new Store()
   const documentDir = jetpack.cwd(store.get('invoicePath'))
   let exec = store.get('chromePath')
@@ -32,9 +32,9 @@ export default async function (email, year, month, invoiceDate, html) {
   store.set('processPID', browser.process().pid) // Store process ID to kill when app quits
 
   const page = await browser.newPage()
-  page.setContent(html)
-
-  page.waitFor(1000)
+  await page.setExtraHTTPHeaders(headers)
+  await page.setContent(html)
+  await page.waitFor(1000)
 
   if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/`))) {
     jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/`))

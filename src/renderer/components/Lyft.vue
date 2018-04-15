@@ -137,6 +137,9 @@ export default {
       if (this.form === 'INVOICE_COUNT') {
         return true
       }
+      if (this.form === 'FILTER_OPTION') {
+        return true
+      }
       if (this.form === 'DOWNLOADED') {
         return true
       }
@@ -312,14 +315,21 @@ export default {
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
               }
             })
+
+            const header = data.data.payload.headers.map((item) => {
+              let obj = {}
+              obj[item.name] = item.value
+              return obj
+            })
             const html = Buffer.from(data.data.payload.body.data, 'base64')
             const date = new Date(parseInt(data.data.internalDate))
             puppeteerLyft(
               user.email,
+              Object.assign({}, ...header),
               moment(date).format('YYYY'),
               moment(date).format('MMMM'),
               moment(date).format('MMMM-DD-YYYY_hh-mm-a'),
-              html.toString().replace(/<img[^>]*>/g, '')
+              html.toString()
             )
             self.progress = _.divide(i + 1, messages.length) * 100
 
