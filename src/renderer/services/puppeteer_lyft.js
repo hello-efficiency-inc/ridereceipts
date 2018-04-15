@@ -32,9 +32,10 @@ export default async function (email, headers, year, month, invoiceDate, html) {
   store.set('processPID', browser.process().pid) // Store process ID to kill when app quits
 
   const page = await browser.newPage()
+  await page.setCacheEnabled(true)
   await page.setExtraHTTPHeaders(headers)
   await page.setContent(html)
-  await page.waitFor(1000)
+  await page.waitFor(2000)
 
   if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/`))) {
     jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/`))
