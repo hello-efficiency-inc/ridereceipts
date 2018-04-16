@@ -43,14 +43,6 @@ async function listenEvent (eventname) {
   return data
 }
 
-const customWaitFor = function (timeToWait) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(true)
-    }, timeToWait)
-  })
-}
-
 // Get Solved Token
 async function solveCaptcha (page) {
   // Get Recaptcha Key
@@ -78,10 +70,12 @@ async function solveCaptcha (page) {
     }
   }
 
-  if (tokenText) {
+  if (tokenText !== '?') {
     await page.evaluate((tokenText) => {
       document.querySelector('#g-recaptcha-response').innerHTML = tokenText
     }, tokenText)
+  } else {
+    ipcRenderer.send('form', ERROR_CAPTCHA_NOT_SOLVED)
   }
 }
 
@@ -101,8 +95,11 @@ async function evaluateReCaptcha (page) {
 // Evaluate Password or Email Error
 async function evaluateError (page) {
   const errorCheck = await page.evaluate(() => {
-    const error = document.querySelector('#error-caption').innerHTML
-    return error !== ''
+    const error = document.querySelector('#error-caption')
+    if (error !== null) {
+      return error.innerHTML !== ''
+    }
+    return false
   })
 
   return errorCheck
@@ -247,17 +244,18 @@ export default async function () {
     }
   }
 
-  await page.waitFor(1000)
-  await page.waitForSelector(PASSWORD_SELECTOR)
+  await page.waitFor(2000)
+  await page.waitForSelector(PASSWORD_SELECTOR, {
+    timeout: 0
+  })
   await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)
   await page.keyboard.type(await listenEvent('passdata'), {delay: 30})
   await page.click(NEXT_BUTTON)
 
-  await customWaitFor(1500)
+  await page.waitFor(1800)
 
   const evaluateErrorPass = await evaluateError(page)
-
   // Evaluate Password Error
   if (evaluateErrorPass) {
     ipcRenderer.send('form', ERROR_PASS)
