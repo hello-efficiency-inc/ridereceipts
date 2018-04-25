@@ -11,3 +11,5 @@ thumbs.db
 !.gitkeep
 .idea/
 _site/
+.env
+src/renderer/config.js

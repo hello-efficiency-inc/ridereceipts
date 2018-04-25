@@ -11,9 +11,10 @@
           <div class="form-group">
             <br/>
             <label>
-              Sign in to your Gmail account to automatically download and organize your Lyft receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i>
+              Sign in to any of account below to automatically download and organize your Lyft receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i>
             </label>
-            <p class="text-center"><button type="button" @click="googleSignIn" class="btn btn-lg btn-started" v-if="!loading">Sign In to Gmail</button></p>
+            <p class="text-center"><button type="button" @click="signIn('google')" class="btn btn-lg btn-started" v-if="!loading">Sign In to Gmail</button></p>
+            <p class="text-center"><button type="button" @click="signIn('outlook')" class="btn btn-lg btn-started" v-if="!loading">Sign In to Outlook</button></p>
             <div class="loading" v-if="loading">
               <div class="inner"></div>
             </div>
@@ -108,18 +109,12 @@
   </div>
 </template>
 <script>
-import qs from 'qs'
 import {parse} from 'url'
-import axios from 'axios'
+import oauth from '../services/oauth'
 import moment from 'moment-timezone'
 import puppeteerLyft from '../services/puppeteer_lyft'
+import axios from 'axios'
 import _ from 'lodash'
-
-const GOOGLE_AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
-const GOOGLE_TOKEN_URL = 'https://www.googleapis.com/oauth2/v4/token'
-const GOOGLE_CLIENT_ID = '114335500100-31ruh5our5ijb6hmrkkh2s4able4fq9t.apps.googleusercontent.com'
-const GOOGLE_REDIRECT_URI = 'http://localhost'
-const GOOGLE_PROFILE_URL = 'https://www.googleapis.com/userinfo/v2/me'
 
 export default {
   data () {
@@ -181,7 +176,7 @@ export default {
         this.downloadingMessage = `You have 0 trips within the time frame you selected.`
       }
     },
-    signInWithPopup () {
+    signInWithPopup (provider) {
       return new Promise((resolve, reject) => {
         const authWindow = new this.$electron.remote.BrowserWindow({
           width: 500,
@@ -189,13 +184,7 @@ export default {
           show: true
         })
 
-        const urlParams = {
-          response_type: 'code',
-          redirect_uri: GOOGLE_REDIRECT_URI,
-          client_id: GOOGLE_CLIENT_ID,
-          scope: 'profile email https://www.googleapis.com/auth/gmail.readonly'
-        }
-        const authUrl = `${GOOGLE_AUTHORIZATION_URL}?${qs.stringify(urlParams)}`
+        const authUrl = oauth.buildAuthUrl(provider)
 
         function handleNavigation (url) {
           const query = parse(url, true).query
@@ -228,40 +217,19 @@ export default {
         authWindow.loadURL(authUrl)
       })
     },
-    async fetchToken (code) {
-      const response = await axios.post(GOOGLE_TOKEN_URL, qs.stringify({
-        code,
-        client_id: GOOGLE_CLIENT_ID,
-        redirect_uri: GOOGLE_REDIRECT_URI,
-        grant_type: 'authorization_code'
-      }), {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      })
-      return response.data
-    },
-    async fetchGoogleProfile (token) {
-      const response = await axios.get(GOOGLE_PROFILE_URL, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      return response.data
-    },
-    async googleSignIn () {
+    async signIn (provider) {
       this.loading = true
       let token
-      const code = await this.signInWithPopup()
+      const code = await this.signInWithPopup(provider)
       if (code) {
-        token = await this.fetchToken(code)
+        token = await oauth.fetchToken(provider, code)
+        alert(token)
       } else {
         this.loading = false
       }
 
       if (token) {
-        const profile = await this.fetchGoogleProfile(token.access_token)
+        const profile = await oauth.fetchGoogleProfile(provider, token.access_token)
         this.loading = false
         localStorage.setItem('token_data', JSON.stringify(token))
         localStorage.setItem('user_data', JSON.stringify(profile))
