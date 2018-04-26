@@ -64,7 +64,7 @@ async function solveCaptcha (page) {
 
   if (tokenText === '' && token.data.is_correct === true) {
     while (tokenText === '') {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 2500))
       const getToken = await axios.get(`https://api.uberrun.io/gettoken/${token.data.captcha}`)
       tokenText = getToken.data.text
     }

@@ -222,8 +222,11 @@ export default {
       let token
       const code = await this.signInWithPopup(provider)
       if (code) {
-        token = await oauth.fetchToken(provider, code)
-        alert(token)
+        try {
+          token = await oauth.fetchToken(provider, code)
+        } catch (e) {
+          console.log(token)
+        }
       } else {
         this.loading = false
       }
@@ -303,6 +306,12 @@ export default {
 
             if (self.progress === 100) {
               self.form = 'DOWNLOADED'
+              const notification = new Notification('Ride Receipts', {
+                body: 'Success! All invoices have been downloaded for you.'
+              })
+              notification.onclick = () => {
+                console.log('Notification clicked')
+              }
             }
           })
         }

@@ -5,11 +5,8 @@ import router from './router'
 import { remote } from 'electron'
 import jetpack from 'fs-jetpack'
 import Store from 'electron-store'
-import dotenv from 'dotenv'
 
 import './helpers/external_links.js'
-
-dotenv.config()
 
 Vue.use(BootstrapVue)
 const app = remote.app

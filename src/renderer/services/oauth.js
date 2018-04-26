@@ -1,6 +1,6 @@
 import qs from 'qs'
 import axios from 'axios'
-import {OUTLOOK_CLIENT_ID, GOOGLE_CLIENT_ID} from '../config'
+import {OUTLOOK_CLIENT_ID, GOOGLE_CLIENT_ID, OUTLOOK_CLIENT_SECRET} from '../config'
 
 const GOOGLE_AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 const GOOGLE_TOKEN_URL = 'https://www.googleapis.com/oauth2/v4/token'
@@ -10,7 +10,7 @@ const GOOGLE_SCOPE = 'profile email https://www.googleapis.com/auth/gmail.readon
 
 const OUTLOOK_AUTHORIZATION_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
 const OUTLOOK_TOKEN_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
-const OUTLOOK_REDIRECT_URI = 'http://localhost'
+const OUTLOOK_REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
 const OUTLOOK_SCOPE = 'openid profile User.Read Mail.Read'
 
 const cryptObj = window.crypto
@@ -36,6 +36,7 @@ export default {
       response_type: 'code',
       redirect_uri: provider === 'google' ? GOOGLE_REDIRECT_URI : OUTLOOK_REDIRECT_URI,
       client_id: provider === 'google' ? GOOGLE_CLIENT_ID : OUTLOOK_CLIENT_ID,
+      client_secret: provider !== 'google' ? OUTLOOK_CLIENT_SECRET : '',
       state: this.guid(),
       nonce: this.guid(),
       scope: provider === 'google' ? GOOGLE_SCOPE : OUTLOOK_SCOPE
@@ -57,7 +58,6 @@ export default {
     const tokenUrl = provider === 'google' ? GOOGLE_TOKEN_URL : OUTLOOK_TOKEN_URL
     const response = await axios.post(tokenUrl, qs.stringify({
       code,
-      client_secret: process.env.OUTLOOK_CLIENT_SECRET,
       client_id: provider === 'google' ? GOOGLE_CLIENT_ID : OUTLOOK_CLIENT_ID,
       redirect_uri: provider === 'google' ? GOOGLE_REDIRECT_URI : OUTLOOK_REDIRECT_URI,
       grant_type: 'authorization_code'

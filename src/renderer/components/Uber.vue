@@ -266,6 +266,16 @@ export default {
           filter_option: null
         }
       }
+
+      if (data === 'DOWNLOADED') {
+        const notification = new Notification('Ride Receipts', {
+          body: 'Success! All invoices have been downloaded for you.'
+        })
+        notification.onclick = () => {
+          console.log('Notification clicked')
+        }
+      }
+
       if (data !== 'error-email' && data !== 'error-pass' && data !== 'error-veri') {
         this.form = data
       }
