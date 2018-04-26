@@ -81,6 +81,9 @@ Simply put, using Ride Receipts is no different security-wise than if you were t
 # install dependencies
 npm install
 
+# Navigate to renderer directory and copy config example to config.js and set Google Client Id and Outlook Id
+cp config.example.js config.js
+
 # serve with hot reload at localhost:9080
 npm run dev
 
