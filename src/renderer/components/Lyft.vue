@@ -74,7 +74,7 @@
           <div class="form-group">
             <br/>
             <br/>
-            <label v-if="invoiceCount > 0">Success! All invoices have been<br/> downloaded for you.</label>
+            <label v-if="invoiceCount > 0">Success! All invoices have been<br/> downloaded for you. Your total amount is {{currency}} {{ totalAmount }}</label>
             <p v-if="invoiceCount > 0" class="text-center">
               <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started">View Receipts</button>
             </p>
@@ -115,6 +115,7 @@ import moment from 'moment-timezone'
 import puppeteerLyft from '../services/puppeteer_lyft'
 import axios from 'axios'
 import _ from 'lodash'
+import cheerio from 'cheerio'
 
 export default {
   data () {
@@ -123,6 +124,8 @@ export default {
       filter_option: null,
       loading: false,
       downloadingMessage: null,
+      totalAmount: null,
+      currency: null,
       invoiceCount: 0,
       progress: ''
     }
@@ -225,7 +228,6 @@ export default {
         try {
           token = await oauth.fetchToken(provider, code)
         } catch (e) {
-          console.log(token)
         }
       } else {
         this.loading = false
@@ -280,6 +282,7 @@ export default {
         }
 
         if (typeof messages !== 'undefined') {
+          const rates = []
           messages.forEach(async function (value, i) {
             const data = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${value.id}`, {
               headers: {
@@ -294,6 +297,15 @@ export default {
             })
             const html = Buffer.from(data.data.payload.body.data, 'base64')
             const date = new Date(parseInt(data.data.internalDate))
+
+            const dom = cheerio.load(html.toString(), {
+              normalizeWhitespace: true
+            })
+            const totalRate = parseFloat(_.trim(dom('span.p-amount').text()))
+            self.currency = _.trim(dom('span.p-currency').text())
+
+            rates.push(totalRate)
+
             puppeteerLyft(
               user.email,
               Object.assign({}, ...header),
@@ -306,6 +318,7 @@ export default {
 
             if (self.progress === 100) {
               self.form = 'DOWNLOADED'
+              self.totalAmount = _.sum(rates)
               const notification = new Notification('Ride Receipts', {
                 body: 'Success! All invoices have been downloaded for you.'
               })
