@@ -1,111 +1,146 @@
 <template>
-  <div>
-    <form v-on:submit.prevent="submitForm" class="wrapper">
-      <nav class="navbar navbar-light bg-transparent">
-        <div class="navbar-brand">
-          <img src="static/ride-receipts.svg" alt="Ride Receipts" width="253">
-        </div>
-      </nav>
-      <transition name="fade">
-        <div class="jumbotron form--container" v-if="form === 'LOGIN_FORM'">
-          <div class="form-group">
-            <br/>
-            <label>
-              Sign in to any of account below to automatically download and organize your Lyft receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i>
-            </label>
-            <p class="text-center"><button type="button" @click="signIn('google')" class="btn btn-lg btn-started" v-if="!loading">Sign In to Gmail</button></p>
-            <p class="text-center"><button type="button" @click="signIn('outlook')" class="btn btn-lg btn-started" v-if="!loading">Sign In to Outlook</button></p>
-            <div class="loading" v-if="loading">
-              <div class="inner"></div>
-            </div>
-          </div>
-          <b-popover  ref="popover" target="privacy" triggers="click focus" placement="bottom">
-             <template slot="title">Privacy</template>
-             Ride Receipts is an automation app that has no database; therefore, it does not store your login credentials, personal information or any other data. Once you log in, we’ll fetch your Lyft receipts and auto-generate PDFs for you.
-             <br/>
-             <p class="text-right"><a class="js-external-link" href="https://ridereceipts.io/privacy">Learn more</a></p>
-          </b-popover>
-        </div>
-        <div class="jumbotron form--container" v-if="form === 'FILTER_OPTION'" key="filteroption">
-          <div class="form-group">
-            <label>Which receipts would you like to <br/> download?</label>
-            <div class="row">
-              <div class="col">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio"  v-model="filter_option" name="filter" value="previousyear">
-                    Previous year
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" v-model="filter_option" name="filter" value="currentyear">
-                    Current year
-                  </label>
-                </div>
-              </div>
-              <div class="col">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" v-model="filter_option" name="filter" value="lastthreemonths">
-                    Last 3 months
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" v-model="filter_option" name="filter" value="lastmonth">
-                    Last month
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="jumbotron form--container" v-if="form === 'INVOICE_COUNT'" key="invoicecounts">
-          <div class="form-group">
-            <label>{{ downloadingMessage }}</label>
-            <br/>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-          </div>
-        </div>
-        <div class="jumbotron form--container" v-if="form === 'DOWNLOADED'" key="downloaded">
-          <div class="form-group">
-            <br/>
-            <br/>
-            <label v-if="invoiceCount > 0">Success! All invoices have been<br/> downloaded for you. Your total amount is {{currency}} {{ totalAmount }}</label>
-            <p v-if="invoiceCount > 0" class="text-center">
-              <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started">View Receipts</button>
-            </p>
-            <label v-if="invoiceCount === 0">{{ downloadingMessage }}</label>
-            <p v-if="invoiceCount === 0" class="text-center">
-              <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
-            </p>
-            <div class="donation-msg mx-auto">
-              <p class="text-center">Did you find this app useful? If so, please make a contribution so we can keep maintaining Ride Receipts.</p>
-              <p class="text-center"><a href="https://paypal.me/UberRun" class="js-external-link">Click here to contribute</a></p>
-            </div>
-          </div>
-        </div>
-      </transition>
-      <div class="submit-container">
-        <div class="container-fluid">
+  <div class="d-flex h-100 w-100 flex-column">
+    <header class="p-4 mb-auto">
+      <img src="static/ride-receipts.svg" alt="Ride Receipts" width="253">
+    </header>
+    <main class="mt-5">
+      <transition name="fade" mode="out-in">
+        <section v-if="form === 'LOGIN_FORM'" key="loginForm" class="p-3 text-center">
           <div class="row">
-            <div class="col-md-12">
-              <div class="continue-btn float-left" v-if="!hideBackButton">
-                <router-link :to="{ name: 'main-page' }" tag="button" class="btn btn-outline-primary btn--submit back-btn">
-                  <img class="arrow" src="static/back-arrow.svg">Back
-                </router-link>
-              </div>
-              <div class="continue-btn float-right" v-if="!hideButton">
-                <button type="submit" class="btn btn-outline-primary btn--submit">Next<img class="arrow" src="static/next-arrow.svg"></button>
+            <div class="col-md-10 mx-auto">
+              <p class="sign-in-text mb-5">Sign in to any of account below to automatically download and organize your Lyft receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i></p>
+              <p class="text-center"><button type="button" @click="signIn('google')" class="btn btn-lg btn-started" v-if="!loading">Sign In to Gmail</button></p>
+              <b-popover  ref="popover" target="privacy" triggers="click focus" placement="bottom">
+                 <template slot="title">Privacy</template>
+                 Ride Receipts is an automation app that has no database; therefore, it does not store your login credentials, personal information or any other data. Once you log in, we’ll fetch your Lyft receipts and auto-generate PDFs for you.
+                 <br/>
+                 <p class="text-right"><a class="js-external-link" href="https://ridereceipts.io/privacy">Learn more</a></p>
+              </b-popover>
+              <div class="loading" v-if="loading">
+                <div class="inner"></div>
               </div>
             </div>
           </div>
+        </section>
+        <section v-if="form === 'FILTER_OPTION'" key="filteroption">
+          <div class="row">
+            <div class="col-8 mx-auto">
+                <p class="sign-in-text text-center mb-5">Which receipts would you like to <br/> download?</p>
+            </div>
+            <div class="col-7 mx-auto">
+              <div class="form-group">
+                <div class="row mx-auto">
+                  <div class="col">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio"  v-model="filter_option" name="filter" value="previousyear">
+                        Previous year
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" v-model="filter_option" name="filter" value="currentyear">
+                        Current year
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" v-model="filter_option" name="filter" value="lastthreemonths">
+                        Last 3 months
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" v-model="filter_option" name="filter" value="lastmonth">
+                        Last month
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section v-if="form === 'INVOICE_COUNT'" key="invoicecounts">
+          <div class="row">
+            <div class="col-8 mx-auto">
+              <p class="sign-in-text mb-5 text-center">{{ downloadingMessage }}</p>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section v-if="form === 'DOWNLOADED'" key="downloaded">
+          <div class="row">
+            <div class="col-8 mx-auto">
+              <p class="sign-in-text mb-4 text-center" v-if="invoiceCount > 0">Success! All receipts have been downloaded for you.</p>
+              <p class="sign-in-text mb-4 text-center" v-if="invoiceCount === 0">{{ downloadingMessage }}</p>
+              <div v-if="invoiceCount > 0" class="card-deck mb-5">
+                <div class="card">
+                  <div class="card-body d-flex flex-row">
+                    <img src="static/rideshare-car.svg" width="86" class="mr-4">
+                    <p class="card-text">
+                      Number of trips<br/>
+                      <span class="trip-count">{{ invoiceCount }} trips</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <carousel navigationEnabled :paginationEnabled="pagination" :perPage="perPage">
+                        <slide class="d-flex flex-row">
+                          <img src="static/piggy-bank.svg" width="86" class="mr-4">
+                          <p class="card-text">
+                            Total spend<br/>
+                            <!-- <span class="trip-count">${{ totalAmount }} {{ currency }}</span> -->
+                          </p>
+                        </slide>
+                        <slide class="d-flex flex-row">
+                          <img src="static/piggy-bank.svg" width="86" class="mr-4">
+                          <p class="card-text">
+                            Total spend<br/>
+                            <!-- <span class="trip-count">${{ totalAmount }} {{ currency }}</span> -->
+                          </p>
+                        </slide>
+                    </carousel>
+                  </div>
+                </div>
+              </div>
+              <p v-if="invoiceCount > 0" class="text-center">
+                <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started" >View Receipts</button>
+              </p>
+              <p v-if="invoiceCount === 0" class="text-center">
+                <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
+              </p>
+            </div>
+          </div>
+        </section>
+      </transition>
+    </main>
+    <footer class="mt-auto contribution-box p-4" v-if="form === 'DOWNLOADED'">
+      <div class="row">
+        <div class="col-md-10 mx-auto">
+          <p class="text-center mb-1">Did you find this app useful?</p>
+          <p class="text-center">If so, please make a contribution so we can keep maintaining Ride Receipts.</p>
+          <p class="text-center">👉 <a href="https://paypal.me/UberRun" class="ml-1 mr-1 js-external-link">Click here to contribute </a> 👈</p>
         </div>
       </div>
-    </form>
+    </footer>
+    <footer class="mt-auto p-4" v-if="form !== 'DOWNLOADED'">
+      <div class="row">
+        <div class="col">
+          <router-link :to="{ name: 'main-page' }" tag="button" class="btn btn-outline-primary btn--submit back-btn float-left mt-3" v-if="!hideBackButton">
+            <img class="arrow" src="static/back-arrow.svg">Back
+          </router-link>
+        </div>
+        <div class="col">
+            <button v-if="!hideButton" type="button" @click="submitForm" class="btn btn-outline-primary btn--submit float-right mt-3" >Next<img class="arrow" src="static/next-arrow.svg"></button>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 <script>
@@ -124,8 +159,10 @@ export default {
       filter_option: null,
       loading: false,
       downloadingMessage: null,
-      totalAmount: null,
-      currency: null,
+      totalAmount: [],
+      pagination: false,
+      perPage: 1,
+      rates: {},
       invoiceCount: 0,
       progress: ''
     }
@@ -282,7 +319,6 @@ export default {
         }
 
         if (typeof messages !== 'undefined') {
-          const rates = []
           messages.forEach(async function (value, i) {
             const data = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${value.id}`, {
               headers: {
@@ -302,9 +338,9 @@ export default {
               normalizeWhitespace: true
             })
             const totalRate = parseFloat(_.trim(dom('span.p-amount').text()))
-            self.currency = _.trim(dom('span.p-currency').text())
+            const currency = _.trim(dom('span.p-currency').text())
 
-            rates.push(totalRate)
+            self.rates[currency] = totalRate
 
             puppeteerLyft(
               user.email,
@@ -314,11 +350,10 @@ export default {
               moment(date).format('MMMM-DD-YYYY_hh-mm-a'),
               html.toString()
             )
-            self.progress = _.divide(i + 1, messages.length) * 100
+            self.progress = (messages.length - 1) ? _.ceil(_.divide(i + 1, messages.length) * 100) : _.ceil(_.divide(i, messages.length) * 100)
 
             if (self.progress === 100) {
               self.form = 'DOWNLOADED'
-              self.totalAmount = _.sum(rates)
               const notification = new Notification('Ride Receipts', {
                 body: 'Success! All invoices have been downloaded for you.'
               })
