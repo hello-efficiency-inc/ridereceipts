@@ -112,7 +112,7 @@ npm run lint
 
 ## Support / Contribution
 
-Please feel free to give us suggestions or report a bug by creating a [new issue](https://github.com/ridereceipts/ridereceipts/issues) via Github or messaging on  Twitter: [@mrgodhani](https://twitter.com/mrgodhani).
+Please feel free to give us suggestions or report a bug by creating a [new issue](https://github.com/ridereceipts/ridereceipts/issues) via Github or messaging on  Twitter: [@ridereceipts](https://twitter.com/ridereceipts. You can also email us at [hello@ridereceipts.io](hello@ridereceipts.io).
 
 ## License
 [MIT](https://github.com/ridereceipts/ridereceipts/blob/master/LICENSE)
