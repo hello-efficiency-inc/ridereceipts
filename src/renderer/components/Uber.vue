@@ -4,7 +4,7 @@
       <img src="static/ride-receipts.svg" alt="Ride Receipts" width="253">
     </header>
     <main class="mt-5">
-      <transition name="fade" mode="in-out">
+      <transition name="fade" mode="out-in">
         <section v-if="form === null" key="loading">
           <div class="loading">
             <div class="inner"></div>
@@ -187,7 +187,7 @@
                 <div class="card">
                   <div class="card-body">
                     <carousel :navigationEnabled="navigation" :paginationEnabled="pagination" :perPage="perPage">
-                        <slide class="d-flex flex-row" v-for="rate in rates">
+                        <slide class="d-flex flex-row" v-for="rate in rates" :key="rate.currency">
                           <img src="static/piggy-bank.svg" width="86" class="mr-4">
                           <p class="card-text">
                             Total spend<br/>

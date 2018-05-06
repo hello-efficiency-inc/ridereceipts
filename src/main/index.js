@@ -5,6 +5,8 @@ import { autoUpdater } from 'electron-updater'
 import fkill from 'fkill'
 import Store from 'electron-store'
 
+import 'electron-context-menu'
+
 let myWindow = null
 
 /**
@@ -77,6 +79,7 @@ if (isSecondInstance) {
   app.quit()
 }
 
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {

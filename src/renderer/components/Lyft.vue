@@ -91,7 +91,7 @@
                 <div class="card">
                   <div class="card-body">
                     <carousel navigationEnabled :paginationEnabled="pagination" :perPage="perPage">
-                        <slide class="d-flex flex-row" v-for="rate in rates">
+                        <slide class="d-flex flex-row" v-for="rate in rates" :key="rate.currency">
                           <img src="static/piggy-bank.svg" width="86" class="mr-4">
                           <p class="card-text">
                             Total spend<br/>
