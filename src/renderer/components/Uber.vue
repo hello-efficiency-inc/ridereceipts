@@ -5,7 +5,7 @@
     </header>
     <main class="mt-5">
       <transition name="fade" mode="in-out">
-        <section v-if="form === null">
+        <section v-if="form === null" key="loading">
           <div class="loading">
             <div class="inner"></div>
           </div>
@@ -185,12 +185,16 @@
                   </div>
                 </div>
                 <div class="card">
-                  <div class="card-body d-flex flex-row">
-                    <img src="static/piggy-bank.svg" width="86" class="mr-4">
-                    <p class="card-text">
-                      Total spend<br/>
-                      <span class="trip-count">${{ totalAmount }} {{ currency }}</span>
-                    </p>
+                  <div class="card-body">
+                    <carousel :navigationEnabled="navigation" :paginationEnabled="pagination" :perPage="perPage">
+                        <slide class="d-flex flex-row" v-for="rate in rates">
+                          <img src="static/piggy-bank.svg" width="86" class="mr-4">
+                          <p class="card-text">
+                            Total spend<br/>
+                            <span class="trip-count">{{ rate.currency }} {{ Number(rate.amount.reduce((a, b) => a + b, 0).toFixed(2)) }}</span>
+                          </p>
+                        </slide>
+                    </carousel>
                   </div>
                 </div>
               </div>
@@ -203,12 +207,28 @@
             </div>
           </div>
         </section>
+        <section v-if="form === 'error-captcha'" key="errorcaptcha">
+          <div class="row">
+            <div class="col-8 mx-auto">
+              <p class="sign-in-text text-center">Ride Receipts failed to verify your account. Please try again.</p>
+            </div>
+          </div>
+        </section>
+        <section v-if="form === 'CHROME_NOT_FOUND'" key="chomenotfound">
+          <div class="row">
+            <div class="col-10 mx-auto">
+              <p class="sign-in-text text-center">
+                It seems like you don't have Chromium installed. Please download it from <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a>. Place the file on your desktop and unzip it.
+             </p>
+            </div>
+          </div>
+        </section>
       </transition>
     </main>
     <footer class="mt-auto p-4" v-if="form === 'INVOICE_COUNT'">
       <div class="row">
         <div class="col">
-          <p class="progress-tip text-center"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
+          <p class="progress-tip text-center pt-5"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
           <b-popover  ref="popover" target="progress-tip" triggers="click" placement="top">
              <template slot="title">Speed</template>
              We purposely check your account slowly to prevent the Uber website from knowing you are running a script.
@@ -218,7 +238,7 @@
         </div>
       </div>
     </footer>
-    <footer class="mt-auto contribution-box p-4" v-if="form === 'DOWNLOADED'">
+    <footer class="mt-auto contribution-box p-4" v-if="hideContribution">
       <div class="row">
         <div class="col-md-10 mx-auto">
           <p class="text-center mb-1">Did you find this app useful?</p>
@@ -227,7 +247,7 @@
         </div>
       </div>
     </footer>
-    <footer class="mt-auto p-4" v-if="form !== 'DOWNLOADED' || form !== 'INVOICE_COUNT'">
+    <footer class="mt-auto p-4" v-if="hideNavigation">
       <div class="row" v-if="!disableButton">
         <div class="col">
           <router-link :to="{ name: 'main-page' }" tag="button" class="btn btn-outline-primary btn--submit back-btn float-left mt-3" v-if="!hideBackButton">
@@ -240,10 +260,12 @@
         </div>
       </div>
     </footer>
+    <footer class="mt-auto p-4" v-if="showBlank"></footer>
   </div>
 </template>
 <script>
 import puppeteer from '../services/puppeteer'
+import _ from 'lodash'
 
 export default {
   data () {
@@ -257,6 +279,8 @@ export default {
         filter_option: null
       },
       invoiceCount: null,
+      invoiceData: null,
+      rates: [],
       online: true,
       emailError: true,
       passError: true,
@@ -264,7 +288,10 @@ export default {
       downloadingMessage: null,
       percent: null,
       downloaded: false,
-      dir_cleanup: false
+      dir_cleanup: false,
+      pagination: false,
+      navigation: true,
+      perPage: 1
     }
   },
   mounted () {
@@ -295,6 +322,7 @@ export default {
       }
 
       if (data === 'DOWNLOADED') {
+        this.calculateAmountSpent()
         const notification = new Notification('Ride Receipts', {
           body: 'Success! All invoices have been downloaded for you.'
         })
@@ -320,8 +348,9 @@ export default {
       }
     })
     this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
-      this.invoiceCount = data
-      this.downloadMessage(data)
+      this.invoiceCount = data.length
+      this.invoiceData = data
+      this.downloadMessage(data.length)
     })
     this.$electron.ipcRenderer.on('progress', (event, data) => {
       this.percent = data
@@ -332,6 +361,34 @@ export default {
     })
   },
   computed: {
+    showBlank () {
+      if (this.form === null) {
+        return true
+      }
+
+      return false
+    },
+    hideNavigation () {
+      if (this.form === 'DOWNLOADED') {
+        return false
+      }
+
+      if (this.form === 'INVOICE_COUNT') {
+        return false
+      }
+
+      if (this.form === null) {
+        return false
+      }
+
+      return true
+    },
+    hideContribution () {
+      if (this.form === 'DOWNLOADED') {
+        return true
+      }
+      return false
+    },
     disableButton () {
       if (this.form === 'DOWNLOADED') {
         return true
@@ -385,6 +442,26 @@ export default {
     }
   },
   methods: {
+    calculateAmountSpent () {
+      this.invoiceData.forEach((value, i) => {
+        const amount = Number(value.amount.replace(/[^0-9.]+/g, ''))
+        const currency = value.amount.match(/[^\d.]/g).join('')
+        const check = _.findIndex(this.rates, ['currency', currency])
+        if (check < 0) {
+          this.rates.push({
+            currency: currency,
+            amount: [amount]
+          })
+        } else {
+          this.rates[check].amount.push(amount)
+        }
+      })
+      if (this.rates.length === 1) {
+        this.navigation = false
+      } else {
+        this.navigation = true
+      }
+    },
     downloadMessage (count) {
       if (count > 76) {
         this.downloadingMessage = `Wow this could take a while! Let Ride Receipts do its thing and we'll let you know once your ${count} trips are in order.`

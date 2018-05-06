@@ -64,7 +64,7 @@ async function solveCaptcha (page) {
 
   if (tokenText === '' && token.data.is_correct === true) {
     while (tokenText === '') {
-      await new Promise(resolve => setTimeout(resolve, 2500))
+      await new Promise(resolve => setTimeout(resolve, 3000))
       const getToken = await axios.get(`https://api.uberrun.io/gettoken/${token.data.captcha}`)
       tokenText = getToken.data.text
     }
@@ -129,6 +129,7 @@ async function evaluateList (page) {
       if (fareBreakDown !== '') { // Only include if there is amount included
         data.push({
           trip: tripLink,
+          amount: fareBreakDown,
           time: timeDate
         })
       }
@@ -136,7 +137,6 @@ async function evaluateList (page) {
 
     return data
   })
-
   return list
 }
 
@@ -344,7 +344,7 @@ export default async function () {
   }
 
   ipcRenderer.send('form', INVOICE_COUNT)
-  ipcRenderer.send('invoiceTotal', uniqItems.length)
+  ipcRenderer.send('invoiceTotal', uniqItems)
 
   for (let i = 0; i < uniqItems.length; ++i) {
     await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`${accountEmail}/Uber/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`)})

@@ -91,18 +91,11 @@
                 <div class="card">
                   <div class="card-body">
                     <carousel navigationEnabled :paginationEnabled="pagination" :perPage="perPage">
-                        <slide class="d-flex flex-row">
+                        <slide class="d-flex flex-row" v-for="rate in rates">
                           <img src="static/piggy-bank.svg" width="86" class="mr-4">
                           <p class="card-text">
                             Total spend<br/>
-                            <!-- <span class="trip-count">${{ totalAmount }} {{ currency }}</span> -->
-                          </p>
-                        </slide>
-                        <slide class="d-flex flex-row">
-                          <img src="static/piggy-bank.svg" width="86" class="mr-4">
-                          <p class="card-text">
-                            Total spend<br/>
-                            <!-- <span class="trip-count">${{ totalAmount }} {{ currency }}</span> -->
+                            <span class="trip-count">${{ rate.amount.reduce((a, b) => a + b, 0) }} {{ rate.currency }}</span>
                           </p>
                         </slide>
                     </carousel>
@@ -162,7 +155,7 @@ export default {
       totalAmount: [],
       pagination: false,
       perPage: 1,
-      rates: {},
+      rates: [],
       invoiceCount: 0,
       progress: ''
     }
@@ -319,51 +312,61 @@ export default {
         }
 
         if (typeof messages !== 'undefined') {
-          messages.forEach(async function (value, i) {
-            const data = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${value.id}`, {
+          messages.forEach((value, i) => {
+            axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${value.id}`, {
               headers: {
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
               }
-            })
-
-            const header = data.data.payload.headers.map((item) => {
-              let obj = {}
-              obj[item.name] = item.value
-              return obj
-            })
-            const html = Buffer.from(data.data.payload.body.data, 'base64')
-            const date = new Date(parseInt(data.data.internalDate))
-
-            const dom = cheerio.load(html.toString(), {
-              normalizeWhitespace: true
-            })
-            const totalRate = parseFloat(_.trim(dom('span.p-amount').text()))
-            const currency = _.trim(dom('span.p-currency').text())
-
-            self.rates[currency] = totalRate
-
-            puppeteerLyft(
-              user.email,
-              Object.assign({}, ...header),
-              moment(date).format('YYYY'),
-              moment(date).format('MMMM'),
-              moment(date).format('MMMM-DD-YYYY_hh-mm-a'),
-              html.toString()
-            )
-            self.progress = (messages.length - 1) ? _.ceil(_.divide(i + 1, messages.length) * 100) : _.ceil(_.divide(i, messages.length) * 100)
-
-            if (self.progress === 100) {
-              self.form = 'DOWNLOADED'
-              const notification = new Notification('Ride Receipts', {
-                body: 'Success! All invoices have been downloaded for you.'
-              })
-              notification.onclick = () => {
-                console.log('Notification clicked')
+            }).then((data) => {
+              self.processEmails(data.data, user)
+              self.progress = (messages.length - 1) ? _.ceil(_.divide(i + 1, messages.length) * 100) : _.ceil(_.divide(i, messages.length) * 100)
+              if (self.progress === 100) {
+                self.form = 'DOWNLOADED'
+                const notification = new Notification('Ride Receipts', {
+                  body: 'Success! All invoices have been downloaded for you.'
+                })
+                notification.onclick = () => {
+                  console.log('Notification clicked')
+                }
               }
-            }
+            })
           })
         }
       }
+    },
+    processEmails (data, user) {
+      const header = data.payload.headers.map((item) => {
+        let obj = {}
+        obj[item.name] = item.value
+        return obj
+      })
+      const html = Buffer.from(data.payload.body.data, 'base64')
+      const date = new Date(parseInt(data.internalDate))
+
+      const dom = cheerio.load(html.toString(), {
+        normalizeWhitespace: true
+      })
+      const totalRate = parseFloat(_.trim(dom('span.p-amount').text()))
+      const currency = _.trim(dom('span.p-currency').text())
+      const check = _.findIndex(this.rates, ['currency', currency])
+
+      if (check < 0) {
+        this.rates.push({
+          currency: currency,
+          amount: [totalRate]
+        })
+      } else {
+        this.rates[check].amount.push(totalRate)
+      }
+
+      puppeteerLyft(
+        user.email,
+        Object.assign({}, ...header),
+        moment(date).format('YYYY'),
+        moment(date).format('MMMM'),
+        moment(date).format('MMMM-DD-YYYY_hh-mm-a'),
+        html.toString()
+      )
     },
     openInvoiceFolder () {
       const documentDir = this.$electronstore.get('invoicePath')

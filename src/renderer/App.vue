@@ -450,6 +450,8 @@ footer {
         background: #fff;
       }
       &:hover {
+        background: #fff;
+        color: #000;
         box-shadow: 1px 1px 4px 2px rgba(160,160,160,0.50);
       }
 
