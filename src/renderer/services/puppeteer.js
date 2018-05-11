@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer'
 import jetpack from 'fs-jetpack'
 import _ from 'lodash'
-import moment from 'moment-timezone'
+import dayjs from 'dayjs'
 import { ipcRenderer } from 'electron'
 import Store from 'electron-store'
 import axios from 'axios'
@@ -25,8 +25,8 @@ async function getLast3Months () {
   let last3Months = []
 
   for (let i = 1; i < 4; ++i) {
-    const month = moment().subtract(i, 'month').format('MMMM')
-    const year = moment().subtract(i, 'month').format('YYYY')
+    const month = dayjs().subtract(i, 'month').format('MMMM')
+    const year = dayjs().subtract(i, 'month').format('YYYY')
     last3Months.push({ 'month': month, 'year': year })
   }
 
@@ -272,9 +272,9 @@ export default async function () {
   ipcRenderer.send('form', FILTER_OPTION)
 
   const filterOption = await listenEvent('filteroption')
-  const currentYear = moment().format('YYYY')
-  const previousYear = moment().subtract(1, 'years').format('YYYY')
-  const month = moment().subtract(1, 'month').add(1, 'day').format('MMMM')
+  const currentYear = dayjs().format('YYYY')
+  const previousYear = dayjs().subtract(1, 'years').format('YYYY')
+  const month = dayjs().subtract(1, 'month').add(1, 'day').format('MMMM')
   const last3Months = await getLast3Months()
 
   await page.waitFor(1000)
@@ -311,9 +311,9 @@ export default async function () {
 
   // Final list of invoice object links
   const DETAIL_ITEMS = _.flattenDeep(DETAIL_LISTS).map((item) => {
-    item.year = moment(item.time).format('YYYY')
-    item.month = moment(item.time).format('MMMM')
-    item.invoice_date = moment(item.time).format('MMMM-DD-YYYY_hh-mm-a')
+    item.year = dayjs(item.time).format('YYYY')
+    item.month = dayjs(item.time).format('MMMM')
+    item.invoice_date = dayjs(item.time).format('MMMM-DD-YYYY_hh-mm-a')
     return item
   })
 
