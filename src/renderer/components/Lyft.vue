@@ -90,7 +90,7 @@
                 </div>
                 <div class="card">
                   <div class="card-body">
-                    <carousel navigationEnabled :paginationEnabled="pagination" :perPage="perPage">
+                    <carousel :navigationEnabled="navigation" :paginationEnabled="pagination" :perPage="perPage">
                         <slide class="d-flex flex-row" v-for="rate in rates" :key="rate.currency">
                           <img src="static/piggy-bank.svg" width="86" class="mr-4">
                           <p class="card-text">
@@ -139,7 +139,7 @@
 <script>
 import {parse} from 'url'
 import oauth from '../services/oauth'
-import moment from 'moment-timezone'
+import dayjs from 'dayjs'
 import puppeteerLyft from '../services/puppeteer_lyft'
 import axios from 'axios'
 import _ from 'lodash'
@@ -157,6 +157,7 @@ export default {
       perPage: 1,
       rates: [],
       invoiceCount: 0,
+      navigation: true,
       progress: ''
     }
   },
@@ -279,17 +280,17 @@ export default {
       const self = this
 
       if (this.filter_option === 'currentyear') {
-        startDate = moment().startOf('year').format('X')
-        endDate = moment().endOf('year').format('X')
+        startDate = dayjs().startOf('year').unix()
+        endDate = dayjs().endOf('year').unix()
       } else if (this.filter_option === 'previousyear') {
-        startDate = moment().subtract(1, 'years').startOf('year').format('X')
-        endDate = moment().subtract(1, 'years').endOf('year').format('X')
+        startDate = dayjs().subtract(1, 'years').startOf('year').unix()
+        endDate = dayjs().subtract(1, 'years').endOf('year').unix()
       } else if (this.filter_option === 'lastmonth') {
-        startDate = moment().subtract(1, 'month').startOf('month').format('X')
-        endDate = moment().startOf('month').format('X')
+        startDate = dayjs().subtract(1, 'month').startOf('month').unix()
+        endDate = dayjs().startOf('month').unix()
       } else if (this.filter_option === 'lastthreemonths') {
-        startDate = moment().subtract(3, 'month').startOf('month').format('X')
-        endDate = moment().startOf('month').format('X')
+        startDate = dayjs().subtract(3, 'month').startOf('month').unix()
+        endDate = dayjs().startOf('month').unix()
       }
 
       const list = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages?q='from:"Lyft Ride Receipt" after:${startDate} before:${endDate}'`, {
@@ -359,12 +360,18 @@ export default {
         this.rates[check].amount.push(totalRate)
       }
 
+      if (this.rates.length === 1) {
+        this.navigation = false
+      } else {
+        this.navigation = true
+      }
+
       puppeteerLyft(
         user.email,
         Object.assign({}, ...header),
-        moment(date).format('YYYY'),
-        moment(date).format('MMMM'),
-        moment(date).format('MMMM-DD-YYYY_hh-mm-a'),
+        dayjs(date).format('YYYY'),
+        dayjs(date).format('MMMM'),
+        dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
         html.toString()
       )
     },
