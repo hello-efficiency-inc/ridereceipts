@@ -8,7 +8,7 @@
         <section v-if="form === 'LOGIN_FORM'" key="loginForm" class="p-3 text-center">
           <div class="row">
             <div class="col-md-10 mx-auto">
-              <p class="sign-in-text mb-5">Sign in to any of account below to automatically download and organize your Lyft receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i></p>
+              <p class="sign-in-text mb-5">Sign in to your Gmail account to automatically download and organize your Lyft receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i></p>
               <p class="text-center"><button type="button" @click="signIn('google')" class="btn btn-lg btn-started" v-if="!loading">Sign In to Gmail</button></p>
               <b-popover  ref="popover" target="privacy" triggers="click focus" placement="bottom">
                  <template slot="title">Privacy</template>
