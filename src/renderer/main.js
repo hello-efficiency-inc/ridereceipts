@@ -5,10 +5,12 @@ import router from './router'
 import { remote } from 'electron'
 import jetpack from 'fs-jetpack'
 import Store from 'electron-store'
+import VueCarousel from 'vue-carousel'
 
 import './helpers/external_links.js'
 
 Vue.use(BootstrapVue)
+Vue.use(VueCarousel)
 const app = remote.app
 const documentDir = jetpack.cwd(app.getPath('documents'))
 
