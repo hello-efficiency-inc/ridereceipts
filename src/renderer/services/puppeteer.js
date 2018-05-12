@@ -261,10 +261,20 @@ export default async function () {
     ipcRenderer.send('form', ERROR_PASS)
   }
 
-  await page.click(SMS_SELECTOR)
-  ipcRenderer.send('form', VERIFICATION)
-  await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
-  await page.click(VERIFY_BUTTON)
+  const verificationCode = await page.evaluate(() => {
+    const verificationCode = document.querySelector('#verificationCode')
+    if (verificationCode) {
+      return true
+    }
+    return false
+  })
+
+  if (verificationCode) {
+    await page.click(SMS_SELECTOR)
+    ipcRenderer.send('form', VERIFICATION)
+    await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
+    await page.click(VERIFY_BUTTON)
+  }
 
   await page.waitFor(1500)
 
