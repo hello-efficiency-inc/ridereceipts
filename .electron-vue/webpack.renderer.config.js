@@ -7,6 +7,7 @@ const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -40,6 +41,22 @@ let rendererConfig = {
             formatter: require('eslint-friendly-formatter')
           }
         }
+      },
+      {
+        test: /\.sass$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
       },
       {
         test: /\.css$/,
@@ -109,6 +126,7 @@ let rendererConfig = {
     __filename: process.env.NODE_ENV !== 'production'
   },
   plugins: [
+    new VueLoaderPlugin(),
     new ExtractTextPlugin('styles.css'),
     new webpack.IgnorePlugin(/vertx/),
     new HtmlWebpackPlugin({

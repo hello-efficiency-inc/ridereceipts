@@ -86,7 +86,7 @@
     "popper.js": "^1.12.9",
     "puppeteer": "^1.1.1",
     "sass-loader": "^7.0.1",
-    "vue": "^2.5.9",
+    "vue": "^2.5.16",
     "vue-carousel": "^0.7.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1"
@@ -130,7 +130,7 @@
     "style-loader": "^0.20.1",
     "url-loader": "^0.6.2",
     "vue-html-loader": "^1.2.4",
-    "vue-loader": "^14.1.1",
+    "vue-loader": "^15.2.2",
     "vue-style-loader": "^4.0.2",
     "vue-template-compiler": "^2.4.2",
     "webpack": "^3.5.2",
