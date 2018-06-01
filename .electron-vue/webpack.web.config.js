@@ -6,8 +6,9 @@ const path = require('path')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 let webConfig = {
@@ -29,11 +30,24 @@ let webConfig = {
         }
       },
       {
+        test: /\.sass$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
+      },
+      {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader'
-        })
+        use: ['vue-style-loader', 'css-loader']
       },
       {
         test: /\.html$/,
@@ -81,7 +95,8 @@ let webConfig = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('styles.css'),
+    new VueLoaderPlugin(),
+    new MiniCssExtractPlugin({filename: 'styles.css'}),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.ejs'),
