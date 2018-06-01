@@ -2456,10 +2456,6 @@ csv-parser@^1.6.0:
     minimist "^1.2.0"
     ndjson "^1.4.0"
 
-currency.js@^1.1.2:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/currency.js/-/currency.js-1.1.4.tgz#b772071e0501a0e926bda0456a6828631cebcbb5"
-
 currently-unhandled@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"
@@ -6491,7 +6487,7 @@ pupa@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/pupa/-/pupa-1.0.0.tgz#9a9568a5af7e657b8462a6e9d5328743560ceff6"
 
-puppeteer@^1.1.1:
+puppeteer@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-1.4.0.tgz#437f0f3450d76e437185c0bf06f446e80f184692"
   dependencies:
