@@ -67,6 +67,7 @@
           <div class="row">
             <div class="col-8 mx-auto">
               <p class="sign-in-text mb-5 text-center">{{ downloadingMessage }}</p>
+              <br>
               <div class="progress">
                 <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
@@ -95,7 +96,7 @@
                           <img src="static/piggy-bank.svg" width="86" class="mr-4">
                           <p class="card-text">
                             Total spend<br/>
-                            <span class="trip-count">${{ rate.amount.reduce((a, b) => a + b, 0) }} {{ rate.currency }}</span>
+                            <span class="trip-count">${{ Math.round(rate.amount.reduce((a, b) => a + b, 0) * 100) / 100 }} {{ rate.currency }}</span>
                           </p>
                         </slide>
                     </carousel>
