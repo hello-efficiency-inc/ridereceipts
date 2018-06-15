@@ -1,21 +1,52 @@
 <template>
   <div class="main-splash">
-    <div class="wrap-content">
-      <img id="logo" src="static/ride-receipts.svg" alt="Ride Receipts">
-      <p>Download your rideshare receipts and<br/>invoices automatically.</p>
-      <p class="choose-app">Choose an app to get started:</p>
-      <p class="text-center">
-        <router-link :to="{ name: 'uber' }" class="btn btn-lg main-btn" tag="button">
-          Uber
-        </router-link>
-        <span class="option-text">or</span>
-        <router-link :to="{ name: 'lyft' }" class="btn btn-lg main-btn" tag="button">
-          Lyft
-        </router-link>
-    </p>
-    </div>
+    <transition name="fade" mode="out-in">
+      <div class="wrap-content" v-if="downloaded">
+        <img id="logo" src="static/ride-receipts.svg" alt="Ride Receipts" key="mainpage">
+        <p>Download your rideshare receipts and<br/>invoices automatically.</p>
+        <p class="choose-app">Choose an app to get started:</p>
+        <p class="text-center">
+          <router-link :to="{ name: 'uber' }" class="btn btn-lg main-btn" tag="button">
+            Uber
+          </router-link>
+          <span class="option-text">or</span>
+          <router-link :to="{ name: 'lyft' }" class="btn btn-lg main-btn" tag="button">
+            Lyft
+          </router-link>
+        </p>
+      </div>
+      <div class="wrap-content" v-if="!downloaded" key="progress">
+        <div class="row">
+          <div class="col-8 mx-auto">
+            <p class="sign-in-text mb-5 text-center">Downloading Chromium ...</p>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
+<script>
+import chrome from '../services/puppeteer_download'
+
+export default {
+  data () {
+    return {
+      progress: null,
+      downloaded: false
+    }
+  },
+  mounted () {
+    const self = this
+    chrome((progress, finished) => {
+      self.progress = progress
+      self.downloaded = finished
+    })
+  }
+}
+</script>
 <style lang="scss">
 .main-splash {
   display: flex;

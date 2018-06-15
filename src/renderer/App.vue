@@ -9,40 +9,14 @@
 <script>
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import jetpack from 'fs-jetpack'
-import os from 'os'
 
 export default {
   name: 'ridereceipts',
   mounted () {
     const documentDir = jetpack.cwd(this.$electron.remote.app.getPath('documents'))
-    const platform = os.platform()
-    const useDataDir = jetpack.cwd(this.$electron.remote.app.getAppPath()).cwd(this.$electron.remote.app.getPath('desktop'))
-
-    let exec
-    switch (platform) {
-      case 'darwin':
-        exec = `${useDataDir.path()}/chrome-mac/Chromium.app/Contents/MacOS/Chromium`
-        break
-      case 'linux':
-        exec = `${useDataDir.path()}/chrome-linux/chrome`
-        break
-      case 'win32':
-        if (os.arch() === 'x64') {
-          exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
-        }
-        exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
-        break
-      case 'win64':
-        exec = `${useDataDir.path()}/chrome-win32/chrome.exe`
-        break
-    }
 
     if (!this.$electronstore.get('invoicePath')) {
       this.$electronstore.set('invoicePath', `${documentDir.path()}/Ride Receipts/`)
-    }
-
-    if (!this.$electronstore.get('chromePath')) {
-      this.$electronstore.set('chromePath', exec)
     }
   }
 }

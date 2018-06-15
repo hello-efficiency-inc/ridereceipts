@@ -163,6 +163,7 @@
           <div class="row">
             <div class="col-8 mx-auto">
               <p class="sign-in-text text-center">{{ downloadingMessage }}</p>
+              <br>
               <div class="progress">
                 <div class="progress-bar" role="progressbar" :style="{ width: percent + '%' }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
