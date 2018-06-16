@@ -459,4 +459,8 @@ footer {
       color: #000;
       border-color: #fff;
     }
+
+    [v-cloak] {
+      display: none;
+    }
 </style>

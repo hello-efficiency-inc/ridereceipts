@@ -1,8 +1,18 @@
 <template>
   <div class="main-splash">
-    <transition name="fade" mode="out-in">
-      <div class="wrap-content" v-if="downloaded">
-        <img id="logo" src="static/ride-receipts.svg" alt="Ride Receipts" key="mainpage">
+    <div class="wrap-content">
+      <img id="logo" src="static/ride-receipts.svg" alt="Ride Receipts" key="mainpage">
+      <template v-if="!downloaded">
+        <div class="row">
+          <div class="col-8 mx-auto">
+            <p class="sign-in-text mb-5 text-center">Downloading Chromium ...</p>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-if="downloaded">
         <p>Download your rideshare receipts and<br/>invoices automatically.</p>
         <p class="choose-app">Choose an app to get started:</p>
         <p class="text-center">
@@ -14,36 +24,43 @@
             Lyft
           </router-link>
         </p>
-      </div>
-      <div class="wrap-content" v-if="!downloaded" key="progress">
-        <div class="row">
-          <div class="col-8 mx-auto">
-            <p class="sign-in-text mb-5 text-center">Downloading Chromium ...</p>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
+      </template>
+    </div>
   </div>
 </template>
 <script>
 import chrome from '../services/puppeteer_download'
+import fs from 'fs'
+import jetpack from 'fs-jetpack'
 
 export default {
   data () {
     return {
       progress: null,
-      downloaded: false
+      downloaded: null
     }
   },
   mounted () {
     const self = this
-    chrome((progress, finished) => {
-      self.progress = progress
-      self.downloaded = finished
-    })
+    const useDataDir = jetpack.cwd(this.$electron.remote.app.getAppPath()).cwd(this.$electron.remote.app.getPath('userData'))
+    const dirChrome = jetpack.exists(useDataDir.path('chrome'))
+    if (!dirChrome) {
+      self.downloaded = false
+      fs.mkdir(useDataDir.path('chrome'))
+      this.downloadChrome(useDataDir.path('chrome'))
+    } else {
+      self.downloaded = true
+      self.progress = null
+    }
+  },
+  methods: {
+    downloadChrome (path) {
+      const self = this
+      chrome(path, (progress, finished) => {
+        self.progress = progress
+        self.downloaded = finished
+      })
+    }
   }
 }
 </script>

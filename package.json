@@ -1,6 +1,6 @@
 {
   "name": "ridereceipts",
-  "version": "1.4.5",
+  "version": "1.4.2",
   "author": "Ride Receipts <hello@ridereceipts.io>",
   "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
   "license": "MIT",
@@ -20,6 +20,13 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ridereceipts",
+        "repo": "ridereceipts"
+      }
+    ],
     "productName": "Ride Receipts",
     "appId": "org.ridereceipts.ridereceipts",
     "directories": {
@@ -45,31 +52,19 @@
     },
     "mac": {
       "publish": [
-        {
-          "provider": "spaces",
-          "name": "ridereceipts",
-          "region": "nyc3"
-        }
+        "github"
       ],
       "icon": "build/icons/icon.icns"
     },
     "win": {
       "publish": [
-        {
-          "provider": "spaces",
-          "name": "ridereceipts",
-          "region": "nyc3"
-        }
+        "github"
       ],
       "icon": "build/icons/icon.ico"
     },
     "linux": {
       "publish": [
-        {
-          "provider": "spaces",
-          "name": "ridereceipts",
-          "region": "nyc3"
-        }
+        "github"
       ],
       "icon": "build/icons"
     }
@@ -81,7 +76,6 @@
     "cheerio": "^1.0.0-rc.2",
     "dayjs": "^1.5.15",
     "electron-context-menu": "^0.9.1",
-    "electron-publisher-s3": "^20.15.0",
     "electron-store": "^2.0.0",
     "fkill": "^5.2.0",
     "fs-jetpack": "^1.2.0",
