@@ -38,6 +38,7 @@ To download Ride Receipts, please visit [https://www.ridereceipts.io](https://ww
 - [x] Take pdf screenshot of receipts of your trip page.
 - [x] Lyft Integration
 - [x] Expenditure stat of your trip depending on your filter you choose
+- [ ] Outlook integration for Lyft
 - [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
 
 ## Why
