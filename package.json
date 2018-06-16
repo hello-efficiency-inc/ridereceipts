@@ -5,6 +5,15 @@
   "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
+  "keywords": [
+    "Receipts",
+    "Uber",
+    "Lyft",
+    "Accounting",
+    "Productivity",
+    "tax",
+    "freelancer"
+  ],
   "scripts": {
     "build": "cross-env PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
