@@ -97,7 +97,7 @@
                           <img src="static/piggy-bank.svg" width="86" class="mr-4">
                           <p class="card-text">
                             Total spend<br/>
-                            <span class="trip-count">${{ Math.round(rate.amount.reduce((a, b) => a + b, 0) * 100) / 100 }} {{ rate.currency }}</span>
+                            <span class="trip-count">${{ Number.parseFloat(rate.amount.reduce((a, b) => a + b, 0) * 100 / 100).toFixed(2) }} {{ rate.currency }}</span>
                           </p>
                         </slide>
                     </carousel>
