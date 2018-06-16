@@ -26,7 +26,7 @@
 
 ### Download
 
-MacOS, Windows and Linux - [https://github.com/ridereceipts/ridereceipts/releases](https://github.com/ridereceipts/ridereceipts/releases)
+To download Ride Receipts, please visit [https://www.ridereceipts.io](https://www.ridereceipts.io)
 
 ## Features
 
@@ -37,6 +37,7 @@ MacOS, Windows and Linux - [https://github.com/ridereceipts/ridereceipts/release
 - [x] Supported on all Platforms i.e Windows, Mac & Linux
 - [x] Take pdf screenshot of receipts of your trip page.
 - [x] Lyft Integration
+- [x] Expenditure stat of your trip depending on your filter you choose
 - [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
 
 ## Why
@@ -55,13 +56,11 @@ Your invoices will be named according to the date and time of your trip, and org
 
 ## Requirements
 
-Since Electron is not 100% headless, we're using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer) to scrape the invoices from your Uber account.
+Since Electron is not 100% headless, we're using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer) to scrape the invoices from your Uber account. For Lyft we utilize Gmail API to scan your email only for **Lyft receipts**.
 
-Ride Receipts requires Chromium to operate. Please download [Chromium](https://download-chromium.appspot.com/) and extract folder on your desktop.
+Ride Receipts works on both Mac and PC.
 
-Ride Receipts works on both Mac and PC. Please note we built this on Mac, so it may still have some details to iron out on PC.
-
-## Limitations
+## Limitations (Uber)
 
 Ride Receipts scrapes your user account on the website, you may be halted by Uber's rate limiting. Please do not run the app more than once in the same hour. If your IP address gets banned, don’t panic, this is only temporary and you’ll be able to access Uber’s website again in an hour or so. We recommend downloading all the invoices you need in one go. After all, that’s why we built it!
 
@@ -69,9 +68,10 @@ Currently Ride Receipts cannot distinguish between business and personal invoice
 
 ## Security
 
-Ride Receipts does not store your login credentials, personal information or any other data. This application operates without a database and it is solely automating on the Chromium browser as you type.
+Ride Receipts does not store your login credentials, personal information or any other data. This application operates without a database and it is solely automating on the Chromium browser as you type for Uber and scanning email only for **receipts** if you choose Lyft.
 
 Simply put, using Ride Receipts is no different security-wise than if you were to log into your Uber account manually through your regular browser. By using Ride Receipts, you’re essentially telling the browser to do this for you automatically.
+
 
 ## Developer Notes
 
@@ -99,9 +99,11 @@ npm run lint
 
 ```
 
-*Open Source projects used*
+*Powered by*
 
 - [Electron Vue](https://github.com/SimulatedGREG/electron-vue)
+- [Vue](https://www.vuejs.org)
+- [DeathByCaptcha](http://www.deathbycaptcha.com)
 - [Google Puppeteer](https://github.com/GoogleChrome/puppeteer)
 - [Bootstrap](https://getbootstrap.com/)
 
