@@ -99,7 +99,7 @@ npm run lint
 
 ```
 
-*Powered by*
+## Powered by
 
 - [Electron Vue](https://github.com/SimulatedGREG/electron-vue)
 - [Vue](https://www.vuejs.org)
