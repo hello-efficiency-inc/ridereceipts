@@ -4,8 +4,8 @@
 <a href="https://travis-ci.org/ridereceipts/ridereceipts">
 <img src="https://travis-ci.org/ridereceipts/ridereceipts.svg?branch=master">
 </a>
-<a href="https://codeclimate.com/github/mrgodhani/uberrun/maintainability">
-<img src="https://api.codeclimate.com/v1/badges/b1b6cc14751a2e62aa4b/maintainability" />
+<a href="https://codeclimate.com/github/ridereceipts/ridereceipts/maintainability">
+<img src="https://api.codeclimate.com/v1/badges/8b850bbab50f0a55b2ed/maintainability" />
 </a>
 <a href="https://david-dm.org/ridereceipts/ridereceipts">
 <img src="https://david-dm.org/ridereceipts/ridereceipts.svg" />
