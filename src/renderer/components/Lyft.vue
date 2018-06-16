@@ -85,7 +85,8 @@
                     <img src="static/rideshare-car.svg" width="86" class="mr-4">
                     <p class="card-text">
                       Number of trips<br/>
-                      <span class="trip-count">{{ invoiceCount }} trips</span>
+                      <span class="trip-count" v-if="invoiceCount > 1">{{ invoiceCount }} trips</span>
+                      <span class="trip-count" v-if="invoiceCount === 1">{{ invoiceCount }} trip</span>
                     </p>
                   </div>
                 </div>
@@ -321,7 +322,12 @@ export default {
               }
             }).then((data) => {
               self.processEmails(data.data, user)
-              self.progress = (messages.length - 1) ? _.ceil(_.divide(i + 1, messages.length) * 100) : _.ceil(_.divide(i, messages.length) * 100)
+              console.log(messages.length)
+              if (messages.length !== 1) {
+                self.progress = (messages.length - 1) ? _.ceil(_.divide(i + 1, messages.length) * 100) : _.ceil(_.divide(i, messages.length) * 100)
+              } else {
+                self.progress = 100
+              }
               if (self.progress === 100) {
                 self.form = 'DOWNLOADED'
                 const notification = new Notification('Ride Receipts', {
