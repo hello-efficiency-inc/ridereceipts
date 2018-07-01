@@ -37,7 +37,7 @@
       }
     ],
     "productName": "Ride Receipts",
-    "appId": "org.ridereceipts.ridereceipts",
+    "appId": "io.ridereceipts.ridereceipts",
     "directories": {
       "output": "build"
     },
