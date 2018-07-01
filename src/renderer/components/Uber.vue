@@ -3,7 +3,7 @@
     <header class="p-4 mb-auto">
       <img src="static/ride-receipts.svg" alt="Ride Receipts" width="253">
     </header>
-    <main class="mt-5">
+    <main class="mt-5" @keyup.enter="submitForm">
       <transition name="fade" mode="out-in">
         <section v-if="form === null" key="loading">
           <div class="loading">

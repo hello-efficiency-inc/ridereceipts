@@ -5,7 +5,7 @@
       <template v-if="!downloaded">
         <div class="row">
           <div class="col-8 mx-auto">
-            <p class="sign-in-text mb-5 text-center">Downloading Chromium ...</p>
+            <p class="sign-in-text mb-5 text-center">Loading ...</p>
             <div class="progress">
               <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
