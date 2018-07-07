@@ -126,6 +126,13 @@ body {
   line-height: 42px;
 }
 
+.loading-text {
+  font-size: 36px;
+  color: #000 !important;
+  font-weight:800;
+  line-height: 42px;
+}
+
 .fa-question-circle {
   color: #898989;
   font-size: 18px;
