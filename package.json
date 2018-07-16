@@ -88,7 +88,7 @@
     "electron-log": "^2.2.16",
     "electron-store": "^2.0.0",
     "fkill": "^5.2.0",
-    "fs-jetpack": "^1.2.0",
+    "fs-jetpack": "^2.0.0",
     "got": "^8.3.1",
     "jquery": "^3.2.1",
     "popper.js": "^1.12.9",
