@@ -1,20 +1,12 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
-import updateElectron from 'update-electron-app'
-import electronLog from 'electron-log'
 import fkill from 'fkill'
 import Store from 'electron-store'
 
 import 'electron-context-menu'
 
 let myWindow = null
-
-updateElectron({
-  repo: 'ridereceipts/ridereceipts',
-  updateInterval: '1 hour',
-  logger: electronLog
-})
 
 /**
  * Set `__static` path to static files in production
