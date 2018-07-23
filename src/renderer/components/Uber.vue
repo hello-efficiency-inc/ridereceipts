@@ -449,13 +449,15 @@ export default {
         const amount = Number(value.amount.replace(/[^0-9.]+/g, ''))
         const currency = value.amount.match(/[^\d.]/g).join('')
         const check = _.findIndex(this.rates, ['currency', currency])
-        if (check < 0) {
-          this.rates.push({
-            currency: currency,
-            amount: [amount]
-          })
-        } else {
-          this.rates[check].amount.push(amount)
+        if (value.title !== 'Uber Eats Marketplace') {
+          if (check < 0) {
+            this.rates.push({
+              currency: currency,
+              amount: [amount]
+            })
+          } else {
+            this.rates[check].amount.push(amount)
+          }
         }
       })
       if (this.rates.length === 1) {
