@@ -20,7 +20,12 @@ async function launch (puppeteer, exec) {
 export default async function (email, headers, year, month, invoiceDate, html) {
   const store = new Store()
   const documentDir = jetpack.cwd(store.get('invoicePath'))
-  let exec = store.get('chromePath')
+  let exec
+  if (process.env.NODE_ENV !== 'development') {
+    exec = puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked')
+  } else {
+    exec = puppeteer.executablePath()
+  }
 
   // If executable path not found then throw error
   if (!jetpack.exists(exec)) {

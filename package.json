@@ -60,6 +60,8 @@
       ]
     },
     "mac": {
+      "asar": true,
+      "asarUnpack": "node_modules/puppeteer/.local-chromium/**/*",
       "publish": [
         "github"
       ],
