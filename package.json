@@ -29,6 +29,8 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
+    "asar": true,
+    "asarUnpack": "node_modules/puppeteer/.local-chromium/**/*",
     "publish": [
       {
         "provider": "github",
@@ -60,8 +62,6 @@
       ]
     },
     "mac": {
-      "asar": true,
-      "asarUnpack": "node_modules/puppeteer/.local-chromium/**/*",
       "publish": [
         "github"
       ],
