@@ -14,8 +14,8 @@ const rimraf = require('rimraf');
     const fetcher = await puppeteer.createBrowserFetcher({
       platform: platform
     })
-    // console.log(`https://storage.googleapis.com/chromium-browser-snapshots/${_.capitalize(platform)}/LAST_CHANGE`)
-    // const latestRevision = await got(`https://storage.googleapis.com/chromium-browser-snapshots/Mac/LAST_CHANGE`)
-    await fetcher.download('576753')
+    const revision = require('./node_modules/puppeteer/package.json').puppeteer.chromium_revision;
+    const revisionInfo = fetcher.revisionInfo(revision);
+    await fetcher.download(revisionInfo.revision)
   })
 })();

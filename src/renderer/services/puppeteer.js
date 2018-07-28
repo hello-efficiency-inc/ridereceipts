@@ -174,6 +174,7 @@ export default async function () {
     exec = puppeteer.executablePath()
   }
 
+  console.log(exec)
   // If executable path not found then throw error
   if (!jetpack.exists(exec)) {
     ipcRenderer.send('form', CHROME_NOT_FOUND)
