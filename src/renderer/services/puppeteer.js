@@ -174,7 +174,6 @@ export default async function () {
     exec = puppeteer.executablePath()
   }
 
-  console.log(exec)
   // If executable path not found then throw error
   if (!jetpack.exists(exec)) {
     ipcRenderer.send('form', CHROME_NOT_FOUND)
@@ -250,16 +249,14 @@ export default async function () {
     }
   }
 
-  await page.waitFor(2000)
   await page.waitForSelector(PASSWORD_SELECTOR, {
     timeout: 0
   })
+
   await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)
   await page.keyboard.type(await listenEvent('passdata'), {delay: 30})
   await page.click(NEXT_BUTTON)
-
-  await page.waitFor(1800)
 
   const evaluateErrorPass = await evaluateError(page)
   // Evaluate Password Error
