@@ -11,6 +11,7 @@ import 'electron-context-menu'
 let myWindow = null
 const store = new Store()
 
+// Update Electron
 updateElectron({
   repo: 'ridereceipts/ridereceipts',
   updateInterval: '1 hour',
@@ -31,6 +32,8 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
+
+  // Turn off debug by default
   store.set('debug', false)
 
   /**
@@ -61,6 +64,7 @@ function createWindow () {
         accelerator: 'Command+D',
         type: 'checkbox',
         click: function (event) {
+          // Toggle debug for chromium headless
           store.set('debug', event.checked)
           app.relaunch()
         }},
