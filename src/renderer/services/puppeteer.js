@@ -382,16 +382,18 @@ export default async function () {
       jetpack.dir(documentDir.path(`${documentDir.path()}/${accountEmail}/Uber/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`))
     }
 
-    await page.emulateMedia('print')
-    const receiptFilePath = `${documentDir.path()}/${accountEmail}/Uber/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/Receipt-${uniqItems[i].invoice_date}.pdf`
-    await page.pdf({
-      path: receiptFilePath,
-      width: '1440px',
-      height: '900px',
-      format: 'A4',
-      printBackground: true,
-      pageRanges: '1'
-    })
+    if (!store.get('debug')) {
+      await page.emulateMedia('print')
+      const receiptFilePath = `${documentDir.path()}/${accountEmail}/Uber/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}/Receipt-${uniqItems[i].invoice_date}.pdf`
+      await page.pdf({
+        path: receiptFilePath,
+        width: '1440px',
+        height: '900px',
+        format: 'A4',
+        printBackground: true,
+        pageRanges: '1'
+      })
+    }
 
     // Check if request invoice button is hidden. Then go ahead download it.
     if (invoiceRequest) {

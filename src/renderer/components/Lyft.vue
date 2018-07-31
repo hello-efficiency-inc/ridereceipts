@@ -106,9 +106,23 @@
               </div>
               <p v-if="invoiceCount > 0" class="text-center">
                 <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started" >View Receipts</button>
+                <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
               </p>
               <p v-if="invoiceCount === 0" class="text-center">
                 <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
+              </p>
+            </div>
+          </div>
+        </section>
+        <section v-if="form === 'ERROR'" key="debugturnedon">
+          <div class="row">
+            <div class="col-10 mx-auto">
+              <p class="sign-in-text text-center">
+                It seems like you have turned on debug mode. Please turn it off and click on start again button below.
+              </p>
+              <br/>
+              <p v-if="invoiceCount === 0" class="text-center">
+                <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started text-center mx-auto" tag="button">Start again</router-link>
               </p>
             </div>
           </div>
@@ -146,6 +160,9 @@ import puppeteerLyft from '../services/puppeteer_lyft'
 import axios from 'axios'
 import _ from 'lodash'
 import cheerio from 'cheerio'
+import Store from 'electron-store'
+
+const store = new Store()
 
 export default {
   data () {
@@ -163,12 +180,20 @@ export default {
       progress: ''
     }
   },
+  mounted () {
+    if (store.get('debug')) {
+      this.form = 'ERROR'
+    }
+  },
   computed: {
     hideBackButton () {
       if (this.form === 'INVOICE_COUNT') {
         return true
       }
       if (this.form === 'FILTER_OPTION') {
+        return true
+      }
+      if (this.form === 'ERROR') {
         return true
       }
       if (this.form === 'DOWNLOADED') {
@@ -183,6 +208,9 @@ export default {
         return true
       }
       if (this.form === 'DOWNLOADED') {
+        return true
+      }
+      if (this.form === 'ERROR') {
         return true
       }
     }

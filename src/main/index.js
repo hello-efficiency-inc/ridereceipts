@@ -32,7 +32,6 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
-
   // Turn off debug by default
   store.set('debug', false)
 
@@ -66,7 +65,6 @@ function createWindow () {
         click: function (event) {
           // Toggle debug for chromium headless
           store.set('debug', event.checked)
-          app.relaunch()
         }},
       { label: 'Quit',
         accelerator: 'Command+Q',

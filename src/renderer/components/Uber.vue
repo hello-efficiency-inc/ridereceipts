@@ -202,6 +202,7 @@
               </div>
               <p v-if="invoiceCount > 0" class="text-center">
                 <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started" >View Receipts</button>
+                <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
               </p>
               <p v-if="invoiceCount === 0" class="text-center">
                 <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
