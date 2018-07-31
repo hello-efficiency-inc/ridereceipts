@@ -19,6 +19,7 @@ const ERROR_EMAIL = 'error-email'
 const ERROR_PASS = 'error-pass'
 const ERROR_CAPTCHA = 'CAPTCHA'
 const ERROR_CAPTCHA_NOT_SOLVED = 'error-captcha'
+const store = new Store()
 
 // Calculate Last 3 Month from current month
 async function getLast3Months () {
@@ -142,8 +143,14 @@ async function evaluateList (page) {
 
 // Launch Puppeteer
 async function launch (puppeteer, exec) {
+  let debug
+  if (store.get('debug')) {
+    debug = false
+  } else {
+    debug = true
+  }
   return puppeteer.launch({
-    headless: true,
+    headless: debug,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -165,7 +172,6 @@ export default async function () {
   const INACTIVE_PREVIOUS_BUTTON = '.btn--inactive.pagination__previous'
   const INACTIVE_NEXT_BUTTON = '.btn--inactive.pagination__next'
   const DOWNLOAD_INVOICE_TRIP = '#data-invoice-btn-download'
-  const store = new Store()
   const documentDir = jetpack.cwd(store.get('invoicePath'))
   let exec
   if (process.env.NODE_ENV !== 'development') {
@@ -174,7 +180,6 @@ export default async function () {
     exec = puppeteer.executablePath()
   }
 
-  console.log(exec)
   // If executable path not found then throw error
   if (!jetpack.exists(exec)) {
     ipcRenderer.send('form', CHROME_NOT_FOUND)
@@ -250,16 +255,14 @@ export default async function () {
     }
   }
 
-  await page.waitFor(2000)
   await page.waitForSelector(PASSWORD_SELECTOR, {
     timeout: 0
   })
+
   await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)
   await page.keyboard.type(await listenEvent('passdata'), {delay: 30})
   await page.click(NEXT_BUTTON)
-
-  await page.waitFor(1800)
 
   const evaluateErrorPass = await evaluateError(page)
   // Evaluate Password Error

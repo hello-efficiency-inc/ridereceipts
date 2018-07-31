@@ -4,11 +4,18 @@ import jetpack from 'fs-jetpack'
 import { ipcRenderer } from 'electron'
 
 const CHROME_NOT_FOUND = 'CHROME_NOT_FOUND'
+const store = new Store()
 
 // Launch Puppeteer
 async function launch (puppeteer, exec) {
+  let debug
+  if (store.get('debug')) {
+    debug = false
+  } else {
+    debug = true
+  }
   return puppeteer.launch({
-    headless: true,
+    headless: debug,
     timeout: 0,
     executablePath: exec,
     args: [
@@ -18,7 +25,6 @@ async function launch (puppeteer, exec) {
 }
 
 export default async function (email, headers, year, month, invoiceDate, html) {
-  const store = new Store()
   const documentDir = jetpack.cwd(store.get('invoicePath'))
   let exec
   if (process.env.NODE_ENV !== 'development') {

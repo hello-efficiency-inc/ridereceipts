@@ -3,10 +3,20 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import fkill from 'fkill'
 import Store from 'electron-store'
+import updateElectron from 'update-electron-app'
+import logger from 'electron-log'
 
 import 'electron-context-menu'
 
 let myWindow = null
+const store = new Store()
+
+// Update Electron
+updateElectron({
+  repo: 'ridereceipts/ridereceipts',
+  updateInterval: '1 hour',
+  logger: logger
+})
 
 /**
  * Set `__static` path to static files in production
@@ -22,6 +32,10 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
+
+  // Turn off debug by default
+  store.set('debug', false)
+
   /**
    * Initial window options
    */
@@ -46,6 +60,14 @@ function createWindow () {
     submenu: [
       { label: 'About Application', selector: 'orderFrontStandardAboutPanel:' },
       { type: 'separator' },
+      { label: 'Debug',
+        accelerator: 'Command+D',
+        type: 'checkbox',
+        click: function (event) {
+          // Toggle debug for chromium headless
+          store.set('debug', event.checked)
+          app.relaunch()
+        }},
       { label: 'Quit',
         accelerator: 'Command+Q',
         click: function () {
@@ -88,7 +110,6 @@ app.on('window-all-closed', () => {
 })
 
 app.on('quit', () => {
-  const store = new Store()
   if (store.has('processPID')) {
     fkill(store.get('processPID', {
       force: true
