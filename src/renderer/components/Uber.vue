@@ -23,7 +23,7 @@
                 :readonly="!emailError"
                 :state="emailError"
                 aria-describedby="email emailFeedback"
-                placeholder="Email Address"></b-form-input>
+                placeholder="Email Address" required></b-form-input>
                 <b-form-invalid-feedback id="emailFeedback">
                   'Oops! There is no account associated with this email address.'
                 </b-form-invalid-feedback>
@@ -502,16 +502,24 @@ export default {
     submitForm () {
       switch (this.form) {
         case 'EMAIL':
-          this.$electron.ipcRenderer.send('email', this.fields.email)
+          if (this.fields.email) {
+            this.$electron.ipcRenderer.send('email', this.fields.email)
+          }
           break
         case 'PASSWORD':
-          this.$electron.ipcRenderer.send('password', this.fields.password)
+          if (this.fields.password) {
+            this.$electron.ipcRenderer.send('password', this.fields.password)
+          }
           break
         case 'VERIFICATION':
-          this.$electron.ipcRenderer.send('code', this.fields.verification_code)
+          if (this.fields.verification_code) {
+            this.$electron.ipcRenderer.send('code', this.fields.verification_code)
+          }
           break
         case 'FILTER_OPTION':
-          this.$electron.ipcRenderer.send('filter_option', this.fields.filter_option)
+          if (this.fields.filter_option) {
+            this.$electron.ipcRenderer.send('filter_option', this.fields.filter_option)
+          }
           break
       }
     }

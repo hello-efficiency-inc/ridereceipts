@@ -383,6 +383,7 @@ footer {
 
   .form-control {
     padding-left: 0;
+    padding-bottom: 8px !important;
     outline: none;
     border: none;
     border-bottom: 2px solid rgba(0, 0, 0, 1);

@@ -321,6 +321,8 @@ export default {
       } else if (this.filter_option === 'lastthreemonths') {
         startDate = dayjs().subtract(3, 'month').startOf('month').unix()
         endDate = dayjs().startOf('month').unix()
+      } else {
+        return
       }
 
       const list = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages?q='from:"Lyft Ride Receipt" after:${startDate} before:${endDate}'`, {

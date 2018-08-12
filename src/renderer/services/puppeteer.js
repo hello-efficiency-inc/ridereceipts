@@ -261,8 +261,9 @@ export default async function () {
 
   await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)
-  await page.keyboard.type(await listenEvent('passdata'), {delay: 30})
+  await page.keyboard.type(await listenEvent('passdata'), {delay: 60})
   await page.click(NEXT_BUTTON)
+  await page.waitFor(1000)
 
   const evaluateErrorPass = await evaluateError(page)
   // Evaluate Password Error
@@ -278,9 +279,10 @@ export default async function () {
     return false
   })
 
+  console.log(verificationCode)
   if (verificationCode) {
-    await page.click(SMS_SELECTOR)
     ipcRenderer.send('form', VERIFICATION)
+    await page.click(SMS_SELECTOR)
     await page.keyboard.type(await listenEvent('codedata'), { delay: 30 })
     await page.click(VERIFY_BUTTON)
   }
