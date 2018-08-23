@@ -471,4 +471,14 @@ footer {
     [v-cloak] {
       display: none;
     }
+
+    .startagain-link {
+      font-size: 18px;
+      font-weight: 700;
+      color: black;
+
+      &:hover {
+        color: black;
+      }
+    }
 </style>

@@ -25,7 +25,7 @@ const store = new Store()
 async function getLast3Months () {
   let last3Months = []
 
-  for (let i = 1; i < 4; ++i) {
+  for (let i = 1; i <= 4; ++i) {
     const month = dayjs().subtract(i, 'month').format('MMMM')
     const year = dayjs().subtract(i, 'month').format('YYYY')
     last3Months.push({ 'month': month, 'year': year })
@@ -263,7 +263,6 @@ export default async function () {
   ipcRenderer.send('form', PASSWORD)
   await page.keyboard.type(await listenEvent('passdata'), {delay: 60})
   await page.click(NEXT_BUTTON)
-  await page.waitFor(1000)
 
   const evaluateErrorPass = await evaluateError(page)
   // Evaluate Password Error
