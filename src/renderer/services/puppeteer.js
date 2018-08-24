@@ -278,7 +278,6 @@ export default async function () {
     return false
   })
 
-  console.log(verificationCode)
   if (verificationCode) {
     ipcRenderer.send('form', VERIFICATION)
     await page.click(SMS_SELECTOR)
