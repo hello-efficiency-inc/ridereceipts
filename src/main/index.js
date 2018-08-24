@@ -3,20 +3,11 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import fkill from 'fkill'
 import Store from 'electron-store'
-import updateElectron from 'update-electron-app'
-import logger from 'electron-log'
 
 import 'electron-context-menu'
 
 let myWindow = null
 const store = new Store()
-
-// Update Electron
-updateElectron({
-  repo: 'ridereceipts/ridereceipts',
-  updateInterval: '1 hour',
-  logger: logger
-})
 
 /**
  * Set `__static` path to static files in production
