@@ -27,7 +27,7 @@ Vue.prototype.$electronstore = store
 
 /* eslint-disable no-new */
 new Vue({
-  components: {App},
+  components: { App },
   router,
   template: '<App/>'
 }).$mount('#app')

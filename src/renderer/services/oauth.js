@@ -1,6 +1,6 @@
 import qs from 'qs'
 import axios from 'axios'
-import {OUTLOOK_CLIENT_ID, GOOGLE_CLIENT_ID, OUTLOOK_CLIENT_SECRET} from '../config'
+import { OUTLOOK_CLIENT_ID, GOOGLE_CLIENT_ID, OUTLOOK_CLIENT_SECRET } from '../config'
 
 const GOOGLE_AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 const GOOGLE_TOKEN_URL = 'https://www.googleapis.com/oauth2/v4/token'

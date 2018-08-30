@@ -200,7 +200,7 @@ export default async function () {
   await page.setCacheEnabled(true)
 
   // Launch Page
-  await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com', {waitUntil: 'domcontentloaded'})
+  await page.goto('https://auth.uber.com/login?next_url=https://riders.uber.com', { waitUntil: 'domcontentloaded' })
 
   await page.on('error', () => {
     page.close()
@@ -231,7 +231,7 @@ export default async function () {
   await page.click(EMAIL_SELECTOR)
   ipcRenderer.send('form', EMAIL)
   const accountEmail = await listenEvent('emaildata')
-  await page.keyboard.type(accountEmail, {delay: 60})
+  await page.keyboard.type(accountEmail, { delay: 60 })
   await page.click(NEXT_BUTTON)
   await page.waitFor(1000)
 
@@ -261,7 +261,7 @@ export default async function () {
 
   await page.click(PASSWORD_SELECTOR)
   ipcRenderer.send('form', PASSWORD)
-  await page.keyboard.type(await listenEvent('passdata'), {delay: 60})
+  await page.keyboard.type(await listenEvent('passdata'), { delay: 60 })
   await page.click(NEXT_BUTTON)
 
   const evaluateErrorPass = await evaluateError(page)
@@ -270,6 +270,7 @@ export default async function () {
     ipcRenderer.send('form', ERROR_PASS)
   }
 
+  await page.waitFor(1000)
   const verificationCode = await page.evaluate(() => {
     const verificationCode = document.querySelector('#verificationCode')
     if (verificationCode) {
@@ -366,8 +367,8 @@ export default async function () {
   ipcRenderer.send('invoiceTotal', uniqItems)
 
   for (let i = 0; i < uniqItems.length; ++i) {
-    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: documentDir.path(`${accountEmail}/Uber/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`)})
-    await page.goto(uniqItems[i].trip, {waitUntil: 'networkidle0'})
+    await page._client.send('Page.setDownloadBehavior', { behavior: 'allow', downloadPath: documentDir.path(`${accountEmail}/Uber/${uniqItems[i].year}/${uniqItems[i].month}/${uniqItems[i].invoice_date}`) })
+    await page.goto(uniqItems[i].trip, { waitUntil: 'networkidle0' })
 
     const progress = i === (uniqItems.length - 1) ? _.ceil(_.divide(i + 1, uniqItems.length) * 100) : _.ceil(_.divide(i, uniqItems.length) * 100)
 

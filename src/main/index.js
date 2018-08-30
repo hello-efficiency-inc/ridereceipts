@@ -56,13 +56,13 @@ function createWindow () {
         click: function (event) {
           // Toggle debug for chromium headless
           store.set('debug', event.checked)
-        }},
+        } },
       { label: 'Quit',
         accelerator: 'Command+Q',
         click: function () {
           app.quit()
-        }}
-    ]}, {
+        } }
+    ] }, {
     label: 'Edit',
     submenu: [
       { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
@@ -72,7 +72,7 @@ function createWindow () {
       { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
       { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
       { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
-    ]}
+    ] }
   ]
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))

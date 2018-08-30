@@ -153,7 +153,7 @@
   </div>
 </template>
 <script>
-import {parse} from 'url'
+import { parse } from 'url'
 import oauth from '../services/oauth'
 import dayjs from 'dayjs'
 import puppeteerLyft from '../services/puppeteer_lyft'
