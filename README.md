@@ -26,7 +26,7 @@
 
 ### Notice
 
-At moment because of rebranding and new look from [Uber](https://www.uber.design/case-studies/rebrand-2018). Uber side of the app won't work. Lyft will still continue to work as it is.
+Due to recent updates made by Uber, our app is currently not working for this platform. We’re working  to update Ride Receipts. In the meantime you may continue using our app to download your receipts from Lyft.
 
 ### Download
 
