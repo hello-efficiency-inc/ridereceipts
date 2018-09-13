@@ -24,6 +24,10 @@
 
 ![screenshot](/ridereceipt-app.png)
 
+### Notice
+
+At moment because of rebranding and new look from [Uber](https://www.uber.design/case-studies/rebrand-2018). Uber side of the app won't work. Lyft will still continue to work as it is.
+
 ### Download
 
 To download Ride Receipts, please visit [https://www.ridereceipts.io](https://www.ridereceipts.io)
