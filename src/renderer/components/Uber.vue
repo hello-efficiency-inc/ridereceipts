@@ -269,7 +269,7 @@
   </div>
 </template>
 <script>
-import puppeteer from '../services/puppeteer'
+import puppeteer from '../services/puppeteer_uberv2'
 import _ from 'lodash'
 
 export default {
@@ -449,18 +449,16 @@ export default {
   methods: {
     calculateAmountSpent () {
       this.invoiceData.forEach((value, i) => {
-        const amount = Number(value.amount.replace(/[^0-9.]+/g, ''))
-        const currency = value.amount.match(/[^\d.]/g).join('')
+        const amount = value.clientFare
+        const currency = value.currencyCode
         const check = _.findIndex(this.rates, ['currency', currency])
-        if (value.title !== 'Uber Eats Marketplace') {
-          if (check < 0) {
-            this.rates.push({
-              currency: currency,
-              amount: [amount]
-            })
-          } else {
-            this.rates[check].amount.push(amount)
-          }
+        if (check < 0) {
+          this.rates.push({
+            currency: currency,
+            amount: [amount]
+          })
+        } else {
+          this.rates[check].amount.push(amount)
         }
       })
       if (this.rates.length === 1) {
