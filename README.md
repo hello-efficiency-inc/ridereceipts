@@ -24,10 +24,6 @@
 
 ![screenshot](/ridereceipt-app.png)
 
-### Notice
-
-Due to recent updates made by Uber, our app is currently not working for this platform. We’re working  to update Ride Receipts. In the meantime you may continue using our app to download your receipts from Lyft.
-
 ### Download
 
 To download Ride Receipts, please visit [https://www.ridereceipts.io](https://www.ridereceipts.io)
