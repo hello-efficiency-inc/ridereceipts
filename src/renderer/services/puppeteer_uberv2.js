@@ -336,6 +336,8 @@ export default async function () {
     await page.goto(tripData[i].link, { waitUntil: 'networkidle0' })
 
     const progress = i === (tripData.length - 1) ? _.ceil(_.divide(i + 1, tripData.length) * 100) : _.ceil(_.divide(i, tripData.length) * 100)
+
+    await page.waitFor(3000)
     await page.waitForSelector('#root > div > div > div > div > div:nth-child(1) > div > div > div:nth-child(2) > div span')
     // Download as pdf of the page to keep record of trip with map
     if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${accountEmail}/Uber/${tripData[i].year}/${tripData[i].month}/${tripData[i].invoice_date}`))) {
@@ -350,7 +352,7 @@ export default async function () {
 
     await page.click('#root > div > div > div > div > div:nth-child(1) > div > div > div:nth-child(2) > div span')
     ipcRenderer.send('progress', progress)
-    await page.waitFor(1500)
+    await page.waitFor(2000)
   }
 
   for (let i = 0; i < tripData.length; ++i) {
