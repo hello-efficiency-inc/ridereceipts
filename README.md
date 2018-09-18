@@ -17,6 +17,7 @@
 <a href="https://www.producthunt.com/posts/uber-run">
   <img src="https://img.shields.io/badge/producthunt-vote-orange.svg">
 </a>
+<a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/ride-receipts/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/328-shield.png"/></a>
 </p>
 
 > Simple automation desktop app to download and organize your tax invoices from Uber and Lyft.
