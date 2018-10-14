@@ -338,8 +338,6 @@ export default async function () {
     const progress = i === (tripData.length - 1) ? _.ceil(_.divide(i + 1, tripData.length) * 100) : _.ceil(_.divide(i, tripData.length) * 100)
 
     await page.waitFor(3500)
-    await page.waitForSelector('#root > div > div > div > div > div:nth-child(1) > div > div > div:nth-child(2) > div span')
-    const invoiceButton = !!(await page.$('#root > div > div > div > div > div:nth-child(1) > div > div > div:nth-child(2) > div span'))
     // Download as pdf of the page to keep record of trip with map
     if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${accountEmail}/Uber/${tripData[i].year}/${tripData[i].month}/${tripData[i].invoice_date}`))) {
       jetpack.dir(documentDir.path(`${documentDir.path()}/${accountEmail}/Uber/${tripData[i].year}/${tripData[i].month}/${tripData[i].invoice_date}`))
@@ -351,9 +349,16 @@ export default async function () {
       fullPage: true
     })
 
-    if (invoiceButton) {
-      await page.click('#root > div > div > div > div > div:nth-child(1) > div > div > div:nth-child(2) > div span')
-    }
+    await page.evaluate(() => {
+      const spans = document.querySelectorAll('span')
+      for (var i = 0; i < spans.length; i++) {
+        if (spans[i].textContent === 'Save Invoice') {
+          spans[i].click()
+          break
+        }
+      }
+    })
+
     ipcRenderer.send('progress', progress)
     await page.waitFor(3000)
   }
