@@ -1,46 +1,35 @@
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-core'
 import Store from 'electron-store'
 import jetpack from 'fs-jetpack'
-import { ipcRenderer } from 'electron'
 
-const CHROME_NOT_FOUND = 'CHROME_NOT_FOUND'
+const chromeLauncher = require('chrome-launcher')
+const request = require('request')
+const util = require('util')
 const store = new Store()
 
 // Launch Puppeteer
-async function launch (puppeteer, exec) {
-  let debug
-  if (store.get('debug')) {
-    debug = false
-  } else {
-    debug = true
-  }
-  return puppeteer.launch({
-    headless: debug,
-    timeout: 0,
-    executablePath: exec,
-    args: [
-      '--disable-gpu'
-    ]
+async function launch (puppeteer) {
+  let flag = [
+    '--headless',
+    '--disable-gpu',
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage'
+  ]
+  return chromeLauncher.launch({
+    chromeFlags: flag
   })
 }
 
 export default async function (email, headers, year, month, invoiceDate, html) {
   const documentDir = jetpack.cwd(store.get('invoicePath'))
-  let exec
-  if (process.env.NODE_ENV !== 'development') {
-    exec = puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked')
-  } else {
-    exec = puppeteer.executablePath()
-  }
-
-  // If executable path not found then throw error
-  if (!jetpack.exists(exec)) {
-    ipcRenderer.send('form', CHROME_NOT_FOUND)
-    return
-  }
-
-  const browser = await launch(puppeteer, exec)
-  store.set('processPID', browser.process().pid) // Store process ID to kill when app quits
+  const chrome = await launch(puppeteer)
+  store.set('processPID', chrome.pid) // Store process ID to kill when app quits
+  const resp = await util.promisify(request)(`http://localhost:${chrome.port}/json/version`)
+  const { webSocketDebuggerUrl } = JSON.parse(resp.body)
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: webSocketDebuggerUrl
+  })
 
   const page = await browser.newPage()
   await page.setCacheEnabled(true)

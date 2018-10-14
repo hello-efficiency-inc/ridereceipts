@@ -50,13 +50,6 @@ function createWindow () {
     submenu: [
       { label: 'About Application', selector: 'orderFrontStandardAboutPanel:' },
       { type: 'separator' },
-      { label: 'Debug',
-        accelerator: 'Command+D',
-        type: 'checkbox',
-        click: function (event) {
-          // Toggle debug for chromium headless
-          store.set('debug', event.checked)
-        } },
       { label: 'Quit',
         accelerator: 'Command+Q',
         click: function () {

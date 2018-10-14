@@ -29,6 +29,10 @@
 
 To download Ride Receipts, please visit [https://www.ridereceipts.io](https://www.ridereceipts.io)
 
+*Note*:
+In order to make the app work. Make sure you have latest chrome installed in your system. Also sometimes captcha might not be resolved automatically. In that case you might have to resolve it manually from the open browser from the app.
+For Windows make sure you allow access to browser via firewall when prompted.
+
 ## Features
 
 - [x] Categorized by User Account
@@ -39,10 +43,6 @@ To download Ride Receipts, please visit [https://www.ridereceipts.io](https://ww
 - [x] Take pdf screenshot of receipts of your trip page.
 - [x] Lyft Integration
 - [x] Expenditure stat of your trip depending on your filter you choose
-- [x] Optional Debug mode (Default: Off) to see actually what is going on / how it is working.
-
-**Note**: When debug mode is turned on screenshots/pdf of receipts won't work. Purpose of this preference is so that you can point out to us where it is going on wrong or you are aware about it how it is working.
-Debug mode won't work with Lyft. It is mainly for Uber.
 - [ ] Outlook integration for Lyft
 - [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
 

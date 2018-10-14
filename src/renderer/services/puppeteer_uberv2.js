@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-core'
 import jetpack from 'fs-jetpack'
 import _ from 'lodash'
 import dayjs from 'dayjs'
@@ -6,11 +6,13 @@ import { ipcRenderer } from 'electron'
 import Store from 'electron-store'
 import axios from 'axios'
 
+const chromeLauncher = require('chrome-launcher')
+const request = require('request')
+const util = require('util')
 const PAGE_CLOSE = 'PAGE_CLOSE'
 const EMAIL = 'EMAIL'
 const PASSWORD = 'PASSWORD'
 const VERIFICATION = 'VERIFICATION'
-const CHROME_NOT_FOUND = 'CHROME_NOT_FOUND'
 const FILTER_OPTION = 'FILTER_OPTION'
 const INVOICE_COUNT = 'INVOICE_COUNT'
 const GENERATE_LINKS = 'GENERATE_LINKS'
@@ -94,20 +96,15 @@ async function evaluateError (page) {
 }
 
 // Launch Puppeteer
-async function launch (puppeteer, exec) {
-  let debug
-  if (store.get('debug')) {
-    debug = false
-  } else {
-    debug = true
-  }
-  return puppeteer.launch({
-    headless: debug,
-    timeout: 0,
-    executablePath: exec,
-    args: [
-      '--disable-gpu'
-    ]
+async function launch (puppeteer) {
+  let flag = [
+    '--disable-gpu',
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage'
+  ]
+  return chromeLauncher.launch({
+    chromeFlags: flag
   })
 }
 
@@ -119,27 +116,15 @@ export default async function () {
   const NEXT_BUTTON = '#app-body > div > div:nth-child(1) > form > button'
   const VERIFY_BUTTON = '#app-body > div > div > form > button'
   const DASHBOARD = '#root'
-  // const NEXT_PAGINATION = '#trips-pagination > div:nth-child(2) > a'
-  // const NEXT_PAGINATION_INACTIVE_BUTTON = '#trips-pagination > div:nth-child(2) > div.btn--inactive'
-  // const INACTIVE_PREVIOUS_BUTTON = '.btn--inactive.pagination__previous'
-  // const INACTIVE_NEXT_BUTTON = '.btn--inactive.pagination__next'
-  // const DOWNLOAD_INVOICE_TRIP = '#data-invoice-btn-download'
   const documentDir = jetpack.cwd(store.get('invoicePath'))
-  let exec
-  if (process.env.NODE_ENV !== 'development') {
-    exec = puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked')
-  } else {
-    exec = puppeteer.executablePath()
-  }
+  const chrome = await launch(puppeteer)
+  store.set('processPID', chrome.pid) // Store process ID to kill when app quits
 
-  // If executable path not found then throw error
-  if (!jetpack.exists(exec)) {
-    ipcRenderer.send('form', CHROME_NOT_FOUND)
-    return
-  }
-
-  const browser = await launch(puppeteer, exec)
-  store.set('processPID', browser.process().pid) // Store process ID to kill when app quits
+  const resp = await util.promisify(request)(`http://localhost:${chrome.port}/json/version`)
+  const { webSocketDebuggerUrl } = JSON.parse(resp.body)
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: webSocketDebuggerUrl
+  })
 
   const page = await browser.newPage()
 
@@ -194,8 +179,12 @@ export default async function () {
   if (!emailError && reCaptcha) {
     ipcRenderer.send('form', ERROR_CAPTCHA)
     await solveCaptcha(page)
+    const reCaptcha = await evaluateReCaptcha(page)
     const errorCheck = await evaluateError(page)
-    if (errorCheck) {
+    if (reCaptcha) {
+      ipcRenderer.send('form', ERROR_CAPTCHA_NOT_SOLVED)
+    }
+    if (errorCheck && !reCaptcha) {
       await page.waitFor(1000)
       ipcRenderer.send('form', ERROR_EMAIL)
     } else {

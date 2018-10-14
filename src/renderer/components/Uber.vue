@@ -215,7 +215,7 @@
         <section v-if="form === 'error-captcha'" key="errorcaptcha">
           <div class="row">
             <div class="col-8 mx-auto">
-              <p class="sign-in-text text-center">Ride Receipts failed to verify your account. Please try again.</p>
+              <p class="sign-in-text text-center">Ride Receipts failed to verify your account. Please try again or please solve recaptcha manually from browser.</p>
             </div>
           </div>
         </section>
