@@ -108,7 +108,7 @@
                 <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started" >View Receipts</button>
               </p>
               <p v-if="invoiceCount > 0" class="text-center">
-                Run again: <router-link :to="{ name: 'uber'}" class="mr-1 font-weight-bold" tag="a">Uber</router-link> <router-link :to="{ name: 'lyft'}" class="font-weight-bold" tag="a">Lyft</router-link>
+                Run again: <a href="#" class="mr-1 font-weight-bold" @click="startAgain">Uber</a> <router-link :to="{ name: 'lyft'}" class="font-weight-bold" tag="a">Lyft</router-link>
               </p>
               <p v-if="invoiceCount === 0" class="text-center">
                 <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
@@ -157,7 +157,7 @@
   </div>
 </template>
 <script>
-import puppeteerUber from '../services/puppeteer_uberv3'
+import puppeteerUber from '../services/puppeteer'
 import { parse } from 'url'
 import oauth from '../services/oauth'
 import dayjs from 'dayjs'
@@ -221,6 +221,9 @@ export default {
     }
   },
   methods: {
+    startAgain () {
+      this.form = 'LOGIN_FORM'
+    },
     downloadMessage (count) {
       if (count > 76) {
         this.downloadingMessage = `Wow this could take a while! Let Ride Receipts do its thing and we'll let you know once your ${count} trips are in order.`
@@ -365,7 +368,7 @@ export default {
               if (self.progress === 100) {
                 self.form = 'DOWNLOADED'
                 const notification = new Notification('Ride Receipts', {
-                  body: 'Success! All invoices have been downloaded for you.'
+                  body: 'Success! All receipts have been downloaded for you.'
                 })
                 notification.onclick = () => {
                   console.log('Notification clicked')
@@ -395,15 +398,14 @@ export default {
       })
 
       let amount, address
-      if (dom('.topPrice')) {
+      if (dom('.topPrice').length > 0) {
         amount = _.trim(dom('.topPrice').text())
         address = _.trim(dom('.firstAddress').text()).split(',').slice(-1)[0]
       } else {
         amount = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > div > span').text())
-        address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td')).split(',').slice(-1)[0]
+        address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text()).split(',').slice(-1)[0]
       }
       const countryData = await axios.get(`https://restcountries.eu/rest/v2/name/${_.trim(address)}`)
-      console.log(countryData.data[0].currencies[0].code)
       const currency = countryData.data[0].currencies[0].code
       const totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
       const check = _.findIndex(this.rates, ['currency', currency])
@@ -429,7 +431,8 @@ export default {
         dayjs(date).format('YYYY'),
         dayjs(date).format('MMMM'),
         dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
-        html.toString()
+        html.toString(),
+        'Uber'
       )
     },
     openInvoiceFolder () {

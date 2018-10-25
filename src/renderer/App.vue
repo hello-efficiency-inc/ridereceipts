@@ -109,7 +109,7 @@ a {
   a {
     font-weight: 800;
     font-size: 12px;
-    color: #0012B9;
+    color: #00afb0;
   }
 }
 
@@ -317,7 +317,7 @@ a {
     }
     /* Half gradients */
     &:before {
-      background-image: linear-gradient(to bottom, #0029DD 0%, #D700D0 100%);
+       background-image: linear-gradient(to bottom, #003132 0%, #00AFB0 100%);
     }
     &:after {
         background-image: linear-gradient(to bottom, #ffffff 0%, #D8D8D8 100%);

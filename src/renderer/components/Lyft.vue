@@ -157,7 +157,7 @@
 import { parse } from 'url'
 import oauth from '../services/oauth'
 import dayjs from 'dayjs'
-import puppeteerLyft from '../services/puppeteer_lyft'
+import puppeteerLyft from '../services/puppeteer'
 import axios from 'axios'
 import _ from 'lodash'
 import cheerio from 'cheerio'
@@ -409,7 +409,8 @@ export default {
         dayjs(date).format('YYYY'),
         dayjs(date).format('MMMM'),
         dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
-        html.toString()
+        html.toString(),
+        'Lyft'
       )
     },
     openInvoiceFolder () {

@@ -98,9 +98,9 @@ export default {
     right: 0;
     z-index: -2;
     background: #0029dd;
-    background: -moz-linear-gradient(top, #003132 0%, #00afb0 100%);
-    background: -webkit-linear-gradient(top, #003132 0%, #00afb0 100%);
-    background: linear-gradient(to bottom, #003132 0%,#00afb0 100%);
+    background: -moz-linear-gradient(top, #00afb0 0%, #003132 100%);
+    background: -webkit-linear-gradient(top, #00afb0 0%, #003132 100%);
+    background: linear-gradient(to bottom, #00afb0 0%,#003132 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#003132', endColorstr='#00afb0',GradientType=0 );
   }
 

@@ -21,7 +21,7 @@ async function launch (puppeteer) {
   })
 }
 
-export default async function (email, headers, year, month, invoiceDate, html) {
+export default async function (email, headers, year, month, invoiceDate, html, rideType) {
   const documentDir = jetpack.cwd(store.get('invoicePath'))
   const chrome = await launch(puppeteer)
   store.set('processPID', chrome.pid) // Store process ID to kill when app quits
@@ -30,6 +30,7 @@ export default async function (email, headers, year, month, invoiceDate, html) {
   const browser = await puppeteer.connect({
     browserWSEndpoint: webSocketDebuggerUrl
   })
+  const rideDirectory = rideType
 
   const page = await browser.newPage()
   await page.setCacheEnabled(true)
@@ -37,12 +38,12 @@ export default async function (email, headers, year, month, invoiceDate, html) {
   await page.setContent(html)
   await page.waitFor(1000)
 
-  if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/Uber/${year}/${month}/`))) {
-    jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/Uber/${year}/${month}/`))
+  if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/${rideDirectory}/${year}/${month}/`))) {
+    jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/${rideDirectory}/${year}/${month}/`))
   }
 
   await page.emulateMedia('print')
-  const receiptFilePath = `${documentDir.path()}/${email}/Uber/${year}/${month}/Receipt-${invoiceDate}.pdf`
+  const receiptFilePath = `${documentDir.path()}/${email}/${rideDirectory}/${year}/${month}/Receipt-${invoiceDate}.pdf`
   await page.pdf({
     path: receiptFilePath,
     format: 'A4',
