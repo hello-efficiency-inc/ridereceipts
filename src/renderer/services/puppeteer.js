@@ -51,5 +51,7 @@ export default async function (email, headers, year, month, invoiceDate, html, r
   })
 
   store.delete('browserEndpoint')
+  await page.close()
+  await browser.close()
   await chrome.kill()
 }
