@@ -106,7 +106,9 @@
               </div>
               <p v-if="invoiceCount > 0" class="text-center">
                 <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started" >View Receipts</button>
-                <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
+              </p>
+              <p v-if="invoiceCount > 0" class="text-center">
+                Run again: <router-link :to="{ name: 'uber'}" class="mr-1 font-weight-bold" tag="a">Uber</router-link> <router-link :to="{ name: 'lyft'}" class="font-weight-bold" tag="a">Lyft</router-link>
               </p>
               <p v-if="invoiceCount === 0" class="text-center">
                 <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
@@ -129,12 +131,11 @@
         </section>
       </transition>
     </main>
-    <footer class="mt-auto contribution-box p-4" v-if="form === 'DOWNLOADED'">
+    <footer class="mt-auto" v-if="form === 'DOWNLOADED'"></footer>
+    <footer class="mt-auto p-4" v-if="form === 'DOWNLOADED'">
       <div class="row">
         <div class="col-md-10 mx-auto">
-          <p class="text-center mb-1">Did you find this app useful?</p>
-          <p class="text-center">If so, please make a contribution so we can keep maintaining Ride Receipts.</p>
-          <p class="text-center">👉 <a href="https://paypal.me/UberRun" class="ml-1 mr-1 js-external-link">Click here to contribute </a> 👈</p>
+          <p class="text-center">Upgrade to Ride Receipts PRO and get an itemized Excel doc of all your trips.</p>
         </div>
       </div>
     </footer>

@@ -37,12 +37,16 @@ body {
 }
 
 body {
-  color: #0B1E4E;
+  color: #000;
   font-family: 'Nunito', sans-serif;
   font-size: 1em;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: #00AFB0 !important;
 }
 
 ::selection {
@@ -55,11 +59,11 @@ body {
   transition: opacity 0.1s ease-in;
 }
 .fade-enter, .fade-leave-active {
-  opacity: 0
+  opacity: 0;
 }
 
 .vue-simple-spinner {
-  border-color: #d800d0 rgb(238, 238, 238) rgb(238, 238, 238) !important;
+  border-color: #00afb0 rgb(238, 238, 238) rgb(238, 238, 238) !important;
 }
 
 .bs-popover-bottom {
@@ -182,7 +186,7 @@ body {
 }
 
 .btn-started {
-  background: #d800d0;
+  background: #00AFB0;
   color: white;
   border-radius: 30px;
   width: auto;
@@ -201,7 +205,7 @@ body {
 
   &:hover,
   &:hover:enabled {
-    background: #0012B9;
+    background: #003132;
     color: white;
   }
 }
@@ -242,7 +246,7 @@ body {
     }
     .trip-count {
       font-size: 22px;
-      color: #0012B9;
+      color: #000;
       font-weight: 800;
     }
   }
@@ -252,12 +256,10 @@ body {
   background-color: #D9D9D9;
   height: 16px;
   border-radius: 1rem;
-  // width: 80%;
-  // margin: 10px auto;
 }
 
 .progress-bar {
-  background: linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
+  background: linear-gradient(to right, rgba(0,175,176,1) 0%, rgba(0,49,50,1) 100%);
 }
 
 /* Loading indicator */
@@ -398,7 +400,7 @@ footer {
     margin: 0 auto;
 
     &:focus {
-      border-image:  linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
+      border-image:  linear-gradient(to right, rgba(0,49,50,1) 0%, rgba(0,175,176,1) 100%);
       border-image-slice: 1;
       box-shadow: none;
       background: none;

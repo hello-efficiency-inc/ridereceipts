@@ -8769,10 +8769,10 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-carousel@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/vue-carousel/-/vue-carousel-0.14.0.tgz#15713a265c2f9197c0d42c3a8f9ed909627497d0"
-  integrity sha512-gEJjXHG6SkscsH1ZfeLcW3f1laQjSitRWvoM3nDSiWK0CxNJVOq2QurPSjzk6yFklFHHVIRg55NBj9gMhd80Ng==
+vue-carousel@^0.16.0-rc1:
+  version "0.16.0-rc1"
+  resolved "https://registry.yarnpkg.com/vue-carousel/-/vue-carousel-0.16.0-rc1.tgz#4b332187f9ff89f8bd8ba63a403eed8baa7f8fb9"
+  integrity sha512-DgzqdVbXWBQN6NUYu4CyOGTE3qRwbJ43YjWIwBS81HdPL1VtxNnFgJku+3sUAbKnxEtSovGDBYvSkF1EZbC4dQ==
   dependencies:
     global "^4.3.2"
     regenerator-runtime "^0.12.1"
