@@ -85,7 +85,6 @@
     "electron-store": "^2.0.0",
     "fkill": "^5.2.0",
     "fs-jetpack": "^2.0.0",
-    "got": "^9.0.0",
     "jquery": "^3.2.1",
     "popper.js": "^1.12.9",
     "puppeteer-core": "^1.9.0",
