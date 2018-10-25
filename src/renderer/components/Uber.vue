@@ -223,6 +223,10 @@ export default {
   methods: {
     startAgain () {
       this.form = 'LOGIN_FORM'
+      this.totalAmount = []
+      this.rates = []
+      this.filter_option = null
+      this.invoiceCount = 0
     },
     downloadMessage (count) {
       if (count > 76) {
