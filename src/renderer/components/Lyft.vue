@@ -344,31 +344,28 @@ export default {
         if (messages.length > 0) {
           this.form = 'INVOICE_COUNT'
         }
-
         if (typeof messages !== 'undefined') {
-          messages.forEach((value, i) => {
-            axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${value.id}`, {
+          for (let i = 0; i < messages.length; i++) {
+            const data = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${messages[i].id}`, {
               headers: {
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
               }
-            }).then((data) => {
-              self.processEmails(data.data, user)
-              if (messages.length !== 1) {
-                self.progress = (messages.length - 1) ? _.ceil(_.divide(i + 1, messages.length) * 100) : _.ceil(_.divide(i, messages.length) * 100)
-              } else {
-                self.progress = 100
-              }
-              if (self.progress === 100) {
-                self.form = 'DOWNLOADED'
-                const notification = new Notification('Ride Receipts', {
-                  body: 'Success! All invoices have been downloaded for you.'
-                })
-                notification.onclick = () => {
-                  console.log('Notification clicked')
-                }
-              }
             })
-          })
+            const processed = await self.processEmails(data.data, user)
+            if (processed) {
+              const number = i + 1
+              self.progress = _.ceil(_.divide(number, messages.length) * 100)
+            }
+            if (self.progress === 100) {
+              self.form = 'DOWNLOADED'
+              const notification = new Notification('Ride Receipts', {
+                body: 'Success! All receipts have been downloaded for you.'
+              })
+              notification.onclick = () => {
+                console.log('Notification clicked')
+              }
+            }
+          }
         }
       }
     },
@@ -403,7 +400,7 @@ export default {
         this.navigation = true
       }
 
-      puppeteerLyft(
+      return puppeteerLyft(
         user.email,
         Object.assign({}, ...header),
         dayjs(date).format('YYYY'),

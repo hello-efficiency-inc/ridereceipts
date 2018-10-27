@@ -8,11 +8,11 @@
         <section v-if="form === 'LOGIN_FORM'" key="loginForm" class="p-3 text-center">
           <div class="row">
             <div class="col-md-10 mx-auto">
-              <p class="sign-in-text mb-5">Sign in to your Gmail account to automatically download and organize your Uber receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i></p>
+              <p class="sign-in-text mb-5">Sign in to your Gmail account to automatically download your Uber receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i></p>
               <p class="text-center"><button type="button" @click="signIn('google')" class="btn btn-lg btn-started" v-if="!loading">Sign In to Gmail</button></p>
               <b-popover  ref="popover" target="privacy" triggers="click focus" placement="bottom">
                  <template slot="title">Privacy</template>
-                 Ride Receipts is an automation app that has no database; therefore, it does not store your login credentials, personal information or any other data. Once you log in, we’ll fetch your Lyft receipts and auto-generate PDFs for you.
+                 Ride Receipts is an automation app that has no database; therefore, it does not store your login credentials, personal information or any other data. Once you log in, we’ll fetch your Uber or Lyft receipts and auto-generate PDFs for you.
                  <br/>
                  <p class="text-right"><a class="js-external-link" href="https://ridereceipts.io/privacy">Learn more</a></p>
               </b-popover>
@@ -97,7 +97,7 @@
                           <img src="static/piggy-bank.svg" width="86" class="mr-4">
                           <p class="card-text">
                             Total spend<br/>
-                            <span class="trip-count">{{ Number.parseFloat(rate.amount.reduce((a, b) => a + b, 0) * 100 / 100).toFixed(2) }} {{ rate.currency }}</span>
+                            <span class="trip-count">{{ rate.currency }} {{ Number.parseFloat(rate.amount.reduce((a, b) => a + b, 0) * 100 / 100).toFixed(2) }}</span>
                           </p>
                         </slide>
                     </carousel>
@@ -138,7 +138,7 @@
     <footer class="mt-auto p-4" v-if="form === 'DOWNLOADED'">
       <div class="row">
         <div class="col-md-10 mx-auto">
-          <p class="text-center">Upgrade to Ride Receipts PRO and get an itemized Excel doc of all your trips.</p>
+          <p class="text-center"><a href="https://ridereceipts.io" class="upgrade-link js-external-link">Upgrade to Ride Receipts PRO and get an itemized Excel doc of all your trips. <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a></p>
         </div>
       </div>
     </footer>
@@ -223,10 +223,16 @@ export default {
   methods: {
     startAgain () {
       this.form = 'LOGIN_FORM'
-      this.totalAmount = []
-      this.rates = []
       this.filter_option = null
+      this.loading = false
+      this.downloadingMessage = null
+      this.totalAmount = []
+      this.pagination = false
+      this.perPage = 1
+      this.rates = []
       this.invoiceCount = 0
+      this.navigation = true
+      this.progress = ''
     },
     downloadMessage (count) {
       if (count > 76) {
@@ -357,29 +363,27 @@ export default {
         }
 
         if (typeof messages !== 'undefined') {
-          messages.forEach((value, i) => {
-            axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${value.id}`, {
+          for (let i = 0; i < messages.length; i++) {
+            const data = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${messages[i].id}`, {
               headers: {
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
               }
-            }).then(async (data) => {
-              await self.processEmails(data.data, user)
-              if (messages.length !== 1) {
-                self.progress = (messages.length - 1) ? _.ceil(_.divide(i + 1, messages.length) * 100) : _.ceil(_.divide(i, messages.length) * 100)
-              } else {
-                self.progress = 100
-              }
-              if (self.progress === 100) {
-                self.form = 'DOWNLOADED'
-                const notification = new Notification('Ride Receipts', {
-                  body: 'Success! All receipts have been downloaded for you.'
-                })
-                notification.onclick = () => {
-                  console.log('Notification clicked')
-                }
-              }
             })
-          })
+            const processed = await self.processEmails(data.data, user)
+            if (processed) {
+              const number = i + 1
+              self.progress = _.ceil(_.divide(number, messages.length) * 100)
+            }
+            if (self.progress === 100) {
+              self.form = 'DOWNLOADED'
+              const notification = new Notification('Ride Receipts', {
+                body: 'Success! All receipts have been downloaded for you.'
+              })
+              notification.onclick = () => {
+                console.log('Notification clicked')
+              }
+            }
+          }
         }
       }
     },
@@ -401,16 +405,16 @@ export default {
         normalizeWhitespace: true
       })
 
-      let amount, address
+      let amount
       if (dom('.topPrice').length > 0) {
         amount = _.trim(dom('.topPrice').text())
-        address = _.trim(dom('.firstAddress').text()).split(',').slice(-1)[0]
+        // address = _.trim(dom('.firstAddress').text()).split(',').slice(-1)[0]
       } else {
         amount = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > div > span').text())
-        address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text()).split(',').slice(-1)[0]
+        // address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text()).split(',').slice(-1)[0]
       }
-      const countryData = await axios.get(`https://restcountries.eu/rest/v2/name/${_.trim(address)}`)
-      const currency = countryData.data[0].currencies[0].code
+      // const countryData = await axios.get(`https://restcountries.eu/rest/v2/name/${_.trim(address)}`)
+      const currency = amount.split(/\d+/)[0]
       const totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
       const check = _.findIndex(this.rates, ['currency', currency])
 
@@ -429,7 +433,7 @@ export default {
         this.navigation = true
       }
 
-      puppeteerUber(
+      return puppeteerUber(
         user.email,
         Object.assign({}, ...header),
         dayjs(date).format('YYYY'),

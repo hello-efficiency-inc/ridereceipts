@@ -46,7 +46,7 @@ body {
 }
 
 a {
-  color: #00AFB0 !important;
+  color: #00AFB0;
 }
 
 ::selection {
@@ -200,12 +200,12 @@ a {
   &:active,
   &:focus,
   &:focus:enabled {
-    background: white;
+    background: #00afb0;
   }
 
   &:hover,
   &:hover:enabled {
-    background: #003132;
+    background: #000;
     color: white;
   }
 }
@@ -481,6 +481,18 @@ footer {
 
       &:hover {
         color: black;
+      }
+    }
+
+    a.upgrade-link {
+      color: black;
+      padding-bottom: 1px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: #00AFB0;
+        border-bottom: 1px solid #00afb0;
       }
     }
 </style>

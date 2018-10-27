@@ -43,7 +43,7 @@ export default async function (email, headers, year, month, invoiceDate, html, r
   }
 
   await page.emulateMedia('print')
-  const receiptFilePath = `${documentDir.path()}/${email}/${rideDirectory}/${year}/${month}/Receipt-${invoiceDate}.pdf`
+  const receiptFilePath = `${documentDir.path()}/${email}/${rideDirectory}/${year}/${month}/${rideDirectory}-${invoiceDate}.pdf`
   await page.pdf({
     path: receiptFilePath,
     format: 'A4',
@@ -54,4 +54,5 @@ export default async function (email, headers, year, month, invoiceDate, html, r
   await page.close()
   await browser.close()
   await chrome.kill()
+  return true
 }
