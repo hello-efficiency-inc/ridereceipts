@@ -407,24 +407,26 @@ export default {
 
       let amount
       if (dom('.topPrice').length > 0) {
-        amount = _.trim(dom('.topPrice').text())
+        amount = _.trim(dom('td.chargedFare').text())
         // address = _.trim(dom('.firstAddress').text()).split(',').slice(-1)[0]
       } else {
         amount = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > div > span').text())
         // address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text()).split(',').slice(-1)[0]
       }
       // const countryData = await axios.get(`https://restcountries.eu/rest/v2/name/${_.trim(address)}`)
-      const currency = amount.split(/\d+/)[0]
-      const totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
-      const check = _.findIndex(this.rates, ['currency', currency])
+      if (amount) {
+        const currency = amount.split(/\d+/)[0]
+        const totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
+        const check = _.findIndex(this.rates, ['currency', currency])
 
-      if (check < 0) {
-        this.rates.push({
-          currency: currency,
-          amount: [totalRate]
-        })
-      } else {
-        this.rates[check].amount.push(totalRate)
+        if (check < 0) {
+          this.rates.push({
+            currency: currency,
+            amount: [totalRate]
+          })
+        } else {
+          this.rates[check].amount.push(totalRate)
+        }
       }
 
       if (this.rates.length === 1) {
