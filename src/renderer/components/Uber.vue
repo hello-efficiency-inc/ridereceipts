@@ -431,9 +431,11 @@ export default {
       let amount
       if (dom('.topPrice').length > 0) {
         amount = _.trim(dom('td.chargedFare').text())
+        // todo: Figure out reverse geocode
         // address = _.trim(dom('.firstAddress').text()).split(',').slice(-1)[0]
       } else {
         amount = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > div > span').text())
+        // todo: Figure out reverse geocode
         // address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text()).split(',').slice(-1)[0]
       }
       // const countryData = await axios.get(`https://restcountries.eu/rest/v2/name/${_.trim(address)}`)
@@ -452,6 +454,7 @@ export default {
         }
       }
 
+      const uberEats = dom('#bgwrapper > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td:nth-child(1) > table:nth-child(3) > tbody > tr > td').text().includes('Uber Eats')
       if (this.rates.length === 1) {
         this.navigation = false
       } else {
@@ -465,7 +468,7 @@ export default {
         dayjs(date).format('MMMM'),
         dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
         html.toString(),
-        'Uber'
+        uberEats ? 'UberEats' : 'Uber'
       )
     },
     openInvoiceFolder () {

@@ -30,6 +30,7 @@ export default async function (email, headers, year, month, invoiceDate, html, r
   const browser = await puppeteer.connect({
     browserWSEndpoint: webSocketDebuggerUrl
   })
+
   const rideDirectory = rideType
 
   const page = await browser.newPage()
