@@ -50,7 +50,7 @@ a {
 }
 
 ::selection {
-  background-color: rgba(215,0,208,0.75);
+  background-color: rgba(0,175,176,0.75);
   color: white;
   text-shadow: none
 }
@@ -394,7 +394,7 @@ footer {
     padding-bottom: 0;
     font-size: 1.9em;
     color: black;
-    caret-color: #0012B9;
+    caret-color: #00AFB0;
     text-overflow: ellipsis;
     transition: all 0.5s ease;
     margin: 0 auto;
