@@ -326,19 +326,42 @@ export default {
         return
       }
 
-      const list = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages?q='from:"Lyft Ride Receipt" after:${startDate} before:${endDate}'`, {
-        headers: {
-          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
-        }
-      })
+      const emails = []
+      let nextToken = null
 
-      if (list.data.resultSizeEstimate === 0) {
+      do {
+        let apiUrl
+        if (nextToken) {
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?pageToken=${nextToken}&q='from:"Lyft Ride Receipt" after:${startDate} before:${endDate}'`
+        } else {
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?q='from:"Lyft Ride Receipt" after:${startDate} before:${endDate}'`
+        }
+        const list = await axios.get(apiUrl, {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
+          }
+        })
+
+        if (list.data.messages.length > 0) {
+          for (let i = 0; i < list.data.messages.length; i++) {
+            emails.push(list.data.messages[i])
+          }
+        }
+
+        if (typeof list.data.nextPageToken !== 'undefined') {
+          nextToken = list.data.nextPageToken
+        } else {
+          nextToken = null
+        }
+      } while (nextToken !== null)
+
+      if (emails.length === 0) {
         this.invoiceCount = 0
         this.downloadMessage(0)
         self.form = 'DOWNLOADED'
       } else {
-        this.downloadMessage(list.data.messages.length)
-        messages = list.data.messages
+        this.downloadMessage(emails.length)
+        messages = emails
         this.invoiceCount = messages.length
 
         if (messages.length > 0) {
