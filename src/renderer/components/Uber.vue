@@ -337,7 +337,7 @@ export default {
         startDate = dayjs().subtract(1, 'month').startOf('month').unix()
         endDate = dayjs().startOf('month').unix()
       } else if (this.filter_option === 'lastthreemonths') {
-        startDate = dayjs().subtract(3, 'month').startOf('month').unix()
+        startDate = dayjs().subtract(3, 'month').add(1, 'day').startOf('month').unix()
         endDate = dayjs().startOf('month').unix()
       } else {
         return
@@ -454,7 +454,16 @@ export default {
         }
       }
 
-      const uberEats = dom('#bgwrapper > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td:nth-child(1) > table:nth-child(3) > tbody > tr > td').text().includes('Uber Eats')
+      let uberEats
+      const newUberEats = dom(`body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr > td > div > div > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table.t7of12.layout > tbody > tr > td > table > tbody > tr:nth-child(1) > td`).text()
+      const oldUberEats = dom('#bgwrapper > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td:nth-child(1) > table:nth-child(3) > tbody > tr > td').text()
+
+      if (newUberEats.includes('ordering') || oldUberEats.includes('Uber Eats')) {
+        uberEats = 'UberEats'
+      } else {
+        uberEats = 'Uber'
+      }
+
       if (this.rates.length === 1) {
         this.navigation = false
       } else {
@@ -468,7 +477,7 @@ export default {
         dayjs(date).format('MMMM'),
         dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
         html.toString(),
-        uberEats ? 'UberEats' : 'Uber'
+        uberEats
       )
     },
     openInvoiceFolder () {
