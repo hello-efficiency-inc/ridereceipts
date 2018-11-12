@@ -29,9 +29,7 @@
 
 To download Ride Receipts, please visit [https://www.ridereceipts.io](https://www.ridereceipts.io)
 
-*Note*:
-In order to make the app work. Make sure you have latest chrome installed in your system. Also sometimes captcha might not be resolved automatically. In that case you might have to resolve it manually from the open browser from the app.
-For Windows make sure you allow access to browser via firewall when prompted.
+To get expense report in excel format and no limitations on filter, you can try out our [Ride Receipts Pro](https://www.ridereceipts.io). It's paid app available for $9.99
 
 ## Features
 
@@ -61,12 +59,12 @@ Your invoices will be named according to the date and time of your trip, and org
 
 ## Requirements
 
-For Uber and Lyft we utilize Gmail API to scan your email only for **Lyft receipts**. 
+For Uber and Lyft we utilize Gmail API to scan your email only for **receipts**. 
 Make sure your system has latest Chrome Browser installed (v69 or above).
 
 Ride Receipts works on both Mac and PC.
 
-## Limitations (Uber)
+## Limitations
 
 Currently Ride Receipts cannot distinguish between business and personal invoices. Our recommended workaround is to use Uber’s monthly business travel report to cross reference with all of the invoices from Ride Receipts and delete the ones you don’t intend to claim for your taxes or company reimbursement. Ride Receipts automatically renames all of your invoices by the date and time of the trip, and organizes them by month in folders, so it’s easier to tell what’s what.
 
