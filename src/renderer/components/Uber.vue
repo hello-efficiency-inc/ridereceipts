@@ -11,10 +11,10 @@
               <p class="sign-in-text mb-5">Sign in to your Gmail account to automatically download your Uber receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i></p>
               <p class="text-center"><button type="button" @click="signIn('google')" class="btn btn-lg btn-started" v-if="!loading">Sign In to Gmail</button></p>
               <b-popover  ref="popover" target="privacy" triggers="click focus" placement="bottom">
-                 <template slot="title">Privacy</template>
-                 Ride Receipts is an automation app that has no database; therefore, it does not store your login credentials, personal information or any other data. Once you log in, we’ll fetch your Uber or Lyft receipts and auto-generate PDFs for you.
-                 <br/>
-                 <p class="text-right"><a class="js-external-link" href="https://ridereceipts.io/privacy">Learn more</a></p>
+                <template slot="title">Privacy</template>
+                Ride Receipts is an automation app that has no database; therefore, it does not store your login credentials, personal information or any other data. Once you log in, we’ll fetch your Uber or Lyft receipts and auto-generate PDFs for you.
+                <br/>
+                <p class="text-right"><a class="js-external-link" href="https://ridereceipts.io/privacy">Learn more</a></p>
               </b-popover>
               <div class="loading" v-if="loading">
                 <div class="inner"></div>
@@ -25,7 +25,7 @@
         <section v-if="form === 'FILTER_OPTION'" key="filteroption">
           <div class="row">
             <div class="col-8 mx-auto">
-                <p class="sign-in-text text-center mb-5">Which receipts would you like to <br/> download?</p>
+              <p class="sign-in-text text-center mb-5">Which receipts would you like to <br/> download?</p>
             </div>
             <div class="col-7 mx-auto">
               <div class="form-group">
@@ -93,13 +93,13 @@
                 <div class="card">
                   <div class="card-body">
                     <carousel :navigationEnabled="navigation" :paginationEnabled="pagination" :perPage="perPage">
-                        <slide class="d-flex flex-row" v-for="rate in rates" :key="rate.currency">
-                          <img src="static/piggy-bank.svg" width="86" class="mr-4">
-                          <p class="card-text">
-                            Total spend<br/>
-                            <span class="trip-count">{{ rate.currency }} {{ Number.parseFloat(rate.amount.reduce((a, b) => a + b, 0) * 100 / 100).toFixed(2) }}</span>
-                          </p>
-                        </slide>
+                      <slide class="d-flex flex-row" v-for="rate in rates" :key="rate.currency">
+                        <img src="static/piggy-bank.svg" width="86" class="mr-4">
+                        <p class="card-text">
+                          Total spend<br/>
+                          <span class="trip-count">{{ rate.currency }} {{ Number.parseFloat(rate.amount.reduce((a, b) => a + b, 0) * 100 / 100).toFixed(2) }}</span>
+                        </p>
+                      </slide>
                     </carousel>
                   </div>
                 </div>
@@ -128,7 +128,7 @@
             <div class="col-10 mx-auto">
               <p class="sign-in-text text-center">
                 It seems like you don't have Chromium installed. Please download it from <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a>. Place the file on your desktop and unzip it.
-             </p>
+              </p>
             </div>
           </div>
         </section>
@@ -150,7 +150,7 @@
           </router-link>
         </div>
         <div class="col">
-            <button v-if="!hideButton" type="button" @click="submitForm" class="btn btn-outline-primary btn--submit float-right mt-3" >Next<img class="arrow" src="static/next-arrow.svg"></button>
+          <button v-if="!hideButton" type="button" @click="submitForm" class="btn btn-outline-primary btn--submit float-right mt-3" >Next<img class="arrow" src="static/next-arrow.svg"></button>
         </div>
       </div>
     </footer>
@@ -411,12 +411,20 @@ export default {
       }
     },
     async processEmails (data, user) {
+      var html
+      var currency
+      var totalRate
+      var address
+      var amount
+      var check
+      var country
+      var uberEats
+
       const header = data.payload.headers.map((item) => {
         let obj = {}
         obj[item.name] = item.value
         return obj
       })
-      let html
       if (data.payload.parts) {
         html = Buffer.from(data.payload.parts[0].body.data, 'base64')
       } else {
@@ -428,21 +436,37 @@ export default {
         normalizeWhitespace: true
       })
 
-      let amount
-      if (dom('.topPrice').length > 0) {
-        amount = _.trim(dom('td.chargedFare').text())
-        // todo: Figure out reverse geocode
-        // address = _.trim(dom('.firstAddress').text()).split(',').slice(-1)[0]
+      const newUberEats = dom(`body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr > td > div > div > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table.t7of12.layout > tbody > tr > td > table > tbody > tr:nth-child(1) > td`).text()
+      const oldUberEats = dom('#bgwrapper > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td:nth-child(1) > table:nth-child(3) > tbody > tr > td').text()
+
+      if (dom('.eventinfo').length > 0) {
+        if (_.trim(dom('.topPrice.tal.black').text()).match(/[+-]?\d+(\.\d+)?/) !== null) {
+          amount = _.trim(dom('.topPrice.tal.black').text())
+        } else {
+          amount = _.trim(dom('td.chargedFare').text())
+        }
+        dom('.rideTime').remove()
+        var firstAddress = _.words(_.trim(dom('.firstAddress').text()))
+        address = firstAddress.indexOf('accepted') < 0 ? _.trim(dom('.firstAddress').text()) : _.trim(dom('#cancelledABlock > tbody > tr:nth-child(2) > td > table > tbody > tr > td.tripInfoDescription.gray.vam.tal').text())
       } else {
         amount = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > div > span').text())
-        // todo: Figure out reverse geocode
-        // address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text()).split(',').slice(-1)[0]
+        if (newUberEats.includes('ordering')) {
+          address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr:nth-child(2) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr:nth-child(3) > td > table:nth-child(1) > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2) > td').text())
+        } else {
+          address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text())
+        }
       }
-      // const countryData = await axios.get(`https://restcountries.eu/rest/v2/name/${_.trim(address)}`)
+      if (address) {
+        var geoData = await axios.get(`https://api.ridereceipts.io/geocode?address=${address}`)
+        country = geoData.data.Response.View[0].Result[0].Location.Address.Country
+      } else {
+        country = amount.replace(/\d+([,.]\d+)?/, '').replace(/[^\w+\s]/, '')
+      }
+      var currencyData = await axios.get(`https://restcountries.eu/rest/v2/alpha/${country}?fields=currencies`)
       if (amount) {
-        const currency = amount.split(/\d+/)[0]
-        const totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
-        const check = _.findIndex(this.rates, ['currency', currency])
+        currency = currencyData.data.currencies[0].code
+        this.currencies.push(currencyData.data.currencies[0].code)
+        totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
 
         if (check < 0) {
           this.rates.push({
@@ -453,10 +477,6 @@ export default {
           this.rates[check].amount.push(totalRate)
         }
       }
-
-      let uberEats
-      const newUberEats = dom(`body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr > td > div > div > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table.t7of12.layout > tbody > tr > td > table > tbody > tr:nth-child(1) > td`).text()
-      const oldUberEats = dom('#bgwrapper > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td:nth-child(1) > table:nth-child(3) > tbody > tr > td').text()
 
       if (newUberEats.includes('ordering') || oldUberEats.includes('Uber Eats')) {
         uberEats = 'UberEats'

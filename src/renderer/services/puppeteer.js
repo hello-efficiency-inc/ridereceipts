@@ -13,8 +13,13 @@ async function launch (puppeteer) {
     '--headless',
     '--disable-gpu',
     '--no-sandbox',
+    '--no-first-run',
+    '--no-sandbox',
+    '--no-zygote',
     '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage'
+    '--disable-dev-shm-usage',
+    '--proxy-server="direct://"',
+    '--proxy-bypass-list=*'
   ]
   return chromeLauncher.launch({
     chromeFlags: flag
@@ -39,8 +44,8 @@ export default async function (email, headers, year, month, invoiceDate, html, r
   await page.setContent(html)
   await page.waitFor(1000)
 
-  if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/${rideDirectory}/${year}/${month}/`))) {
-    jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/${rideDirectory}/${year}/${month}/`))
+  if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/${rideDirectory}/${year}/`))) {
+    jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/${rideDirectory}/${year}/`))
   }
 
   await page.emulateMedia('print')
