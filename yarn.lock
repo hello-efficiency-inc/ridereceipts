@@ -8667,7 +8667,7 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-carousel@^0.16.0-rc1:
+vue-carousel@^0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/vue-carousel/-/vue-carousel-0.16.0.tgz#2980d4c923fe4d6501d71d37a64e5242221ffb44"
   integrity sha512-k8bHBUnDxAaJrLwYgk0Z8sXxGOerS5+fTX500EIpH63gN2J/QztE9nblSyVONnv0T8/pM3GrDK01G30Mnf2NMA==
