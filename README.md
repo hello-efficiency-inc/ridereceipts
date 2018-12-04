@@ -29,8 +29,6 @@
 
 To download Ride Receipts, please visit [https://www.ridereceipts.io](https://www.ridereceipts.io)
 
-To get expense report in excel format and no limitations on filter, you can try out our [Ride Receipts Pro](https://www.ridereceipts.io). It's paid app available for $9.99
-
 ## Features
 
 - [x] Categorized by User Account
@@ -59,7 +57,7 @@ Your invoices will be named according to the date and time of your trip, and org
 
 ## Requirements
 
-For Uber and Lyft we utilize Gmail API to scan your email only for **receipts**. 
+For Uber and Lyft we utilize Gmail API to scan your email only for **receipts**.
 Make sure your system has latest Chrome Browser installed (v69 or above).
 
 Ride Receipts works on both Mac and PC.
