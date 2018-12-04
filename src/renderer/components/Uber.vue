@@ -116,18 +116,11 @@
             </div>
           </div>
         </section>
-        <section v-if="form === 'error-captcha'" key="errorcaptcha">
-          <div class="row">
-            <div class="col-8 mx-auto">
-              <p class="sign-in-text text-center">Ride Receipts failed to verify your account. Please try again or please solve recaptcha manually from browser.</p>
-            </div>
-          </div>
-        </section>
         <section v-if="form === 'CHROME_NOT_FOUND'" key="chomenotfound">
           <div class="row">
             <div class="col-10 mx-auto">
               <p class="sign-in-text text-center">
-                It seems like you don't have Chromium installed. Please download it from <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a>. Place the file on your desktop and unzip it.
+                It seems like you don't have Chromium installed. Please download it from <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a>.
               </p>
             </div>
           </div>
@@ -162,11 +155,8 @@ import { parse } from 'url'
 import oauth from '../services/oauth'
 import dayjs from 'dayjs'
 import cheerio from 'cheerio'
-import Store from 'electron-store'
 import axios from 'axios'
 import _ from 'lodash'
-
-const store = new Store()
 
 export default {
   data () {
@@ -182,12 +172,6 @@ export default {
       invoiceCount: 0,
       navigation: true,
       progress: ''
-    }
-  },
-  mounted () {
-    // this.startAgain()
-    if (store.get('debug')) {
-      this.form = 'ERROR'
     }
   },
   computed: {
@@ -436,52 +420,55 @@ export default {
         normalizeWhitespace: true
       })
 
-      const newUberEats = dom(`body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr > td > div > div > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table.t7of12.layout > tbody > tr > td > table > tbody > tr:nth-child(1) > td`).text()
-      const oldUberEats = dom('#bgwrapper > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td:nth-child(1) > table:nth-child(3) > tbody > tr > td').text()
+      try {
+        const newUberEats = dom(`body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr > td > div > div > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table.t7of12.layout > tbody > tr > td > table > tbody > tr:nth-child(1) > td`).text()
+        const oldUberEats = dom('#bgwrapper > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td:nth-child(1) > table:nth-child(3) > tbody > tr > td').text()
 
-      if (dom('.eventinfo').length > 0) {
-        if (_.trim(dom('.topPrice.tal.black').text()).match(/[+-]?\d+(\.\d+)?/) !== null) {
-          amount = _.trim(dom('.topPrice.tal.black').text())
+        if (dom('.eventinfo').length > 0) {
+          if (_.trim(dom('.topPrice.tal.black').text()).match(/[+-]?\d+(\.\d+)?/) !== null) {
+            amount = _.trim(dom('.topPrice.tal.black').text())
+          } else {
+            amount = _.trim(dom('td.chargedFare').text())
+          }
+          dom('.rideTime').remove()
+          var firstAddress = _.words(_.trim(dom('.firstAddress').text()))
+          address = firstAddress.indexOf('accepted') < 0 ? _.trim(dom('.firstAddress').text()) : _.trim(dom('#cancelledABlock > tbody > tr:nth-child(2) > td > table > tbody > tr > td.tripInfoDescription.gray.vam.tal').text())
         } else {
-          amount = _.trim(dom('td.chargedFare').text())
+          amount = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > div > span').text())
+          if (newUberEats.includes('ordering')) {
+            address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr:nth-child(2) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr:nth-child(3) > td > table:nth-child(1) > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2) > td').text())
+          } else {
+            address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text())
+          }
         }
-        dom('.rideTime').remove()
-        var firstAddress = _.words(_.trim(dom('.firstAddress').text()))
-        address = firstAddress.indexOf('accepted') < 0 ? _.trim(dom('.firstAddress').text()) : _.trim(dom('#cancelledABlock > tbody > tr:nth-child(2) > td > table > tbody > tr > td.tripInfoDescription.gray.vam.tal').text())
-      } else {
-        amount = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > div > span').text())
-        if (newUberEats.includes('ordering')) {
-          address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr:nth-child(2) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr:nth-child(3) > td > table:nth-child(1) > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2) > td').text())
+        if (address) {
+          var geoData = await axios.get(`https://api.ridereceipts.io/geocode?address=${address}`)
+          country = geoData.data.Response.View[0].Result[0].Location.Address.Country
         } else {
-          address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text())
+          country = amount.replace(/\d+([,.]\d+)?/, '').replace(/[^\w+\s]/, '')
         }
-      }
-      if (address) {
-        var geoData = await axios.get(`https://api.ridereceipts.io/geocode?address=${address}`)
-        country = geoData.data.Response.View[0].Result[0].Location.Address.Country
-      } else {
-        country = amount.replace(/\d+([,.]\d+)?/, '').replace(/[^\w+\s]/, '')
-      }
-      var currencyData = await axios.get(`https://restcountries.eu/rest/v2/alpha/${country}?fields=currencies`)
-      if (amount) {
-        currency = currencyData.data.currencies[0].code
-        this.currencies.push(currencyData.data.currencies[0].code)
-        totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
+        var currencyData = await axios.get(`https://restcountries.eu/rest/v2/alpha/${country}?fields=currencies`)
+        if (amount) {
+          currency = currencyData.data.currencies[0].code
+          totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
+          check = _.findIndex(this.rates, ['currency', currency])
+          if (check < 0) {
+            this.rates.push({
+              currency: currency,
+              amount: [totalRate]
+            })
+          } else {
+            this.rates[check].amount.push(totalRate)
+          }
+        }
 
-        if (check < 0) {
-          this.rates.push({
-            currency: currency,
-            amount: [totalRate]
-          })
+        if (newUberEats.includes('ordering') || oldUberEats.includes('Uber Eats')) {
+          uberEats = 'UberEats'
         } else {
-          this.rates[check].amount.push(totalRate)
+          uberEats = 'Uber'
         }
-      }
-
-      if (newUberEats.includes('ordering') || oldUberEats.includes('Uber Eats')) {
-        uberEats = 'UberEats'
-      } else {
-        uberEats = 'Uber'
+      } catch (e) {
+        console.log(e)
       }
 
       if (this.rates.length === 1) {
@@ -490,15 +477,19 @@ export default {
         this.navigation = true
       }
 
-      return puppeteerUber(
-        user.email,
-        Object.assign({}, ...header),
-        dayjs(date).format('YYYY'),
-        dayjs(date).format('MMMM'),
-        dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
-        html.toString(),
-        uberEats
-      )
+      try {
+        return puppeteerUber(
+          user.email,
+          Object.assign({}, ...header),
+          dayjs(date).format('YYYY'),
+          dayjs(date).format('MMMM'),
+          dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
+          html.toString(),
+          uberEats
+        )
+      } catch (e) {
+        this.form = 'CHROME_NOT_FOUND'
+      }
     },
     openInvoiceFolder () {
       const documentDir = this.$electronstore.get('invoicePath')

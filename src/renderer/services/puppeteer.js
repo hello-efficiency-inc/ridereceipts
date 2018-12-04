@@ -14,7 +14,6 @@ async function launch (puppeteer) {
     '--disable-gpu',
     '--no-sandbox',
     '--no-first-run',
-    '--no-sandbox',
     '--no-zygote',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',
@@ -49,7 +48,7 @@ export default async function (email, headers, year, month, invoiceDate, html, r
   }
 
   await page.emulateMedia('print')
-  const receiptFilePath = `${documentDir.path()}/${email}/${rideDirectory}/${year}/${month}/${rideDirectory}-${invoiceDate}.pdf`
+  const receiptFilePath = `${documentDir.path()}/${email}/${rideDirectory}/${year}/${rideDirectory}-${invoiceDate}.pdf`
   await page.pdf({
     path: receiptFilePath,
     format: 'A4',
