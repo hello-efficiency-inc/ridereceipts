@@ -3,11 +3,19 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import fkill from 'fkill'
 import Store from 'electron-store'
+import updateElectron from 'update-electron-app'
+import electronLog from 'electron-log'
 
 import 'electron-context-menu'
 
 let myWindow = null
 const store = new Store()
+
+updateElectron({
+  repo: 'ridereceipts/ridereceipts',
+  updateInterval: '1 hour',
+  logger: electronLog
+})
 
 /**
  * Set `__static` path to static files in production
@@ -108,36 +116,4 @@ app.on('activate', () => {
 
 ipcMain.on('online-status-changed', (event, status) => {
   event.sender.send('onlinestatus', status)
-})
-
-ipcMain.on('form', (event, status) => {
-  event.sender.send('form', status)
-})
-
-ipcMain.on('invoiceTotal', (event, status) => {
-  event.sender.send('invoiceTotal', status)
-})
-
-ipcMain.on('progress', (event, status) => {
-  event.sender.send('progress', status)
-})
-
-ipcMain.on('email', (event, data) => {
-  event.sender.send('emaildata', data)
-})
-
-ipcMain.on('password', (event, data) => {
-  event.sender.send('passdata', data)
-})
-
-ipcMain.on('code', (event, data) => {
-  event.sender.send('codedata', data)
-})
-
-ipcMain.on('filter_option', (event, data) => {
-  event.sender.send('filteroption', data)
-})
-
-ipcMain.on('filters', (event, data) => {
-  event.sender.send('filters', data)
 })

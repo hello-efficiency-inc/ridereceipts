@@ -46,7 +46,7 @@ export default {
 
   p {
     font-size: 20px;
-    color: #0A11BA;
+    color: #000808;
     text-align: center;
     margin-top: 30px;
     margin-bottom: 30px;
@@ -76,7 +76,7 @@ export default {
   font-size: 15px;
 
   &:hover {
-    background: #D700D0;
+    background: #00afb0;
     color: #fff;
 
     &:before {
@@ -98,10 +98,10 @@ export default {
     right: 0;
     z-index: -2;
     background: #0029dd;
-    background: -moz-linear-gradient(top, #d700d0 0%, #0029dd 100%);
-    background: -webkit-linear-gradient(top, #d700d0 0%, #0029dd 100%);
-    background: linear-gradient(to bottom, #d700d0 0%,#0029dd 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d700d0', endColorstr='#0029dd',GradientType=0 );
+    background: -moz-linear-gradient(top, #00afb0 0%, #003132 100%);
+    background: -webkit-linear-gradient(top, #00afb0 0%, #003132 100%);
+    background: linear-gradient(to bottom, #00afb0 0%,#003132 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#003132', endColorstr='#00afb0',GradientType=0 );
   }
 
   &:after {

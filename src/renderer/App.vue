@@ -37,7 +37,7 @@ body {
 }
 
 body {
-  color: #0B1E4E;
+  color: #000;
   font-family: 'Nunito', sans-serif;
   font-size: 1em;
   overflow: hidden;
@@ -45,8 +45,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+  color: #00AFB0;
+}
+
 ::selection {
-  background-color: rgba(215,0,208,0.75);
+  background-color: rgba(0,175,176,0.75);
   color: white;
   text-shadow: none
 }
@@ -55,11 +59,11 @@ body {
   transition: opacity 0.1s ease-in;
 }
 .fade-enter, .fade-leave-active {
-  opacity: 0
+  opacity: 0;
 }
 
 .vue-simple-spinner {
-  border-color: #d800d0 rgb(238, 238, 238) rgb(238, 238, 238) !important;
+  border-color: #00afb0 rgb(238, 238, 238) rgb(238, 238, 238) !important;
 }
 
 .bs-popover-bottom {
@@ -105,7 +109,7 @@ body {
   a {
     font-weight: 800;
     font-size: 12px;
-    color: #0012B9;
+    color: #00afb0;
   }
 }
 
@@ -182,7 +186,7 @@ body {
 }
 
 .btn-started {
-  background: #d800d0;
+  background: #00AFB0;
   color: white;
   border-radius: 30px;
   width: auto;
@@ -196,12 +200,12 @@ body {
   &:active,
   &:focus,
   &:focus:enabled {
-    background: white;
+    background: #00afb0;
   }
 
   &:hover,
   &:hover:enabled {
-    background: #0012B9;
+    background: #000;
     color: white;
   }
 }
@@ -242,7 +246,7 @@ body {
     }
     .trip-count {
       font-size: 22px;
-      color: #0012B9;
+      color: #000;
       font-weight: 800;
     }
   }
@@ -252,12 +256,10 @@ body {
   background-color: #D9D9D9;
   height: 16px;
   border-radius: 1rem;
-  // width: 80%;
-  // margin: 10px auto;
 }
 
 .progress-bar {
-  background: linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
+  background: linear-gradient(to right, rgba(0,175,176,1) 0%, rgba(0,49,50,1) 100%);
 }
 
 /* Loading indicator */
@@ -315,7 +317,7 @@ body {
     }
     /* Half gradients */
     &:before {
-      background-image: linear-gradient(to bottom, #0029DD 0%, #D700D0 100%);
+       background-image: linear-gradient(to bottom, #003132 0%, #00AFB0 100%);
     }
     &:after {
         background-image: linear-gradient(to bottom, #ffffff 0%, #D8D8D8 100%);
@@ -392,13 +394,13 @@ footer {
     padding-bottom: 0;
     font-size: 1.9em;
     color: black;
-    caret-color: #0012B9;
+    caret-color: #00AFB0;
     text-overflow: ellipsis;
     transition: all 0.5s ease;
     margin: 0 auto;
 
     &:focus {
-      border-image:  linear-gradient(to right, rgba(0,41,221,1) 0%, rgba(215,1,208,1) 100%);
+      border-image:  linear-gradient(to right, rgba(0,49,50,1) 0%, rgba(0,175,176,1) 100%);
       border-image-slice: 1;
       box-shadow: none;
       background: none;
@@ -479,6 +481,18 @@ footer {
 
       &:hover {
         color: black;
+      }
+    }
+
+    a.upgrade-link {
+      color: black;
+      padding-bottom: 1px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: #00AFB0;
+        border-bottom: 1px solid #00afb0;
       }
     }
 </style>

@@ -1,4 +1,4 @@
-<p align="center"><img src="/ride-receipts.png" alt="Ride Receipts" width="350"></p>
+<p align="center"><img src="static/ride-receipts.svg" alt="Ride Receipts" width="350"></p>
 
 <p align="center">
 <a href="https://travis-ci.org/ridereceipts/ridereceipts">
@@ -29,9 +29,7 @@
 
 To download Ride Receipts, please visit [https://www.ridereceipts.io](https://www.ridereceipts.io)
 
-*Note*:
-In order to make the app work. Make sure you have latest chrome installed in your system. Also sometimes captcha might not be resolved automatically. In that case you might have to resolve it manually from the open browser from the app.
-For Windows make sure you allow access to browser via firewall when prompted.
+To get expense report in excel format and no limitations on filter, you can try out our [Ride Receipts Pro](https://www.ridereceipts.io). It's paid app available for $9.99
 
 ## Features
 
@@ -39,12 +37,11 @@ For Windows make sure you allow access to browser via firewall when prompted.
 - [x] Categorized by Year and Month
 - [x] Invoices are renamed by date and timestamp. E.g. Jan-30-2018-9am.PDF
 - [x] Option to filter invoices by a specific month(s) or year(s)
-- [x] Supported on all Platforms i.e Windows, Mac & Linux
-- [x] Take pdf screenshot of receipts of your trip page.
+- [x] Supported on Windows & Mac
 - [x] Lyft Integration
 - [x] Expenditure stat of your trip depending on your filter you choose
+- [x] Categorizes **Uber** and **Uber Eats** receipts
 - [ ] Outlook integration for Lyft
-- [ ] Automatically separate business from personal invoices (Maybe only for Lyft)
 
 ## Why
 
@@ -62,22 +59,18 @@ Your invoices will be named according to the date and time of your trip, and org
 
 ## Requirements
 
-Since Electron is not 100% headless, we're using [Google Puppeteer](https://github.com/GoogleChrome/puppeteer) to scrape the invoices from your Uber account. For Lyft we utilize Gmail API to scan your email only for **Lyft receipts**.
+For Uber and Lyft we utilize Gmail API to scan your email only for **receipts**. 
+Make sure your system has latest Chrome Browser installed (v69 or above).
 
 Ride Receipts works on both Mac and PC.
 
-## Limitations (Uber)
-
-Ride Receipts scrapes your user account on the website, you may be halted by Uber's rate limiting. Please do not run the app more than once in the same hour. If your IP address gets banned, don’t panic, this is only temporary and you’ll be able to access Uber’s website again in an hour or so. We recommend downloading all the invoices you need in one go. After all, that’s why we built it!
+## Limitations
 
 Currently Ride Receipts cannot distinguish between business and personal invoices. Our recommended workaround is to use Uber’s monthly business travel report to cross reference with all of the invoices from Ride Receipts and delete the ones you don’t intend to claim for your taxes or company reimbursement. Ride Receipts automatically renames all of your invoices by the date and time of the trip, and organizes them by month in folders, so it’s easier to tell what’s what.
 
 ## Security
 
-Ride Receipts does not store your login credentials, personal information or any other data. This application operates without a database and it is solely automating on the Chromium browser as you type for Uber and scanning email only for **receipts** if you choose Lyft.
-
-Simply put, using Ride Receipts is no different security-wise than if you were to log into your Uber account manually through your regular browser. By using Ride Receipts, you’re essentially telling the browser to do this for you automatically.
-
+Ride Receipts does not store your login credentials, personal information or any other data. This application operates without a database. It only scans email for **receipts** with **read-only** access.
 
 ## Developer Notes
 
@@ -109,7 +102,7 @@ npm run lint
 
 - [Electron Vue](https://github.com/SimulatedGREG/electron-vue)
 - [Vue](https://www.vuejs.org)
-- [DeathByCaptcha](http://www.deathbycaptcha.com)
+- [Chrome Launcher](https://github.com/GoogleChrome/chrome-launcher)
 - [Google Puppeteer](https://github.com/GoogleChrome/puppeteer)
 - [Bootstrap](https://getbootstrap.com/)
 

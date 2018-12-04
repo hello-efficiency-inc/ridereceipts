@@ -13,15 +13,19 @@ async function launch (puppeteer) {
     '--headless',
     '--disable-gpu',
     '--no-sandbox',
+    '--no-first-run',
+    '--no-zygote',
     '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage'
+    '--disable-dev-shm-usage',
+    '--proxy-server="direct://"',
+    '--proxy-bypass-list=*'
   ]
   return chromeLauncher.launch({
     chromeFlags: flag
   })
 }
 
-export default async function (email, headers, year, month, invoiceDate, html) {
+export default async function (email, headers, year, month, invoiceDate, html, rideType) {
   const documentDir = jetpack.cwd(store.get('invoicePath'))
   const chrome = await launch(puppeteer)
   store.set('processPID', chrome.pid) // Store process ID to kill when app quits
@@ -31,18 +35,20 @@ export default async function (email, headers, year, month, invoiceDate, html) {
     browserWSEndpoint: webSocketDebuggerUrl
   })
 
+  const rideDirectory = rideType
+
   const page = await browser.newPage()
   await page.setCacheEnabled(true)
   await page.setExtraHTTPHeaders(headers)
   await page.setContent(html)
-  await page.waitFor(2000)
+  await page.waitFor(1000)
 
-  if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/`))) {
-    jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/Lyft/${year}/${month}/`))
+  if (!jetpack.exists(documentDir.path(`${documentDir.path()}/${email}/${rideDirectory}/${year}/`))) {
+    jetpack.dir(documentDir.path(`${documentDir.path()}/${email}/${rideDirectory}/${year}/`))
   }
 
   await page.emulateMedia('print')
-  const receiptFilePath = `${documentDir.path()}/${email}/Lyft/${year}/${month}/Receipt-${invoiceDate}.pdf`
+  const receiptFilePath = `${documentDir.path()}/${email}/${rideDirectory}/${year}/${rideDirectory}-${invoiceDate}.pdf`
   await page.pdf({
     path: receiptFilePath,
     format: 'A4',
@@ -50,5 +56,8 @@ export default async function (email, headers, year, month, invoiceDate, html) {
   })
 
   store.delete('browserEndpoint')
+  await page.close()
   await browser.close()
+  await chrome.kill()
+  return true
 }

@@ -106,7 +106,9 @@
               </div>
               <p v-if="invoiceCount > 0" class="text-center">
                 <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started" >View Receipts</button>
-                <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
+              </p>
+              <p v-if="invoiceCount > 0" class="text-center">
+                Run again: <router-link :to="{ name: 'uber'}" class="mr-1 font-weight-bold" tag="a">Uber</router-link> <router-link :to="{ name: 'lyft'}" class="font-weight-bold" tag="a">Lyft</router-link>
               </p>
               <p v-if="invoiceCount === 0" class="text-center">
                 <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
@@ -129,12 +131,11 @@
         </section>
       </transition>
     </main>
-    <footer class="mt-auto contribution-box p-4" v-if="form === 'DOWNLOADED'">
+    <footer class="mt-auto" v-if="form === 'DOWNLOADED'"></footer>
+    <footer class="mt-auto p-4" v-if="form === 'DOWNLOADED'">
       <div class="row">
         <div class="col-md-10 mx-auto">
-          <p class="text-center mb-1">Did you find this app useful?</p>
-          <p class="text-center">If so, please make a contribution so we can keep maintaining Ride Receipts.</p>
-          <p class="text-center">👉 <a href="https://paypal.me/UberRun" class="ml-1 mr-1 js-external-link">Click here to contribute </a> 👈</p>
+          <p class="text-center">Upgrade to Ride Receipts PRO and get an itemized Excel doc of all your trips.</p>
         </div>
       </div>
     </footer>
@@ -156,7 +157,7 @@
 import { parse } from 'url'
 import oauth from '../services/oauth'
 import dayjs from 'dayjs'
-import puppeteerLyft from '../services/puppeteer_lyft'
+import puppeteerLyft from '../services/puppeteer'
 import axios from 'axios'
 import _ from 'lodash'
 import cheerio from 'cheerio'
@@ -325,49 +326,69 @@ export default {
         return
       }
 
-      const list = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages?q='from:"Lyft Ride Receipt" after:${startDate} before:${endDate}'`, {
-        headers: {
-          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
-        }
-      })
+      const emails = []
+      let nextToken = null
 
-      if (list.data.resultSizeEstimate === 0) {
+      do {
+        let apiUrl
+        if (nextToken) {
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?pageToken=${nextToken}&q='from:"Lyft Ride Receipt" after:${startDate} before:${endDate}'`
+        } else {
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?q='from:"Lyft Ride Receipt" after:${startDate} before:${endDate}'`
+        }
+        const list = await axios.get(apiUrl, {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
+          }
+        })
+
+        if (list.data.messages.length > 0) {
+          for (let i = 0; i < list.data.messages.length; i++) {
+            emails.push(list.data.messages[i])
+          }
+        }
+
+        if (typeof list.data.nextPageToken !== 'undefined') {
+          nextToken = list.data.nextPageToken
+        } else {
+          nextToken = null
+        }
+      } while (nextToken !== null)
+
+      if (emails.length === 0) {
         this.invoiceCount = 0
         this.downloadMessage(0)
         self.form = 'DOWNLOADED'
       } else {
-        this.downloadMessage(list.data.messages.length)
-        messages = list.data.messages
+        this.downloadMessage(emails.length)
+        messages = emails
         this.invoiceCount = messages.length
 
         if (messages.length > 0) {
           this.form = 'INVOICE_COUNT'
         }
-
         if (typeof messages !== 'undefined') {
-          messages.forEach((value, i) => {
-            axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${value.id}`, {
+          for (let i = 0; i < messages.length; i++) {
+            const data = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${messages[i].id}`, {
               headers: {
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
               }
-            }).then((data) => {
-              self.processEmails(data.data, user)
-              if (messages.length !== 1) {
-                self.progress = (messages.length - 1) ? _.ceil(_.divide(i + 1, messages.length) * 100) : _.ceil(_.divide(i, messages.length) * 100)
-              } else {
-                self.progress = 100
-              }
-              if (self.progress === 100) {
-                self.form = 'DOWNLOADED'
-                const notification = new Notification('Ride Receipts', {
-                  body: 'Success! All invoices have been downloaded for you.'
-                })
-                notification.onclick = () => {
-                  console.log('Notification clicked')
-                }
-              }
             })
-          })
+            const processed = await self.processEmails(data.data, user)
+            if (processed) {
+              const number = i + 1
+              self.progress = _.ceil(_.divide(number, messages.length) * 100)
+            }
+            if (self.progress === 100) {
+              self.form = 'DOWNLOADED'
+              const notification = new Notification('Ride Receipts', {
+                body: 'Success! All receipts have been downloaded for you.'
+              })
+              notification.onclick = () => {
+                console.log('Notification clicked')
+              }
+            }
+          }
         }
       }
     },
@@ -402,13 +423,14 @@ export default {
         this.navigation = true
       }
 
-      puppeteerLyft(
+      return puppeteerLyft(
         user.email,
         Object.assign({}, ...header),
         dayjs(date).format('YYYY'),
         dayjs(date).format('MMMM'),
         dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
-        html.toString()
+        html.toString(),
+        'Lyft'
       )
     },
     openInvoiceFolder () {

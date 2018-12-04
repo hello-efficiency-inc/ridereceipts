@@ -4,7 +4,7 @@ import { OUTLOOK_CLIENT_ID, GOOGLE_CLIENT_ID, OUTLOOK_CLIENT_SECRET } from '../c
 
 const GOOGLE_AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 const GOOGLE_TOKEN_URL = 'https://www.googleapis.com/oauth2/v4/token'
-const GOOGLE_REDIRECT_URI = 'http://localhost'
+const GOOGLE_REDIRECT_URI = 'org.ridereceipts.ridereceipts:redirect_uri_path'
 const GOOGLE_PROFILE_URL = 'https://www.googleapis.com/userinfo/v2/me'
 const GOOGLE_SCOPE = 'profile email https://www.googleapis.com/auth/gmail.readonly'
 

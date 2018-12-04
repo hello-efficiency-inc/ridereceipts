@@ -5,111 +5,27 @@
     </header>
     <main class="mt-5" @keyup.enter="submitForm">
       <transition name="fade" mode="out-in">
-        <section v-if="form === null" key="loading">
-          <div class="loading">
-            <div class="inner"></div>
-          </div>
-        </section>
-        <section v-if="form === 'EMAIL'" key="email">
+        <section v-if="form === 'LOGIN_FORM'" key="loginForm" class="p-3 text-center">
           <div class="row">
-            <div class="col-8 mx-auto">
-              <p class="sign-in-text text-center mb-5">Enter the email address associated with your Uber account</p>
-            </div>
-            <div class="col-8 mx-auto">
-              <div class="form-group">
-                <b-form-input id="email"
-                v-model.trim="fields.email"
-                type="text"
-                :readonly="!emailError"
-                :state="emailError"
-                aria-describedby="email emailFeedback"
-                placeholder="Email Address" required></b-form-input>
-                <b-form-invalid-feedback id="emailFeedback">
-                  'Oops! There is no account associated with this email address.'
-                </b-form-invalid-feedback>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section v-if="form === 'CAPTCHA'" key="captcha">
-          <div class="row">
-            <div class="col-8 mx-auto">
-              <p class="sign-in-text text-center mb-5">Verifying your account. This takes approximately 1 minute.</p>
-              <div class="loading">
+            <div class="col-md-10 mx-auto">
+              <p class="sign-in-text mb-5">Sign in to your Gmail account to automatically download your Uber receipts. <i id="privacy" class="far fa-2x fa-question-circle"></i></p>
+              <p class="text-center"><button type="button" @click="signIn('google')" class="btn btn-lg btn-started" v-if="!loading">Sign In to Gmail</button></p>
+              <b-popover  ref="popover" target="privacy" triggers="click focus" placement="bottom">
+                <template slot="title">Privacy</template>
+                Ride Receipts is an automation app that has no database; therefore, it does not store your login credentials, personal information or any other data. Once you log in, we’ll fetch your Uber or Lyft receipts and auto-generate PDFs for you.
+                <br/>
+                <p class="text-right"><a class="js-external-link" href="https://ridereceipts.io/privacy">Learn more</a></p>
+              </b-popover>
+              <div class="loading" v-if="loading">
                 <div class="inner"></div>
               </div>
             </div>
           </div>
         </section>
-        <section v-if="form === 'PASSWORD'" key="password">
-          <div class="col-8 mx-auto">
-            <p class="sign-in-text text-center mb-5">Enter the password for your Uber<br/>account <i id="user-password" class="far fa-2x fa-question-circle"></i></p>
-          </div>
-          <div class="col-8 mx-auto">
-            <div class="form-group">
-              <b-form-input
-                id="password"
-                v-model.trim="fields.password"
-                type="password"
-                :readonly="!passError"
-                :state="passError"
-                aria-describedby="password passwordFeeback"
-                placeholder="Password">
-              </b-form-input>
-              <img class="password-lock" src="static/password-lock.svg">
-              <b-form-invalid-feedback id="passwordFeedback">
-                Oops! That is not the correct password. Unfortunately you will have to start again because the app does
-                not store any information.
-              </b-form-invalid-feedback>
-            </div>
-            <b-popover  ref="popover" target="user-password" triggers="click focus" placement="bottom">
-               <template slot="title">Security</template>
-               Ride Receipts is an automation app that tells the Chromium browser to download your receipts/invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
-               <br/>
-               <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
-            </b-popover>
-          </div>
-        </section>
-        <section v-if="form === 'VERIFICATION'" key="verification">
-          <div class="col-8 mx-auto">
-            <p class="sign-in-text text-center mb-5">
-              Enter the Uber verification code sent to you via SMS <i id="verification-code" class="far fa-2x fa-question-circle"></i>
-            </p>
-          </div>
-          <div class="col-8 mx-auto">
-            <div class="form-group">
-              <b-popover ref="popover" target="verification-code" triggers="click focus" placement="bottom">
-                 <template slot="title">Security</template>
-                 Ride Receipts is an automation app that tells the Chromium browser to download your receipts/invoices. This app has no database; therefore, it does not store your login credentials, personal information or any other data. It is as secure as logging into your Uber account through your browser.
-                 <br/>
-                 <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#security">Learn more</a></p>
-              </b-popover>
-              <b-form-input
-                id="verification"
-                v-model.trim="fields.verification_code"
-                type="text"
-                size="4"
-                :readonly="!veriError"
-                :state="veriError"
-                aria-describedby="verification verificationFeeback"
-                placeholder="Verification code"></b-form-input>
-                <b-form-invalid-feedback id="verificationFeedback">
-                  Oops! That is not the correct verification code. Unfortunately you will have to start again because the app does not store any information.
-                </b-form-invalid-feedback>
-              </div>
-          </div>
-        </section>
-        <section v-if="form === 'FILTER_OPTION'" key='filteroption'>
+        <section v-if="form === 'FILTER_OPTION'" key="filteroption">
           <div class="row">
-            <div class="col-9 mx-auto">
-                <p class="sign-in-text text-center mb-5">Which receipts/invoices would you like to <br/> download? <i id="filter-option" class="far fa-2x fa-question-circle"></i></p>
-                <b-popover ref="popover" target="filter-option" triggers="click" placement="bottom">
-                   <template slot="title">Note</template>
-                   Ride Receipts can only download the invoices and/or receipts that exist in your Uber account.
-                   <br/>
-                   <br/>
-                   <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#limitations">Learn more</a></p>
-                </b-popover>
+            <div class="col-8 mx-auto">
+              <p class="sign-in-text text-center mb-5">Which receipts would you like to <br/> download?</p>
             </div>
             <div class="col-7 mx-auto">
               <div class="form-group">
@@ -117,13 +33,13 @@
                   <div class="col">
                     <div class="form-check">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="radio"  v-model="fields.filter_option" name="filter" value="previousyear">
+                        <input class="form-check-input" type="radio"  v-model="filter_option" name="filter" value="previousyear">
                         Previous year
                       </label>
                     </div>
                     <div class="form-check">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" value="currentyear">
+                        <input class="form-check-input" type="radio" v-model="filter_option" name="filter" value="currentyear">
                         Current year
                       </label>
                     </div>
@@ -131,13 +47,13 @@
                   <div class="col">
                     <div class="form-check">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" value="lastthreemonths">
+                        <input class="form-check-input" type="radio" v-model="filter_option" name="filter" value="lastthreemonths">
                         Last 3 months
                       </label>
                     </div>
                     <div class="form-check">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="radio" v-model="fields.filter_option" name="filter" value="lastmonth">
+                        <input class="form-check-input" type="radio" v-model="filter_option" name="filter" value="lastmonth">
                         Last month
                       </label>
                     </div>
@@ -147,30 +63,18 @@
             </div>
           </div>
         </section>
-        <section v-if="form === 'GENERATE_LINKS'" key='generatelinks'>
+        <section v-if="form === 'INVOICE_COUNT'" key="invoicecounts">
           <div class="row">
             <div class="col-8 mx-auto">
-              <p class="sign-in-text text-center">Checking your Uber account for all receipts/invoices within the time frame you selected. This could take 10 mins or more.</p>
-            </div>
-            <div class="col-8 mx-auto">
-              <div class="loading">
-                <div class="inner"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section v-if="form === 'INVOICE_COUNT'" key='invoicecount'>
-          <div class="row">
-            <div class="col-8 mx-auto">
-              <p class="sign-in-text text-center">{{ downloadingMessage }}</p>
+              <p class="sign-in-text mb-5 text-center">{{ downloadingMessage }}</p>
               <br>
               <div class="progress">
-                <div class="progress-bar" role="progressbar" :style="{ width: percent + '%' }" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
           </div>
         </section>
-        <section v-if="form === 'DOWNLOADED'" key='downloaded'>
+        <section v-if="form === 'DOWNLOADED'" key="downloaded">
           <div class="row">
             <div class="col-8 mx-auto">
               <p class="sign-in-text mb-4 text-center" v-if="invoiceCount > 0">Success! All receipts have been downloaded for you.</p>
@@ -189,22 +93,22 @@
                 <div class="card">
                   <div class="card-body">
                     <carousel :navigationEnabled="navigation" :paginationEnabled="pagination" :perPage="perPage">
-                        <slide class="d-flex flex-row" v-for="rate in rates" :key="rate.currency">
-                          <img src="static/piggy-bank.svg" width="86" class="mr-4">
-                          <p class="card-text">
-                            Total spend<br/>
-                            <span class="trip-count">{{ rate.currency }} {{ Number(rate.amount.reduce((a, b) => a + b, 0).toFixed(2)) }}</span>
-                          </p>
-                        </slide>
+                      <slide class="d-flex flex-row" v-for="rate in rates" :key="rate.currency">
+                        <img src="static/piggy-bank.svg" width="86" class="mr-4">
+                        <p class="card-text">
+                          Total spend<br/>
+                          <span class="trip-count">{{ rate.currency }} {{ Number.parseFloat(rate.amount.reduce((a, b) => a + b, 0) * 100 / 100).toFixed(2) }}</span>
+                        </p>
+                      </slide>
                     </carousel>
                   </div>
                 </div>
               </div>
               <p v-if="invoiceCount > 0" class="text-center">
-                <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started" >View Receipts</button><br/><br/>
-                <router-link :to="{ name: 'main-page' }" class="startagain-link" tag="a">
-                  Start again <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </router-link>
+                <button type="button" @click.stop.prevent="openInvoiceFolder()" class="btn btn-lg btn-started" >View Receipts</button>
+              </p>
+              <p v-if="invoiceCount > 0" class="text-center">
+                Run again: <a href="#" class="mr-1 font-weight-bold" @click="startAgain">Uber</a> <router-link :to="{ name: 'lyft'}" class="font-weight-bold" tag="a">Lyft</router-link>
               </p>
               <p v-if="invoiceCount === 0" class="text-center">
                 <router-link :to="{ name: 'main-page' }" class="btn btn-lg btn-started" tag="button">Start again</router-link>
@@ -212,260 +116,107 @@
             </div>
           </div>
         </section>
-        <section v-if="form === 'error-captcha'" key="errorcaptcha">
-          <div class="row">
-            <div class="col-8 mx-auto">
-              <p class="sign-in-text text-center">Ride Receipts failed to verify your account. Please try again or please solve recaptcha manually from browser.</p>
-            </div>
-          </div>
-        </section>
         <section v-if="form === 'CHROME_NOT_FOUND'" key="chomenotfound">
           <div class="row">
             <div class="col-10 mx-auto">
               <p class="sign-in-text text-center">
-                It seems like you don't have Chromium installed. Please download it from <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a>. Place the file on your desktop and unzip it.
-             </p>
+                It seems like you don't have Chromium installed. Please download it from <a class="js-external-link" href="https://download-chromium.appspot.com/">here</a>.
+              </p>
             </div>
           </div>
         </section>
       </transition>
     </main>
-    <footer class="mt-auto p-4" v-if="form === 'INVOICE_COUNT'">
-      <div class="row">
-        <div class="col">
-          <p class="progress-tip text-center pt-5"><i id="progress-tip" class="far fa-2x fa-question-circle"></i></p>
-          <b-popover  ref="popover" target="progress-tip" triggers="click" placement="top">
-             <template slot="title">Speed</template>
-             We purposely check your account slowly to prevent the Uber website from knowing you are running a script.
-             <br/>
-             <p class="text-right"><a class="js-external-link" href="https://github.com/mrgodhani/uberrun#limitation">Learn more</a></p>
-          </b-popover>
-        </div>
-      </div>
-    </footer>
-    <footer class="mt-auto contribution-box p-4" v-if="hideContribution">
+    <footer class="mt-auto" v-if="form === 'DOWNLOADED'"></footer>
+    <footer class="mt-auto p-4" v-if="form === 'DOWNLOADED'">
       <div class="row">
         <div class="col-md-10 mx-auto">
-          <p class="text-center mb-1">Did you find this app useful?</p>
-          <p class="text-center">If so, please make a contribution so we can keep maintaining Ride Receipts.</p>
-          <p class="text-center">👉 <a href="https://paypal.me/UberRun" class="ml-1 mr-1 js-external-link">Click here to contribute </a> 👈</p>
+          <p class="text-center"><a href="https://ridereceipts.io" class="upgrade-link js-external-link">Upgrade to Ride Receipts PRO and get an itemized Excel doc of all your trips. <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a></p>
         </div>
       </div>
     </footer>
-    <footer class="mt-auto p-4" v-if="hideNavigation">
-      <div class="row" v-if="!disableButton">
+    <footer class="mt-auto p-4" v-if="form !== 'DOWNLOADED'">
+      <div class="row">
         <div class="col">
           <router-link :to="{ name: 'main-page' }" tag="button" class="btn btn-outline-primary btn--submit back-btn float-left mt-3" v-if="!hideBackButton">
             <img class="arrow" src="static/back-arrow.svg">Back
           </router-link>
         </div>
-        <div class="col" v-if="!hideButton">
-            <button v-if="!errorButton" type="button" @click="submitForm" class="btn btn-outline-primary btn--submit float-right mt-3" >Next<img class="arrow" src="static/next-arrow.svg"></button>
-            <button type="button" v-if="errorButton" @keyup.enter="startForm()" @click="startAgain()" class="btn btn-outline-primary btn--submit-start float-right mt-3">Start Again<img class="arrow" src="static/next-arrow.svg"></button>
+        <div class="col">
+          <button v-if="!hideButton" type="button" @click="submitForm" class="btn btn-outline-primary btn--submit float-right mt-3" >Next<img class="arrow" src="static/next-arrow.svg"></button>
         </div>
       </div>
     </footer>
-    <footer class="mt-auto p-4" v-if="showBlank"></footer>
   </div>
 </template>
 <script>
-import puppeteer from '../services/puppeteer_uberv2'
+import puppeteerUber from '../services/puppeteer'
+import { parse } from 'url'
+import oauth from '../services/oauth'
+import dayjs from 'dayjs'
+import cheerio from 'cheerio'
+import axios from 'axios'
 import _ from 'lodash'
 
 export default {
   data () {
     return {
-      form: null,
+      form: 'LOGIN_FORM',
+      filter_option: null,
       loading: false,
-      fields: {
-        email: null,
-        password: null,
-        verification_code: null,
-        filter_option: null
-      },
-      invoiceCount: null,
-      invoiceData: null,
-      rates: [],
-      online: true,
-      emailError: true,
-      passError: true,
-      veriError: true,
       downloadingMessage: null,
-      percent: null,
-      downloaded: false,
-      dir_cleanup: false,
+      totalAmount: [],
       pagination: false,
+      perPage: 1,
+      rates: [],
+      invoiceCount: 0,
       navigation: true,
-      perPage: 1
+      progress: ''
     }
   },
-  mounted () {
-    this.startAgain()
-    this.$electron.ipcRenderer.on('onlinestatus', (event, data) => {
-      if (data === 'offline') {
-        this.online = false
-        this.emailError = false
-        this.passError = false
-        this.veriError = false
-      } else {
-        this.online = true
-      }
-    })
-    this.$electron.ipcRenderer.on('form', (event, data) => {
-      this.emailError = true
-      this.passError = true
-      this.veriError = true
-      this.loading = false
-
-      if (data === 'EMAIL') {
-        this.fields = {
-          email: null,
-          password: null,
-          verification_code: null,
-          filter_option: null
-        }
-      }
-
-      if (data === 'DOWNLOADED') {
-        this.calculateAmountSpent()
-        const notification = new Notification('Ride Receipts', {
-          body: 'Success! All invoices have been downloaded for you.'
-        })
-        notification.onclick = () => {
-          console.log('Notification clicked')
-        }
-      }
-
-      if (data !== 'error-email' && data !== 'error-pass' && data !== 'error-veri') {
-        this.form = data
-      }
-
-      if (data === 'error-email') {
-        this.emailError = false
-      }
-
-      if (data === 'error-pass') {
-        this.passError = false
-      }
-
-      if (data === 'error-veri') {
-        this.veriError = false
-      }
-    })
-    this.$electron.ipcRenderer.on('invoiceTotal', (event, data) => {
-      this.invoiceCount = data.length
-      this.invoiceData = data
-      this.downloadMessage(data.length)
-    })
-    this.$electron.ipcRenderer.on('progress', (event, data) => {
-      this.percent = data
-    })
-    this.$electron.ipcRenderer.on('dircleanup', (event, data) => {
-      this.percent = null
-      this.dir_cleanup = true
-    })
-  },
   computed: {
-    showBlank () {
-      if (this.form === null) {
-        return true
-      }
-
-      return false
-    },
-    hideNavigation () {
-      if (this.form === 'DOWNLOADED') {
-        return false
-      }
-
-      if (this.form === 'INVOICE_COUNT') {
-        return false
-      }
-
-      if (this.form === null) {
-        return false
-      }
-
-      return true
-    },
-    hideContribution () {
-      if (this.form === 'DOWNLOADED') {
-        return true
-      }
-      return false
-    },
-    disableButton () {
-      if (this.form === 'DOWNLOADED') {
-        return true
-      }
-      if (this.form === 'GENERATE_LINKS') {
-        return true
-      }
-      if (this.form === 'INVOICE_COUNT') {
-        return true
-      }
-      if (this.form === 'CAPTCHA') {
-        return true
-      }
-      if (!this.online) {
-        return true
-      }
-      return false
-    },
     hideBackButton () {
-      if (this.form === 'EMAIL') {
-        return false
-      }
-      return true
-    },
-    hideButton () {
-      if (this.form === 'error-captcha') {
-        return false
-      }
-      return false
-    },
-    errorButton () {
-      if (!this.passError) {
+      if (this.form === 'INVOICE_COUNT') {
         return true
       }
-      if (!this.emailError) {
-        return true
-      }
-      if (!this.veriError) {
+      if (this.form === 'FILTER_OPTION') {
         return true
       }
       if (this.form === 'ERROR') {
         return true
       }
-      if (this.form === 'CHROME_NOT_FOUND') {
+      if (this.form === 'DOWNLOADED') {
         return true
       }
-      if (this.form === 'error-captcha') {
+    },
+    hideButton () {
+      if (this.form === 'LOGIN_FORM') {
         return true
       }
-      return false
+      if (this.form === 'INVOICE_COUNT') {
+        return true
+      }
+      if (this.form === 'DOWNLOADED') {
+        return true
+      }
+      if (this.form === 'ERROR') {
+        return true
+      }
     }
   },
   methods: {
-    calculateAmountSpent () {
-      this.invoiceData.forEach((value, i) => {
-        const amount = value.clientFare
-        const currency = value.currencyCode
-        const check = _.findIndex(this.rates, ['currency', currency])
-        if (check < 0) {
-          this.rates.push({
-            currency: currency,
-            amount: [amount]
-          })
-        } else {
-          this.rates[check].amount.push(amount)
-        }
-      })
-      if (this.rates.length === 1) {
-        this.navigation = false
-      } else {
-        this.navigation = true
-      }
+    startAgain () {
+      this.form = 'LOGIN_FORM'
+      this.filter_option = null
+      this.loading = false
+      this.downloadingMessage = null
+      this.totalAmount = []
+      this.pagination = false
+      this.perPage = 1
+      this.rates = []
+      this.invoiceCount = 0
+      this.navigation = true
+      this.progress = ''
     },
     downloadMessage (count) {
       if (count > 76) {
@@ -491,37 +242,258 @@ export default {
         this.downloadingMessage = `You have 0 trips within the time frame you selected.`
       }
     },
-    startAgain () {
+    signInWithPopup (provider) {
+      return new Promise((resolve, reject) => {
+        const authWindow = new this.$electron.remote.BrowserWindow({
+          width: 500,
+          height: 600,
+          show: true
+        })
+
+        const authUrl = oauth.buildAuthUrl(provider)
+
+        function handleNavigation (url) {
+          const query = parse(url, true).query
+          if (query) {
+            if (query.error) {
+              authWindow.removeAllListeners('closed')
+              setImmediate(() => authWindow.close())
+              resolve(false)
+            } else if (query.code) {
+              authWindow.removeAllListeners('closed')
+              setImmediate(() => authWindow.close())
+              resolve(query.code)
+            }
+          }
+        }
+
+        authWindow.on('closed', () => {
+          resolve(false)
+          throw new Error('Auth window was closed by user')
+        })
+
+        authWindow.webContents.on('will-navigate', (event, url) => {
+          handleNavigation(url)
+        })
+
+        authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
+          handleNavigation(newUrl)
+        })
+
+        authWindow.loadURL(authUrl)
+      })
+    },
+    async signIn (provider) {
       this.loading = true
-      puppeteer()
+      let token
+      const code = await this.signInWithPopup(provider)
+      if (code) {
+        try {
+          token = await oauth.fetchToken(provider, code)
+        } catch (e) {
+        }
+      } else {
+        this.loading = false
+      }
+
+      if (token) {
+        const profile = await oauth.fetchGoogleProfile(provider, token.access_token)
+        this.loading = false
+        localStorage.setItem('token_data', JSON.stringify(token))
+        localStorage.setItem('user_data', JSON.stringify(profile))
+        this.form = 'FILTER_OPTION'
+      }
+    },
+    async submitForm () {
+      let startDate, endDate
+
+      const user = JSON.parse(localStorage.getItem('user_data'))
+      let messages
+      const self = this
+
+      if (this.filter_option === 'currentyear') {
+        startDate = dayjs().startOf('year').unix()
+        endDate = dayjs().endOf('year').unix()
+      } else if (this.filter_option === 'previousyear') {
+        startDate = dayjs().subtract(1, 'years').startOf('year').unix()
+        endDate = dayjs().subtract(1, 'years').endOf('year').unix()
+      } else if (this.filter_option === 'lastmonth') {
+        startDate = dayjs().subtract(1, 'month').startOf('month').unix()
+        endDate = dayjs().startOf('month').unix()
+      } else if (this.filter_option === 'lastthreemonths') {
+        startDate = dayjs().subtract(3, 'month').add(1, 'day').startOf('month').unix()
+        endDate = dayjs().startOf('month').unix()
+      } else {
+        return
+      }
+
+      const emails = []
+      let nextToken = null
+
+      do {
+        let apiUrl
+        if (nextToken) {
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?pageToken=${nextToken}&q='from:"Uber Receipts" after:${startDate} before:${endDate}'`
+        } else {
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?q='from:"Uber Receipts" after:${startDate} before:${endDate}'`
+        }
+        const list = await axios.get(apiUrl, {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
+          }
+        })
+
+        if (list.data.messages.length > 0) {
+          for (let i = 0; i < list.data.messages.length; i++) {
+            emails.push(list.data.messages[i])
+          }
+        }
+
+        if (typeof list.data.nextPageToken !== 'undefined') {
+          nextToken = list.data.nextPageToken
+        } else {
+          nextToken = null
+        }
+      } while (nextToken !== null)
+
+      if (emails.length === 0) {
+        this.invoiceCount = 0
+        this.downloadMessage(0)
+        self.form = 'DOWNLOADED'
+      } else {
+        this.downloadMessage(emails.length)
+        messages = emails
+        this.invoiceCount = messages.length
+
+        if (messages.length > 0) {
+          this.form = 'INVOICE_COUNT'
+        }
+
+        if (typeof messages !== 'undefined') {
+          for (let i = 0; i < messages.length; i++) {
+            const data = await axios.get(`https://www.googleapis.com/gmail/v1/users/me/messages/${messages[i].id}`, {
+              headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
+              }
+            })
+            const processed = await self.processEmails(data.data, user)
+            if (processed) {
+              const number = i + 1
+              self.progress = _.ceil(_.divide(number, messages.length) * 100)
+            }
+            if (self.progress === 100) {
+              self.form = 'DOWNLOADED'
+              const notification = new Notification('Ride Receipts', {
+                body: 'Success! All receipts have been downloaded for you.'
+              })
+              notification.onclick = () => {
+                console.log('Notification clicked')
+              }
+            }
+          }
+        }
+      }
+    },
+    async processEmails (data, user) {
+      var html
+      var currency
+      var totalRate
+      var address
+      var amount
+      var check
+      var country
+      var uberEats
+
+      const header = data.payload.headers.map((item) => {
+        let obj = {}
+        obj[item.name] = item.value
+        return obj
+      })
+      if (data.payload.parts) {
+        html = Buffer.from(data.payload.parts[0].body.data, 'base64')
+      } else {
+        html = Buffer.from(data.payload.body.data, 'base64')
+      }
+      const date = new Date(parseInt(data.internalDate))
+
+      const dom = cheerio.load(html.toString(), {
+        normalizeWhitespace: true
+      })
+
+      try {
+        const newUberEats = dom(`body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr > td > div > div > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table.t7of12.layout > tbody > tr > td > table > tbody > tr:nth-child(1) > td`).text()
+        const oldUberEats = dom('#bgwrapper > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td:nth-child(1) > table:nth-child(3) > tbody > tr > td').text()
+
+        if (dom('.eventinfo').length > 0) {
+          if (_.trim(dom('.topPrice.tal.black').text()).match(/[+-]?\d+(\.\d+)?/) !== null) {
+            amount = _.trim(dom('.topPrice.tal.black').text())
+          } else {
+            amount = _.trim(dom('td.chargedFare').text())
+          }
+          dom('.rideTime').remove()
+          var firstAddress = _.words(_.trim(dom('.firstAddress').text()))
+          address = firstAddress.indexOf('accepted') < 0 ? _.trim(dom('.firstAddress').text()) : _.trim(dom('#cancelledABlock > tbody > tr:nth-child(2) > td > table > tbody > tr > td.tripInfoDescription.gray.vam.tal').text())
+        } else {
+          amount = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > div > span').text())
+          if (newUberEats.includes('ordering')) {
+            address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(4) > tbody > tr:nth-child(2) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr:nth-child(3) > td > table:nth-child(1) > tbody > tr > td > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2) > td').text())
+          } else {
+            address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text())
+          }
+        }
+        if (address) {
+          var geoData = await axios.get(`https://api.ridereceipts.io/geocode?address=${address}`)
+          country = geoData.data.Response.View[0].Result[0].Location.Address.Country
+        } else {
+          country = amount.replace(/\d+([,.]\d+)?/, '').replace(/[^\w+\s]/, '')
+        }
+        var currencyData = await axios.get(`https://restcountries.eu/rest/v2/alpha/${country}?fields=currencies`)
+        if (amount) {
+          currency = currencyData.data.currencies[0].code
+          totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
+          check = _.findIndex(this.rates, ['currency', currency])
+          if (check < 0) {
+            this.rates.push({
+              currency: currency,
+              amount: [totalRate]
+            })
+          } else {
+            this.rates[check].amount.push(totalRate)
+          }
+        }
+
+        if (newUberEats.includes('ordering') || oldUberEats.includes('Uber Eats')) {
+          uberEats = 'UberEats'
+        } else {
+          uberEats = 'Uber'
+        }
+      } catch (e) {
+        console.log(e)
+      }
+
+      if (this.rates.length === 1) {
+        this.navigation = false
+      } else {
+        this.navigation = true
+      }
+
+      try {
+        return puppeteerUber(
+          user.email,
+          Object.assign({}, ...header),
+          dayjs(date).format('YYYY'),
+          dayjs(date).format('MMMM'),
+          dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
+          html.toString(),
+          uberEats
+        )
+      } catch (e) {
+        this.form = 'CHROME_NOT_FOUND'
+      }
     },
     openInvoiceFolder () {
       const documentDir = this.$electronstore.get('invoicePath')
       this.$electron.shell.openItem(documentDir)
-    },
-    submitForm () {
-      switch (this.form) {
-        case 'EMAIL':
-          if (this.fields.email) {
-            this.$electron.ipcRenderer.send('email', this.fields.email)
-          }
-          break
-        case 'PASSWORD':
-          if (this.fields.password) {
-            this.$electron.ipcRenderer.send('password', this.fields.password)
-          }
-          break
-        case 'VERIFICATION':
-          if (this.fields.verification_code) {
-            this.$electron.ipcRenderer.send('code', this.fields.verification_code)
-          }
-          break
-        case 'FILTER_OPTION':
-          if (this.fields.filter_option) {
-            this.$electron.ipcRenderer.send('filter_option', this.fields.filter_option)
-          }
-          break
-      }
     }
   }
 }
