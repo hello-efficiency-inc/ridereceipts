@@ -135,7 +135,8 @@
     <footer class="mt-auto p-4" v-if="form === 'DOWNLOADED'">
       <div class="row">
         <div class="col-md-10 mx-auto">
-          <p class="text-center">Upgrade to Ride Receipts PRO and get an itemized Excel doc of all your trips.</p>
+          <!-- <p class="text-center">Upgrade to Ride Receipts PRO and get an itemized Excel doc of all your trips.</p> -->
+          <p class="text-center">Ride Receipts PRO is coming soon.</p>
         </div>
       </div>
     </footer>
