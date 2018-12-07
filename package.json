@@ -1,6 +1,6 @@
 {
   "name": "ridereceipts",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "author": "Ride Receipts <hello@ridereceipts.io>",
   "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
   "license": "MIT",
