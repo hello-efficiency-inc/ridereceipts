@@ -12,13 +12,30 @@ async function launch (puppeteer) {
   let flag = [
     '--headless',
     '--disable-gpu',
-    '--no-sandbox',
-    '--no-first-run',
-    '--no-zygote',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
     '--proxy-server="direct://"',
-    '--proxy-bypass-list=*'
+    '--proxy-bypass-list=*',
+    '--disable-background-networking',
+    '--disable-background-timer-throttling',
+    '--disable-backgrounding-occluded-windows',
+    '--disable-breakpad',
+    '--disable-client-side-phishing-detection',
+    '--disable-default-apps',
+    '--disable-dev-shm-usage',
+    '--disable-extensions',
+    '--disable-features=site-per-process',
+    '--disable-hang-monitor',
+    '--disable-ipc-flooding-protection',
+    '--disable-popup-blocking',
+    '--disable-prompt-on-repost',
+    '--disable-renderer-backgrounding',
+    '--disable-sync',
+    '--disable-translate',
+    '--metrics-recording-only',
+    '--no-first-run',
+    '--safebrowsing-disable-auto-update',
+    '--enable-automation',
+    '--password-store=basic',
+    '--use-mock-keychain'
   ]
   return chromeLauncher.launch({
     chromeFlags: flag

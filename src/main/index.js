@@ -5,6 +5,7 @@ import fkill from 'fkill'
 import Store from 'electron-store'
 import updateElectron from 'update-electron-app'
 import electronLog from 'electron-log'
+import path from 'path'
 
 import 'electron-context-menu'
 
@@ -30,10 +31,9 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-function createWindow () {
-  // Turn off debug by default
-  store.set('debug', false)
+const openAboutWindow = require('about-window').default
 
+function createWindow () {
   /**
    * Initial window options
    */
@@ -56,7 +56,19 @@ function createWindow () {
   const template = [{
     label: 'Application',
     submenu: [
-      { label: 'About Application', selector: 'orderFrontStandardAboutPanel:' },
+      {
+        label: 'About Application',
+        click: () => openAboutWindow({
+          icon_path: path.join(__static, '/256x256.png'),
+          copyright: 'Copyright (c) 2018 Ride Receipts',
+          open_devtools: process.env.NODE_ENV !== 'production',
+          homepage: 'https:/ridereceipts.io',
+          license: 'MIT',
+          product_name: 'Ride Receipts',
+          package_json_dir: path.join(__dirname, '../..'),
+          use_version_info: false
+        })
+      },
       { type: 'separator' },
       { label: 'Quit',
         accelerator: 'Command+Q',

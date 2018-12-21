@@ -375,7 +375,8 @@ export default {
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
               }
             })
-            const processed = await self.processEmails(data.data, user)
+            const processed = self.processEmails(data.data, user)
+            console.log(processed)
             if (processed) {
               const number = i + 1
               self.progress = _.ceil(_.divide(number, messages.length) * 100)
