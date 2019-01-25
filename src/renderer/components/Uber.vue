@@ -334,9 +334,9 @@ export default {
       do {
         let apiUrl
         if (nextToken) {
-          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?pageToken=${nextToken}&q='from:"Uber Receipts" after:${startDate} before:${endDate}'`
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?pageToken=${nextToken}&q='{from:"Uber Receipts" from:"Reçu Uber"} after:${startDate} before:${endDate}'`
         } else {
-          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?q='from:"Uber Receipts" after:${startDate} before:${endDate}'`
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?q='{from:"Uber Receipts" from:"Reçu Uber"} after:${startDate} before:${endDate}'`
         }
         const list = await axios.get(apiUrl, {
           headers: {
@@ -344,7 +344,7 @@ export default {
           }
         })
 
-        if (list.data.messages.length > 0) {
+        if (typeof list.data.messages !== 'undefined' && list.data.messages.length > 0) {
           for (let i = 0; i < list.data.messages.length; i++) {
             emails.push(list.data.messages[i])
           }
