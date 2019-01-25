@@ -9,7 +9,7 @@ import path from 'path'
 
 import 'electron-context-menu'
 
-let myWindow = null
+// let myWindow = null
 const store = new Store()
 
 updateElectron({
@@ -91,16 +91,10 @@ function createWindow () {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 }
 // Allow only one instance
-const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
-  if (myWindow) {
-    if (myWindow.isMinimized()) myWindow.restore()
-    myWindow.focus()
-  }
-})
-
-if (isSecondInstance) {
+app.requestSingleInstanceLock()
+app.on('second-instance', function (event, argv, cwd) {
   app.quit()
-}
+})
 
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 app.on('ready', createWindow)
