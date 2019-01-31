@@ -27,7 +27,7 @@
 
 ### Download
 
-To download Ride Receipts, please visit [https://www.ridereceipts.io](https://www.ridereceipts.io)
+To download Ride Receipts or purchase Ride Receipts PRO, please visit [https://www.ridereceipts.io](https://www.ridereceipts.io)
 
 ## Features
 
