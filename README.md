@@ -20,7 +20,7 @@
 <a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/ride-receipts/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/328-shield.svg"/></a>
 </p>
 
-> Simple automation desktop app to download and organize your tax invoices from Uber and Lyft.
+> Simple automation desktop app to download and organize your receipts from Uber and Lyft.
 
 
 ![screenshot](/ridereceipt-app.png)
@@ -45,13 +45,13 @@ To download Ride Receipts or purchase Ride Receipts PRO, please visit [https://w
 
 Ride Receipts is essential for anyone who relies on Uber/Lyft for business travel. Whether you’re self-employed or get reimbursed by your employer for travel, you’ll likely need proper tax invoices for accounting purposes.
 
-This was a major pain point for us every year around tax season. Since the current Uber website does not allow you to download all of your invoices for the year at once, you have to manually download, rename, and organize each of your invoices. So you’re either doing it one by one, or if you have a business profile, you still have to download them one month at a time. Uber’s monthly business travel report is great for keeping track of your trips, but these aren’t actual invoices.
+This was a major pain point for us every year around tax season. Since the current Uber website does not allow you to download all of your receipts for the year at once, you have to manually download, rename, and organize each of your invoices. So you’re either doing it one by one, or if you have a business profile, you still have to download them one month at a time. Uber’s monthly business travel report is great for keeping track of your trips, but these aren’t actual receipts.
 
 We created Ride Receipts to address this painfully inefficient process, and now we’re sharing it with everyone who could benefit from this time-saving tool.
 
 ## Solution
 
-Automation! Ride Receipts is an open-source desktop app that automates the process of downloading, renaming, and organizing your Uber invoices. Rather than logging into your Uber account to scan through each of your trips and manually download each invoice, Ride Receipts will automatically do it for you.
+Automation! Ride Receipts is an open-source desktop app that automates the process of downloading, renaming, and organizing your Uber/Lyft receipts. Rather than logging into your Uber account to scan through each of your trips and manually download each receipt, Ride Receipts will automatically do it for you.
 
 Your invoices will be named according to the date and time of your trip, and organized by user account, year and month, in neat and tidy folders on your computer.
 
@@ -61,10 +61,6 @@ For Uber and Lyft we utilize Gmail API to scan your email only for **receipts**.
 Make sure your system has latest Chrome Browser installed (v69 or above).
 
 Ride Receipts works on both Mac and PC.
-
-## Limitations
-
-Currently Ride Receipts cannot distinguish between business and personal invoices. Our recommended workaround is to use Uber’s monthly business travel report to cross reference with all of the invoices from Ride Receipts and delete the ones you don’t intend to claim for your taxes or company reimbursement. Ride Receipts automatically renames all of your invoices by the date and time of the trip, and organizes them by month in folders, so it’s easier to tell what’s what.
 
 ## Security
 
