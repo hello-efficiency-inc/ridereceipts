@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, Menu } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, session } from 'electron'
 import fkill from 'fkill'
 import Store from 'electron-store'
 import updateElectron from 'update-electron-app'
@@ -106,6 +106,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('quit', () => {
+  session.defaultSession.clearStorageData()
   if (store.has('processPID')) {
     fkill(store.get('processPID', {
       force: true
