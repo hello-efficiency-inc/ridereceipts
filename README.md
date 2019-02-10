@@ -11,9 +11,6 @@
 <img src="https://david-dm.org/ridereceipts/ridereceipts.svg" />
 </a>
 <a href="https://david-dm.org/ridereceipts/ridereceipts?type=dev" title="devDependencies status"><img src="https://david-dm.org/ridereceipts/ridereceipts/dev-status.svg"/></a>
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5GHVYY9WEL78Y">
- <img src="https://img.shields.io/badge/Donate-PayPal-green.svg"/>
-</a>
 <a href="https://www.producthunt.com/posts/uber-run">
   <img src="https://img.shields.io/badge/producthunt-vote-orange.svg">
 </a>
