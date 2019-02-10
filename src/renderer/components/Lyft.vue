@@ -155,7 +155,7 @@
   </div>
 </template>
 <script>
-import { parse } from 'url'
+import { URL } from 'url'
 import oauth from '../services/oauth'
 import dayjs from 'dayjs'
 import puppeteerLyft from '../services/puppeteer'
@@ -253,16 +253,17 @@ export default {
         const authUrl = oauth.buildAuthUrl(provider)
 
         function handleNavigation (url) {
-          const query = parse(url, true).query
-          if (query) {
-            if (query.error) {
+          const urlItem = new URL(url)
+          const params = urlItem.searchParams
+          if (params) {
+            if (params.get('error')) {
               authWindow.removeAllListeners('closed')
-              setImmediate(() => authWindow.close())
+              authWindow.close()
               resolve(false)
-            } else if (query.code) {
+            } else if (params.get('code')) {
               authWindow.removeAllListeners('closed')
-              setImmediate(() => authWindow.close())
-              resolve(query.code)
+              authWindow.close()
+              resolve(params.get('code'))
             }
           }
         }

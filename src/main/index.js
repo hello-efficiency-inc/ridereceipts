@@ -4,7 +4,6 @@ import { app, BrowserWindow, ipcMain, Menu, session } from 'electron'
 import fkill from 'fkill'
 import Store from 'electron-store'
 import updateElectron from 'update-electron-app'
-import electronLog from 'electron-log'
 import path from 'path'
 
 import 'electron-context-menu'
@@ -14,8 +13,7 @@ const store = new Store()
 
 updateElectron({
   repo: 'ridereceipts/ridereceipts',
-  updateInterval: '1 hour',
-  logger: electronLog
+  updateInterval: '1 hour'
 })
 
 /**
