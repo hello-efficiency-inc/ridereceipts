@@ -1,7 +1,7 @@
 {
   "name": "ridereceipts",
   "version": "1.7.4",
-  "author": "Ride Receipts <hello@ridereceipts.io>",
+  "author": "Hello Efficiency Inc. <info@helloefficiency.com>",
   "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
@@ -38,7 +38,7 @@
       }
     ],
     "productName": "Ride Receipts",
-    "appId": "io.ridereceipts.ridereceipts",
+    "appId": "io.helloefficiency.ridereceipts",
     "directories": {
       "output": "build"
     },

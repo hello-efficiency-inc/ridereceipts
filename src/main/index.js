@@ -58,7 +58,7 @@ function createWindow () {
         label: 'About Application',
         click: () => openAboutWindow({
           icon_path: path.join(__static, '/256x256.png'),
-          copyright: 'Copyright (c) 2018 Ride Receipts',
+          copyright: 'Copyright (c) 2018 Hello Efficiency Inc.',
           open_devtools: process.env.NODE_ENV !== 'production',
           homepage: 'https:/ridereceipts.io',
           license: 'MIT',
