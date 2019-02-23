@@ -131,8 +131,7 @@
     <footer class="mt-auto p-4" v-if="form === 'DOWNLOADED'">
       <div class="row">
         <div class="col-md-10 mx-auto">
-          <!-- <p class="text-center"><a href="https://ridereceipts.io" class="upgrade-link js-external-link">Upgrade to Ride Receipts PRO and get an itemized Excel doc of all your trips. <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a></p> -->
-          <p class="text-center">Ride Receipts PRO is coming soon</p>
+          <p class="text-center"><a href="https://ridereceipts.io" class="upgrade-link js-external-link">Upgrade to Ride Receipts PRO and get an itemized Excel doc of all your trips. <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a></p>
         </div>
       </div>
     </footer>
