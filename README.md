@@ -107,4 +107,4 @@ npm run lint
 Please feel free to give us suggestions or report a bug by creating a [new issue](https://github.com/ridereceipts/ridereceipts/issues) via Github or messaging on  Twitter: [@ridereceipts](https://twitter.com/ridereceipts). You can also email us at [hello@ridereceipts.io](hello@ridereceipts.io).
 
 ## License
-License by default is [AGPL](https://github.com/ridereceipts/ridereceipts/blob/master/LICENSE). After purchase please refer [COMM-LICENSE](https://github.com/ridereceipts/ridereceipts/blob/master/COMM-LICENSE) is applied
+License by default is [LGPLv3](https://github.com/ridereceipts/ridereceipts/blob/master/LICENSE). After purchase please refer [COMM-LICENSE](https://github.com/ridereceipts/ridereceipts/blob/master/COMM-LICENSE) is applied
