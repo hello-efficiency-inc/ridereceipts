@@ -135,6 +135,7 @@ export default {
         sales_id: data.purchase.id,
         email: data.purchase.email,
         machine_id: machineId,
+        product_type: 'Ride Receipts Basic'
         platform: os.platform() === 'darwin' ? 'Mac' : 'Windows'
       })
       if (activateMachine.data.data.success) {
