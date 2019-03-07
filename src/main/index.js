@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, Menu, session } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, session, shell } from 'electron'
 import fkill from 'fkill'
 import Store from 'electron-store'
 import jetpack from 'fs-jetpack'
@@ -49,19 +49,6 @@ function createWindow () {
   // Create the Application's main menu
   const template = [
     {
-      label: 'About Application',
-      click: () => openAboutWindow({
-        icon_path: path.join(__static, '/256x256.png'),
-        copyright: 'Copyright (c) 2018 Hello Efficiency Inc.',
-        open_devtools: process.env.NODE_ENV !== 'production',
-        homepage: 'https:/ridereceipts.io',
-        license: 'MIT',
-        product_name: 'Ride Receipts',
-        package_json_dir: path.join(__dirname, '../..'),
-        use_version_info: false
-      })
-    },
-    {
       label: 'Edit',
       submenu: [
         { role: 'undo' },
@@ -104,6 +91,10 @@ function createWindow () {
             })
         },
         {
+          label: 'View license',
+          click: () => require('shell').openExternal('http://www.google.com')
+        },
+        {
           label: `Version ${version}`,
           enabled: false
         },
@@ -122,6 +113,10 @@ function createWindow () {
       label: app.getName(),
       submenu: [
         { role: 'about' },
+        {
+          label: 'View license',
+          click: () => shell.openExternal('https://ridereceipts.io/license-agreement/')
+        },
         {
           label: `Version ${version}`,
           enabled: false

@@ -3,7 +3,7 @@
   "version": "1.7.6",
   "author": "Hello Efficiency Inc. <info@helloefficiency.com>",
   "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
-  "license": "MIT",
+  "license": "LGPLv3",
   "main": "./dist/electron/main.js",
   "keywords": [
     "Receipts",
@@ -30,13 +30,6 @@
   },
   "build": {
     "asar": true,
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "ridereceipts",
-        "repo": "ridereceipts"
-      }
-    ],
     "productName": "Ride Receipts",
     "appId": "io.helloefficiency.ridereceipts",
     "directories": {

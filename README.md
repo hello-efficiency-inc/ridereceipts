@@ -97,11 +97,6 @@ npm run lint
 - [Google Puppeteer](https://github.com/GoogleChrome/puppeteer)
 - [Bootstrap](https://getbootstrap.com/)
 
-## Credits
-
-- Adi Ofir ([Break and Enter](https://www.instagram.com/break.enter)) for logo and app design.
-- Meet Godhani ([@mrgodhani](https://twitter.com/mrgodhani)) for all programming.
-
 ## Support / Contribution
 
 Please feel free to give us suggestions or report a bug by creating a [new issue](https://github.com/ridereceipts/ridereceipts/issues) via Github or messaging on  Twitter: [@ridereceipts](https://twitter.com/ridereceipts). You can also email us at [hello@ridereceipts.io](hello@ridereceipts.io).
