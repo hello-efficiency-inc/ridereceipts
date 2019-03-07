@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <!-- <div v-if="this.$store.state.LicenseKey.expiring ||  this.$store.state.LicenseKey.expired" class="expire-notification d-flex justify-content-center align-items-center">
+    <div v-if="this.$store.state.LicenseKey.expiring ||  this.$store.state.LicenseKey.expired" class="expire-notification d-flex justify-content-center align-items-center">
       <div v-if="this.$store.state.LicenseKey.expiring">License is expiring in {{ this.$store.state.LicenseKey.days }} days. <a class="js-external-link renew-link" href="https://gum.co/ridereceiptspro">Click here to renew</a>.</div>
       <div v-if="this.$store.state.LicenseKey.expired">License has expired. <a class="js-external-link renew-link" href="https://gum.co/ridereceiptspro">Click here to renew</a>.</div>
-    </div> -->
+    </div>
     <transition name="fade">
       <router-view></router-view>
     </transition>

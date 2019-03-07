@@ -139,8 +139,8 @@ export default {
       })
       if (activateMachine.data.data.success) {
         store.set('license_key', self.licenseKeyValue)
-        self.licenseKey = key
-        self.licenseError = true
+        this.licenseKey = key
+        this.licenseError = false
       }
     },
     submitLicenseKey () {
@@ -171,7 +171,7 @@ export default {
                 machine_id: machineId
               })
               if (!verifyMachine.data.data.success && verifyMachine.data.data.machines < 2) {
-                self.activateMachine(self.licenseKeyValue, machineId, data)
+                await self.activateMachine(self.licenseKeyValue, machineId, data)
               } else if (!verifyMachine.data.data.success && verifyMachine.data.data.machines === 2) {
                 self.licenseErrorMessage = 'License key usage limit exceeded.'
                 self.licenseError = false

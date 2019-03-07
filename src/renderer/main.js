@@ -4,10 +4,11 @@ import App from './App'
 import router from './router'
 import { remote } from 'electron'
 import jetpack from 'fs-jetpack'
-import Store from 'electron-store'
+import ElectronStore from 'electron-store'
 import VueCarousel from 'vue-carousel'
 
 import './helpers/external_links.js'
+import store from './store'
 
 Vue.use(BootstrapVue)
 Vue.use(VueCarousel)
@@ -21,13 +22,14 @@ if (!jetpack.exists(documentDir.path('Ride Receipts'))) {
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
 
-const store = new Store()
+const electronstore = new ElectronStore()
 
-Vue.prototype.$electronstore = store
+Vue.prototype.$electronstore = electronstore
 
 /* eslint-disable no-new */
 new Vue({
   components: { App },
   router,
+  store,
   template: '<App/>'
 }).$mount('#app')
