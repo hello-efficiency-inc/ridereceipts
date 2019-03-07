@@ -116,12 +116,12 @@ export default {
                 machine_id: machineId
               })
               if (!verifyMachine.data.data.success && verifyMachine.data.data.machines === 0) {
-                self.activateMachine(licenseKey, machineId, data)
+                await self.activateMachine(licenseKey, machineId, data)
               }
               self.licenseKey = licenseKey
               self.loading = false
             } catch (e) {
-              self.activateMachine(licenseKey, machineId, data)
+              await self.activateMachine(licenseKey, machineId, data)
               self.licenseKey = licenseKey
               self.loading = false
             }
@@ -139,7 +139,7 @@ export default {
         platform: os.platform() === 'darwin' ? 'Mac' : 'Windows'
       })
       if (activateMachine.data.data.success) {
-        store.set('license_key', self.licenseKeyValue)
+        store.set('license_key', key)
         this.licenseKey = key
         this.licenseError = false
       }
@@ -182,7 +182,7 @@ export default {
                 self.licenseError = true
               }
             } catch (e) {
-              self.activateMachine(self.licenseKeyValue, machineId, data)
+              await self.activateMachine(self.licenseKeyValue, machineId, data)
             }
           }
         })
