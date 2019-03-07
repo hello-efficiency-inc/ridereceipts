@@ -157,7 +157,6 @@
 import { URL } from 'url'
 import oauth from '../services/oauth'
 import dayjs from 'dayjs'
-import puppeteerLyft from '../services/puppeteer'
 import axios from 'axios'
 import _ from 'lodash'
 import cheerio from 'cheerio'
@@ -395,11 +394,6 @@ export default {
       }
     },
     processEmails (data, user) {
-      const header = data.payload.headers.map((item) => {
-        let obj = {}
-        obj[item.name] = item.value
-        return obj
-      })
       const html = Buffer.from(data.payload.body.data, 'base64')
       const date = new Date(parseInt(data.internalDate))
 
@@ -425,15 +419,16 @@ export default {
         this.navigation = true
       }
 
-      return puppeteerLyft(
-        user.email,
-        Object.assign({}, ...header),
-        dayjs(date).format('YYYY'),
-        dayjs(date).format('MMMM'),
-        dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
-        html.toString(),
-        'Lyft'
-      )
+      this.$electron.ipcRenderer.send('downloadPDF', {
+        email: user.email,
+        date: date,
+        year: dayjs(date).format('YYYY'),
+        invoiceDate: dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
+        html: `data:text/html;charset=UTF-8,${encodeURIComponent(html)}`,
+        rideType: 'Lyft'
+      })
+      setTimeout(() => { console.log('Resting.....') }, 2000)
+      return true
     },
     openInvoiceFolder () {
       const documentDir = this.$electronstore.get('invoicePath')

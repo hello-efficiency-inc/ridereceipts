@@ -14,3 +14,4 @@ thumbs.db
 _site/
 .env
 src/renderer/config.js
+windows_codesign.pfx

@@ -150,7 +150,6 @@
   </div>
 </template>
 <script>
-import puppeteerUber from '../services/puppeteer'
 import { URL } from 'url'
 import oauth from '../services/oauth'
 import dayjs from 'dayjs'
@@ -405,11 +404,6 @@ export default {
       var country
       var uberEats
 
-      const header = data.payload.headers.map((item) => {
-        let obj = {}
-        obj[item.name] = item.value
-        return obj
-      })
       if (data.payload.parts) {
         html = Buffer.from(data.payload.parts[0].body.data, 'base64')
       } else {
@@ -478,19 +472,15 @@ export default {
         this.navigation = true
       }
 
-      try {
-        return puppeteerUber(
-          user.email,
-          Object.assign({}, ...header),
-          dayjs(date).format('YYYY'),
-          dayjs(date).format('MMMM'),
-          dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
-          html.toString(),
-          uberEats
-        )
-      } catch (e) {
-        this.form = 'CHROME_NOT_FOUND'
-      }
+      this.$electron.ipcRenderer.send('downloadPDF', {
+        email: user.email,
+        date: date,
+        year: dayjs(date).format('YYYY'),
+        invoiceDate: dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
+        html: `data:text/html;charset=UTF-8,${encodeURIComponent(html)}`,
+        rideType: uberEats
+      })
+      setTimeout(() => { console.log('Resting.....') }, 2000)
     },
     openInvoiceFolder () {
       const documentDir = this.$electronstore.get('invoicePath')

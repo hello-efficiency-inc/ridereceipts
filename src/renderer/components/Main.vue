@@ -1,12 +1,48 @@
 <template>
   <div class="main-splash">
-    <div class="wrap-content">
+    <div>
       <img id="logo" src="static/ride-receipts.svg" alt="Ride Receipts" key="mainpage">
-      <template>
+      <div>
+        <p>Download your rideshare receipts and<br/>invoices automatically.</p>
+        <div class="loading" v-if="loading">
+          <div class="inner"></div>
+        </div>
+        <div v-if="!licenseKey && !loading">
+          <p class="choose-app">Please enter license key to get started.</p>
+          <div class="form-group">
+            <b-form-input id="email"
+                  v-model.trim="licenseKeyValue"
+                  type="text"
+                  :state="licenseError"
+                  aria-describedby="license licenseFeedback"
+                  placeholder="License Key" required>
+              </b-form-input>
+              <b-form-invalid-feedback id="licenseFeedback">
+                    {{ licenseErrorMessage }}
+              </b-form-invalid-feedback>
+           </div>
+           <p class="text-center">
+            <button class="btn btn-lg main-btn" tag="button" @click="submitLicenseKey">Submit</button>
+          </p>
+        </div>
+        <div v-if="licenseKey && !loading">
+          <p class="choose-app">Choose an app to get started:</p>
+          <p class="text-center">
+            <router-link :to="{ name: 'uber-gmail' }" class="btn btn-lg main-btn" tag="button">
+              Uber
+            </router-link>
+            <span class="option-text">or</span>
+            <router-link :to="{ name: 'lyft' }" class="btn btn-lg main-btn" tag="button">
+              Lyft
+            </router-link>
+          </p>
+        </div>
+      </div>
+      <!-- <div v-if="licenseKey" v-cloak>
         <p>Download your rideshare receipts and<br/>invoices automatically.</p>
         <p class="choose-app">Choose an app to get started:</p>
         <p class="text-center">
-          <router-link :to="{ name: 'uber' }" class="btn btn-lg main-btn" tag="button">
+          <router-link :to="{ name: 'uber-gmail' }" class="btn btn-lg main-btn" tag="button">
             Uber
           </router-link>
           <span class="option-text">or</span>
@@ -14,16 +50,156 @@
             Lyft
           </router-link>
         </p>
-      </template>
+      </div> -->
+      </transition>
     </div>
   </div>
 </template>
 <script>
+import request from 'request'
+import { GUMROAD_PRODUCT_ID, TEST_LICENSE_KEY, API_URI } from '../config'
+import Store from 'electron-store'
+import dayjs from 'dayjs'
+import { machineIdSync } from 'node-machine-id'
+import axios from 'axios'
+import crypto from 'crypto'
+import os from 'os'
+const store = new Store()
+
 export default {
   data () {
     return {
       progress: null,
-      downloaded: true
+      downloaded: true,
+      licenseKeyExpired: false,
+      licenseKeyExpiring: false,
+      licenseKeyMessage: '',
+      licenseKey: false,
+      licenseKeyValue: '',
+      licenseError: true,
+      loading: false,
+      licenseErrorMessage: null
+    }
+  },
+  mounted () {
+    this.checkLicenseKey()
+  },
+  methods: {
+    checkLicenseKey () {
+      const self = this
+      const licenseKey = store.get('license_key')
+      let machine = machineIdSync({ original: true })
+      let machineId = crypto.createHash('sha512').update(machine).digest('hex')
+      const testLicenseKey = TEST_LICENSE_KEY
+      this.loading = true
+      if (licenseKey === testLicenseKey) {
+        this.licenseKey = licenseKey
+        self.loading = false
+      } else {
+        request.post(`https://api.gumroad.com/v2/licenses/verify`, {
+          form: {
+            product_permalink: GUMROAD_PRODUCT_ID,
+            increment_uses_count: false,
+            license_key: licenseKey
+          } }, async function (err, res, body) {
+          if (err) {}
+          var data = JSON.parse(body)
+          if (data.purchase) {
+            var subscribedAt = dayjs(data.purchase.created_at)
+            var expiresAt = dayjs(data.purchase.created_at).add(1, 'year')
+            var days = expiresAt.diff(subscribedAt, 'day')
+            self.licenseKeyExpiring = days > 0 && days <= 30
+            self.licenseKeyExpired = days === 0
+            self.$store.dispatch('setDays', days)
+            if (self.licenseKeyExpiring) {
+              self.$store.dispatch('setLicenseExpiring', days)
+            }
+
+            if (self.licenseKeyExpired) {
+              self.$store.dispatch('setLicenseExpired', days)
+            }
+          }
+
+          if (data.success === false) {
+            self.licensekey = false
+            self.loading = false
+          } else {
+            try {
+              const verifyMachine = await axios.post(`${API_URI}/machine/verify`, {
+                license_key: licenseKey,
+                machine_id: machineId
+              })
+              if (!verifyMachine.data.data.success && verifyMachine.data.data.machines === 0) {
+                self.activateMachine(licenseKey, machineId, data)
+              }
+              self.licenseKey = licenseKey
+              self.loading = false
+            } catch (e) {
+              self.activateMachine(licenseKey, machineId, data)
+              self.licenseKey = licenseKey
+              self.loading = false
+            }
+          }
+        })
+      }
+    },
+    async activateMachine (key, machineId, data) {
+      const activateMachine = await axios.post(`${API_URI}/machine/activate`, {
+        license_key: key,
+        sales_id: data.purchase.id,
+        email: data.purchase.email,
+        machine_id: machineId,
+        platform: os.platform() === 'darwin' ? 'Mac' : 'Windows'
+      })
+      if (activateMachine.data.data.success) {
+        store.set('license_key', self.licenseKeyValue)
+        self.licenseKey = key
+        self.licenseError = true
+      }
+    },
+    submitLicenseKey () {
+      const self = this
+      const testLicenseKey = TEST_LICENSE_KEY
+      let machine = machineIdSync({ original: true })
+      let machineId = crypto.createHash('sha512').update(machine).digest('hex')
+      if (this.licenseKeyValue === testLicenseKey) {
+        store.set('license_key', this.licenseKeyValue)
+        this.licenseKey = this.licenseKeyValue
+        this.licenseError = true
+      } else {
+        request.post(`https://api.gumroad.com/v2/licenses/verify`, {
+          form: {
+            product_permalink: GUMROAD_PRODUCT_ID,
+            license_key: this.licenseKeyValue
+          } }, async function (err, res, body) {
+          if (err) {}
+          var data = JSON.parse(body)
+          if (data.success === false) {
+            self.licenseKey = null
+            self.licenseErrorMessage = 'Oops license key is invalid.'
+            self.licenseError = false
+          } else if (data.success === true) { // limit license usage
+            try {
+              const verifyMachine = await axios.post(`${API_URI}/machine/verify`, {
+                license_key: self.licenseKeyValue,
+                machine_id: machineId
+              })
+              if (!verifyMachine.data.data.success && verifyMachine.data.data.machines < 2) {
+                self.activateMachine(self.licenseKeyValue, machineId, data)
+              } else if (!verifyMachine.data.data.success && verifyMachine.data.data.machines === 2) {
+                self.licenseErrorMessage = 'License key usage limit exceeded.'
+                self.licenseError = false
+              } else {
+                store.set('license_key', self.licenseKeyValue)
+                self.licenseKey = self.licenseKeyValue
+                self.licenseError = true
+              }
+            } catch (e) {
+              self.activateMachine(self.licenseKeyValue, machineId, data)
+            }
+          }
+        })
+      }
     }
   }
 }
@@ -33,11 +209,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 100vw;
   min-height: 100vh;
-
-  .wrap-content {
-    width: 450px;
-  }
 
   .choose-app {
     color: #000;
@@ -67,13 +240,14 @@ export default {
   position: relative;
   background: transparent;
   padding-top: 15px;
-  padding-left: 58px;
-  padding-right: 58px;
+  // padding-left: 58px;
+  // padding-right: 58px;
   padding-bottom: 15px;
   border-radius: 100px;
   font-weight: 700;
   text-transform: uppercase;
   font-size: 15px;
+  width: 160px;
 
   &:hover {
     background: #00afb0;
