@@ -1,5 +1,9 @@
 <template>
   <div id="app">
+    <!-- <div v-if="this.$store.state.LicenseKey.expiring ||  this.$store.state.LicenseKey.expired" class="expire-notification d-flex justify-content-center align-items-center">
+      <div v-if="this.$store.state.LicenseKey.expiring">License is expiring in {{ this.$store.state.LicenseKey.days }} days. <a class="js-external-link renew-link" href="https://gum.co/ridereceiptspro">Click here to renew</a>.</div>
+      <div v-if="this.$store.state.LicenseKey.expired">License has expired. <a class="js-external-link renew-link" href="https://gum.co/ridereceiptspro">Click here to renew</a>.</div>
+    </div> -->
     <transition name="fade">
       <router-view></router-view>
     </transition>
@@ -47,6 +51,12 @@ body {
 
 a {
   color: #00AFB0;
+  text-decoration: none;
+  border-bottom: 0;
+
+  &:hover {
+    color: #003132;
+  }
 }
 
 ::selection {
@@ -56,14 +66,16 @@ a {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.1s ease-in;
+  transition-duration: 0.2s;
+  transition-property: opacity;
+  transition-timing-function: ease;
 }
 .fade-enter, .fade-leave-active {
-  opacity: 0;
+  opacity: 0
 }
 
 .vue-simple-spinner {
-  border-color: #00afb0 rgb(238, 238, 238) rgb(238, 238, 238) !important;
+  border-color: #00AFB0 rgb(238, 238, 238) rgb(238, 238, 238) !important;
 }
 
 .bs-popover-bottom {
@@ -200,12 +212,12 @@ a {
   &:active,
   &:focus,
   &:focus:enabled {
-    background: #00afb0;
+    background: white;
   }
 
   &:hover,
   &:hover:enabled {
-    background: #000;
+    background: #003132;
     color: white;
   }
 }
@@ -237,6 +249,7 @@ a {
 .card {
   border-radius: 0;
   background: #FFFFFF;
+  border: 0px;
   box-shadow: 0 2px 4px 1px rgba(0,0,0,0.32);
 
   .card-body {
@@ -250,12 +263,17 @@ a {
       font-weight: 800;
     }
   }
+  .card-footer {
+    border: 0px;
+  }
 }
 
 .progress {
   background-color: #D9D9D9;
   height: 16px;
   border-radius: 1rem;
+  // width: 80%;
+  // margin: 10px auto;
 }
 
 .progress-bar {
@@ -317,7 +335,7 @@ a {
     }
     /* Half gradients */
     &:before {
-       background-image: linear-gradient(to bottom, #003132 0%, #00AFB0 100%);
+      background-image: linear-gradient(to bottom, #003132 0%, #00AFB0 100%);
     }
     &:after {
         background-image: linear-gradient(to bottom, #ffffff 0%, #D8D8D8 100%);
@@ -400,7 +418,7 @@ footer {
     margin: 0 auto;
 
     &:focus {
-      border-image:  linear-gradient(to right, rgba(0,49,50,1) 0%, rgba(0,175,176,1) 100%);
+      border-image:  linear-gradient(to right, rgba(0, 175, 176,1) 0%, rgba(0,49,50,1) 100%);
       border-image-slice: 1;
       box-shadow: none;
       background: none;
@@ -417,7 +435,7 @@ footer {
     position: relative;
       top: -35px;
       bottom: 0;
-      left: 97%;
+      left: 96.5%;
   }
 
     .btn--submit-start {
@@ -474,25 +492,83 @@ footer {
       display: none;
     }
 
-    .startagain-link {
-      font-size: 18px;
-      font-weight: 700;
-      color: black;
-
-      &:hover {
-        color: black;
-      }
+    .col-form-label {
+      color: #000;
+      font-size: 24px;
     }
 
-    a.upgrade-link {
-      color: black;
-      padding-bottom: 1px;
-      text-decoration: none;
-      transition: all 0.2s ease;
+    .v2-date-wrap {
+      min-width: 250px !important;
+      height: auto !important;
+      border-color: #898989 !important;
+    }
+
+    .v2-picker-trigger {
+      line-height: 50px !important;
+      padding-left: 45px !important;
+      height: auto !important;
+      font-size: 24px !important;
+      color: #000;
+    }
+
+    .v2-date-icon {
+      left: 10px;
+      right: 0 !important;
+    }
+
+    .v2-picker-panel__day.selected span {
+      background: #00AFB0 !important;
+    }
+
+    .v2-picker-panel__day:hover {
+      color: #00AFB0 !important;
+    }
+
+    .v2-picker-panel__day.today span {
+      color: #00AFB0 !important;
+    }
+
+    .v2-picker-panel-wrap {
+      top:45% !important;
+    }
+
+    .btn-card {
+      width: 100%;
+      border-radius: 0;
+      background-color: #00AFB0;
+      color: #fff;
+      text-transform: uppercase;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      border:0;
+      font-weight: 700;
+      outline: 0;
+      box-shadow: none;
+    }
+    .btn-card:hover {
+      background-color: #003132;
+      color: white;
+    }
+    .expire-notification {
+      height: 40px;
+      background: black;
+      text-align: center;
+      color: #fff;
+    }
+
+    .v2-toggle-icon__prev-year:hover::before, .v2-toggle-icon__next-year:hover::before, .v2-toggle-icon__prev-year:hover::after, .v2-toggle-icon__next-year:hover::after {
+      border-color: #00afb0 !important;
+    }
+
+    .v2-toggle-icon__prev-month:hover::before, .v2-toggle-icon__next-month:hover::before {
+      border-color: #00afb0 !important;
+    }
+
+    .renew-link {
+      color: white;
 
       &:hover {
-        color: #00AFB0;
-        border-bottom: 1px solid #00afb0;
+        color: #00afb0;
       }
     }
 </style>

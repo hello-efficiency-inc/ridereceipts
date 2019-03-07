@@ -2,7 +2,7 @@
   <div class="main-splash">
     <div>
       <img id="logo" src="static/ride-receipts.svg" alt="Ride Receipts" key="mainpage">
-      <div>
+      <div style="width: 550px;">
         <p>Download your rideshare receipts and<br/>invoices automatically.</p>
         <div class="loading" v-if="loading">
           <div class="inner"></div>
@@ -28,7 +28,7 @@
         <div v-if="licenseKey && !loading">
           <p class="choose-app">Choose an app to get started:</p>
           <p class="text-center">
-            <router-link :to="{ name: 'uber-gmail' }" class="btn btn-lg main-btn" tag="button">
+            <router-link :to="{ name: 'uber' }" class="btn btn-lg main-btn" tag="button">
               Uber
             </router-link>
             <span class="option-text">or</span>
@@ -38,20 +38,6 @@
           </p>
         </div>
       </div>
-      <!-- <div v-if="licenseKey" v-cloak>
-        <p>Download your rideshare receipts and<br/>invoices automatically.</p>
-        <p class="choose-app">Choose an app to get started:</p>
-        <p class="text-center">
-          <router-link :to="{ name: 'uber-gmail' }" class="btn btn-lg main-btn" tag="button">
-            Uber
-          </router-link>
-          <span class="option-text">or</span>
-          <router-link :to="{ name: 'lyft' }" class="btn btn-lg main-btn" tag="button">
-            Lyft
-          </router-link>
-        </p>
-      </div> -->
-      </transition>
     </div>
   </div>
 </template>
@@ -207,6 +193,7 @@ export default {
 <style lang="scss">
 .main-splash {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-width: 100vw;
