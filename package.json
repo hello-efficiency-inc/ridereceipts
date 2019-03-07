@@ -3,7 +3,7 @@
   "version": "1.8.0",
   "author": "Hello Efficiency Inc. <info@helloefficiency.com>",
   "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
-  "license": "LGPLv3",
+  "license": "LGPL-3.0-or-later",
   "main": "./dist/electron/main.js",
   "keywords": [
     "Receipts",
