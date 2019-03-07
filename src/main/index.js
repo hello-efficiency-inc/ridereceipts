@@ -75,7 +75,7 @@ function createWindow () {
 
   if (process.platform === 'win32') {
     template.unshift({
-      label: app.getName(),
+      label: 'Ride Receipts',
       submenu: [
         {
           label: 'About',
@@ -92,7 +92,7 @@ function createWindow () {
         },
         {
           label: 'View license',
-          click: () => require('shell').openExternal('http://www.google.com')
+          click: () => shell.openExternal('https://ridereceipts.io/license-agreement/')
         },
         {
           label: `Version ${version}`,
@@ -110,7 +110,7 @@ function createWindow () {
 
   if (process.platform === 'darwin') {
     template.unshift({
-      label: app.getName(),
+      label: 'Ride Receipts',
       submenu: [
         { role: 'about' },
         {
