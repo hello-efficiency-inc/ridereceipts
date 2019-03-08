@@ -1,6 +1,6 @@
 {
   "name": "ridereceipts",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "author": "Hello Efficiency Inc. <info@helloefficiency.com>",
   "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
   "license": "LGPL-3.0-or-later",
@@ -79,6 +79,7 @@
     "electron-context-menu": "^0.11.0",
     "electron-log": "^3.0.1",
     "electron-store": "^2.0.0",
+    "electron-util": "^0.11.0",
     "fkill": "^5.2.0",
     "fs-jetpack": "^2.0.0",
     "jquery": "^3.2.1",

@@ -6,6 +6,7 @@ import Store from 'electron-store'
 import jetpack from 'fs-jetpack'
 import fs from 'fs'
 import path from 'path'
+import { enforceMacOSAppLocation } from 'electron-util'
 
 import 'electron-context-menu'
 
@@ -142,7 +143,11 @@ app.on('second-instance', function (event, argv, cwd) {
 })
 
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow()
+  // Move to Application folder on MacOS
+  enforceMacOSAppLocation()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
