@@ -7,6 +7,7 @@ import jetpack from 'fs-jetpack'
 import fs from 'fs'
 import path from 'path'
 import { enforceMacOSAppLocation } from 'electron-util'
+import { autoUpdateApp, checkForUpdates } from './updater.js'
 
 import 'electron-context-menu'
 
@@ -92,6 +93,12 @@ function createWindow () {
             })
         },
         {
+          label: 'Check for update',
+          click: function (menuItem, browserWindow, event) {
+            checkForUpdates(menuItem, browserWindow, event)
+          }
+        },
+        {
           label: 'View license',
           click: () => shell.openExternal('https://ridereceipts.io/license-agreement/')
         },
@@ -117,6 +124,12 @@ function createWindow () {
         {
           label: 'View license',
           click: () => shell.openExternal('https://ridereceipts.io/license-agreement/')
+        },
+        {
+          label: 'Check for update',
+          click: function (menuItem, browserWindow, event) {
+            checkForUpdates(menuItem, browserWindow, event)
+          }
         },
         {
           label: `Version ${version}`,
@@ -147,6 +160,9 @@ app.on('ready', () => {
   createWindow()
   // Move to Application folder on MacOS
   enforceMacOSAppLocation()
+  if (process.env.NODE_ENV === 'production') {
+    autoUpdateApp()
+  }
 })
 
 app.on('window-all-closed', () => {
