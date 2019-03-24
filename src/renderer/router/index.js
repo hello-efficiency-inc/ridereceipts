@@ -21,6 +21,11 @@ export default new Router({
       component: require('@/components/Main').default
     },
     {
+      path: '/view-logs',
+      name: 'view-logs',
+      component: require('@/components/ViewLogs').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

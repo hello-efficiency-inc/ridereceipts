@@ -23,6 +23,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+let logsWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
@@ -106,6 +107,24 @@ function createWindow () {
           label: `Version ${version}`,
           enabled: false
         },
+        {
+          label: 'View logs',
+          click: function () {
+            if (typeof logsWindow === 'undefined' || logsWindow === null || logsWindow.isDestroyed()) {
+              const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/view-logs' : `file://${__dirname}/index.html#view-logs`
+              logsWindow = new BrowserWindow({
+                width: 860,
+                height: 600,
+                useContentSize: false,
+                resizable: false
+              })
+              logsWindow.setTitle('Logs')
+              logsWindow.loadURL(modalPath)
+            } else {
+              logsWindow.show()
+            }
+          }
+        },
         { type: 'separator' },
         { role: 'hide' },
         { role: 'hideothers' },
@@ -134,6 +153,24 @@ function createWindow () {
         {
           label: `Version ${version}`,
           enabled: false
+        },
+        {
+          label: 'View logs',
+          click: function () {
+            if (typeof logsWindow === 'undefined' || logsWindow === null || logsWindow.isDestroyed()) {
+              const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/view-logs' : `file://${__dirname}/index.html#view-logs`
+              logsWindow = new BrowserWindow({
+                width: 860,
+                height: 600,
+                useContentSize: false,
+                resizable: false
+              })
+              logsWindow.setTitle('Logs')
+              logsWindow.loadURL(modalPath)
+            } else {
+              logsWindow.show()
+            }
+          }
         },
         { type: 'separator' },
         { role: 'services' },
@@ -195,9 +232,14 @@ ipcMain.on('online-status-changed', (event, status) => {
 ipcMain.on('downloadPDF', (event, data) => {
   const documentDir = jetpack.cwd(store.get('invoicePath'))
   const rideDirectory = data.rideType
+  const cancelled = data.cancelled ? data.cancelled : false
   var invoiceDate = data.invoiceDate
   var folderPath
-  folderPath = `${documentDir.path()}/${data.email}/${rideDirectory}/${data.year}/`
+  if (cancelled) {
+    folderPath = `${documentDir.path()}/${data.email}/${rideDirectory}/Cancelled/${data.year}/`
+  } else {
+    folderPath = `${documentDir.path()}/${data.email}/${rideDirectory}/${data.year}/`
+  }
 
   if (!jetpack.exists(documentDir.path(folderPath))) {
     jetpack.dir(documentDir.path(folderPath))

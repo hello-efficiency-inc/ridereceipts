@@ -156,6 +156,7 @@ import dayjs from 'dayjs'
 import cheerio from 'cheerio'
 import axios from 'axios'
 import _ from 'lodash'
+const log = require('electron-log')
 
 export default {
   data () {
@@ -409,8 +410,15 @@ export default {
       } else {
         html = Buffer.from(data.payload.body.data, 'base64')
       }
+      const from = _.find(data.payload.headers, { name: 'From' }).value
+      const countryFromEmail = from.match(/<(\w+.\w+@\w+.\w+)>/g)[0].replace(/[<>]/g, '').replace('uber.', '').replace('@uber.com', '')
+      console.log(countryFromEmail)
+      const subject = _.find(data.payload.headers, { name: 'Subject' }).value
+      const cancelled = subject.includes('canceled')
+      if (cancelled) {
+        log.info(`Trip is cancelled`)
+      }
       const date = new Date(parseInt(data.internalDate))
-
       const dom = cheerio.load(html.toString(), {
         normalizeWhitespace: true
       })
@@ -436,8 +444,8 @@ export default {
             address = _.trim(dom('body > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(5) > tbody > tr:nth-child(1) > td > table > tbody > tr > td > table.t11of12 > tbody > tr > td > table > tbody > tr > td > table.t5of12 > tbody > tr > td > table > tbody > tr > td > table:nth-child(1) > tbody > tr > td.Uber18_text_p2.black > table > tbody > tr:nth-child(2) > td').text())
           }
         }
-        if (address) {
-          var geoData = await axios.get(`https://api.ridereceipts.io/geocode?address=${address}`)
+        if (countryFromEmail) {
+          var geoData = await axios.get(`https://api.ridereceipts.io/geocode?address=${countryFromEmail}`)
           country = geoData.data.Response.View[0].Result[0].Location.Address.Country
         } else {
           country = amount.replace(/\d+([,.]\d+)?/, '').replace(/[^\w+\s]/, '')
@@ -463,6 +471,8 @@ export default {
           uberEats = 'Uber'
         }
       } catch (e) {
+        log.info(address)
+        log.info(e)
         console.log(e)
       }
 
@@ -476,6 +486,7 @@ export default {
         email: user.email,
         date: date,
         year: dayjs(date).format('YYYY'),
+        cancelled: cancelled,
         invoiceDate: dayjs(date).format('MMMM-DD-YYYY_hh-mm-a'),
         html: `data:text/html;charset=UTF-8,${encodeURIComponent(html)}`,
         rideType: uberEats

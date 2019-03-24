@@ -1,7 +1,7 @@
 {
   "name": "ridereceipts",
   "productName": "Ride Receipts",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "private": true,
   "author": "Hello Efficiency Inc. <info@helloefficiency.com>",
   "description": "Simple automation desktop app to download and organize your tax invoices from Uber.",
