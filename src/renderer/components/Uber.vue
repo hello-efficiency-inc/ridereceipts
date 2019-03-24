@@ -412,7 +412,6 @@ export default {
       }
       const from = _.find(data.payload.headers, { name: 'From' }).value
       const countryFromEmail = from.match(/<(\w+.\w+@\w+.\w+)>/g)[0].replace(/[<>]/g, '').replace('uber.', '').replace('@uber.com', '')
-      console.log(countryFromEmail)
       const subject = _.find(data.payload.headers, { name: 'Subject' }).value
       const cancelled = subject.includes('canceled')
       if (cancelled) {
