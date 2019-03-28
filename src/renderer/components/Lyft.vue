@@ -342,6 +342,13 @@ export default {
           }
         })
 
+        if (typeof list.data.messages === 'undefined') {
+          this.invoiceCount = 0
+          this.downloadMessage(0)
+          self.form = 'DOWNLOADED'
+          return
+        }
+
         if (list.data.messages.length > 0) {
           for (let i = 0; i < list.data.messages.length; i++) {
             emails.push(list.data.messages[i])
