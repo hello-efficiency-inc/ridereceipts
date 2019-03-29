@@ -1,7 +1,6 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain, Menu, session, shell } from 'electron'
-import fkill from 'fkill'
 import Store from 'electron-store'
 import jetpack from 'fs-jetpack'
 import fs from 'fs'
@@ -210,12 +209,6 @@ app.on('window-all-closed', () => {
 
 app.on('quit', () => {
   session.defaultSession.clearStorageData()
-  if (store.has('processPID')) {
-    fkill(store.get('processPID', {
-      force: true
-    }))
-    store.delete('processPID')
-  }
 })
 
 app.on('activate', () => {
