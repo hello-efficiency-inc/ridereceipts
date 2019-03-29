@@ -15,6 +15,7 @@
   <img src="https://img.shields.io/badge/producthunt-vote-orange.svg">
 </a>
 <a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/ride-receipts/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/328-shield.svg"/></a>
+  <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fridereceipts%2Fridereceipts?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fridereceipts%2Fridereceipts.svg?type=shield"/></a>
 </p>
 
 > Simple automation desktop app to download and organize your receipts from Uber and Lyft.
