@@ -15,6 +15,7 @@
   <img src="https://img.shields.io/badge/producthunt-vote-orange.svg">
 </a>
 <a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/ride-receipts/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/328-shield.svg"/></a>
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fridereceipts%2Fridereceipts?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fridereceipts%2Fridereceipts.svg?type=shield"/></a>
 </p>
 
 > Simple automation desktop app to download and organize your receipts from Uber and Lyft.
@@ -103,3 +104,6 @@ Please feel free to give us suggestions or report a bug by creating a [new issue
 
 ## License
 License by default is [LGPLv3](https://github.com/ridereceipts/ridereceipts/blob/master/LICENSE). After purchase please refer [COMM-LICENSE](https://github.com/ridereceipts/ridereceipts/blob/master/COMM-LICENSE) is applied
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fridereceipts%2Fridereceipts.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fridereceipts%2Fridereceipts?ref=badge_large)
