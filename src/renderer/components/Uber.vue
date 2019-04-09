@@ -406,9 +406,17 @@ export default {
       var uberEats
 
       if (data.payload.parts) {
-        html = Buffer.from(data.payload.parts[0].body.data, 'base64')
-      } else {
-        html = Buffer.from(data.payload.body.data, 'base64')
+        const payload = _.find(data.payload.parts, { mimeType: 'multipart/alternative' })
+        if (payload) {
+          const htmlData = _.find(payload.parts, { mimeType: 'text/html' })
+          if (htmlData) {
+            html = Buffer.from(htmlData.body.data, 'base64')
+          }
+        } else if (data.payload.parts) {
+          html = Buffer.from(data.payload.parts[0].body.data, 'base64')
+        } else {
+          html = Buffer.from(data.payload.body.data, 'base64')
+        }
       }
       const from = _.find(data.payload.headers, { name: 'From' }).value
       const countryFromEmail = from.match(/<(\w+.\w+@\w+.\w+)>/g)[0].replace(/[<>]/g, '').replace('uber.', '').replace('@uber.com', '')

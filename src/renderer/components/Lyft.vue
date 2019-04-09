@@ -401,7 +401,13 @@ export default {
       }
     },
     processEmails (data, user) {
-      const html = Buffer.from(data.payload.body.data, 'base64')
+      let html
+      const htmlData = _.find(data.payload.parts, { mimeType: 'text/html' })
+      if (htmlData) {
+        html = Buffer.from(htmlData.body.data, 'base64')
+      } else {
+        html = Buffer.from(data.payload.body.data, 'base64')
+      }
       const date = new Date(parseInt(data.internalDate))
 
       const dom = cheerio.load(html.toString(), {
