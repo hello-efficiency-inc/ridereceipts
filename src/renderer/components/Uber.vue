@@ -155,8 +155,30 @@ import oauth from '../services/oauth'
 import dayjs from 'dayjs'
 import cheerio from 'cheerio'
 import axios from 'axios'
+import path from 'path'
 import _ from 'lodash'
+import fs from 'fs'
+import Fuse from 'fuse.js'
 const log = require('electron-log')
+const countryJsonData = JSON.parse(fs.readFileSync(path.join(__static, '/countrydata.json'), 'utf-8'))
+const fuseOption = {
+  shouldSort: true,
+  matchAllTokens: true,
+  includeScore: true,
+  threshold: 0.6,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32,
+  minMatchCharLength: 1,
+  keys: [
+    'name',
+    'currencies',
+    'altSpellings',
+    'nativeName'
+  ]
+}
+
+var fuse = new Fuse(countryJsonData, fuseOption)
 
 export default {
   data () {
@@ -402,7 +424,6 @@ export default {
       var address
       var amount
       var check
-      var country
       var uberEats
 
       if (data.payload.parts) {
@@ -452,14 +473,12 @@ export default {
           }
         }
         if (countryFromEmail) {
-          var geoData = await axios.get(`https://api.ridereceipts.io/geocode?address=${countryFromEmail}`)
-          country = geoData.data.Response.View[0].Result[0].Location.Address.Country
+          var geoData = _.minBy(fuse.search(countryFromEmail), 'score')
         } else {
-          country = amount.replace(/\d+([,.]\d+)?/, '').replace(/[^\w+\s]/, '')
+          geoData = _.minBy(fuse.search(amount.replace(/\d+([,.]\d+)?/, '').replace(/[^\w+\s]/, '')), 'score')
         }
-        var currencyData = await axios.get(`https://restcountries.eu/rest/v2/alpha/${country}?fields=currencies`)
         if (amount) {
-          currency = currencyData.data.currencies[0].code
+          currency = geoData.item.currencies[0].code
           totalRate = parseFloat(amount.match(/[+-]?\d+(\.\d+)?/)[0])
           check = _.findIndex(this.rates, ['currency', currency])
           if (check < 0) {
