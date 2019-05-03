@@ -39,7 +39,12 @@ function createWindow () {
     width: 960,
     minWidth: 900,
     minHeight: 600,
-    resizable: false
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true,
+      webSecurity: false
+    }
   })
 
   mainWindow.loadURL(winURL)
@@ -115,7 +120,12 @@ function createWindow () {
                 width: 860,
                 height: 600,
                 useContentSize: false,
-                resizable: false
+                resizable: false,
+                webPreferences: {
+                  nodeIntegration: true,
+                  nodeIntegrationInWorker: true,
+                  webSecurity: false
+                }
               })
               logsWindow.setTitle('Logs')
               logsWindow.loadURL(modalPath)
@@ -162,7 +172,12 @@ function createWindow () {
                 width: 860,
                 height: 600,
                 useContentSize: false,
-                resizable: false
+                resizable: false,
+                webPreferences: {
+                  nodeIntegration: true,
+                  nodeIntegrationInWorker: true,
+                  webSecurity: false
+                }
               })
               logsWindow.setTitle('Logs')
               logsWindow.loadURL(modalPath)
