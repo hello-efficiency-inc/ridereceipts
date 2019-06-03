@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "about-window": "^1.12.1",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bootstrap": "^4.1.0",
     "bootstrap-vue": "^2.0.0-rc.11",
     "cheerio": "^1.0.0-rc.2",
