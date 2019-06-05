@@ -360,7 +360,7 @@ export default {
         } else {
           apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?q='{from:"Uber Receipts" from:"Reçu Uber" from:"Uber 收据"} after:${startDate} before:${endDate}'`
         }
-        const list = await axios.get(apiUrl, {
+        const list = await axios.get(encodeURI(apiUrl), {
           headers: {
             'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token_data')).access_token}`
           }
