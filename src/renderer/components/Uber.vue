@@ -356,9 +356,9 @@ export default {
       do {
         let apiUrl
         if (nextToken) {
-          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?pageToken=${nextToken}&q='{from:"Uber Receipts" from:"Reçu Uber"} after:${startDate} before:${endDate}'`
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?pageToken=${nextToken}&q='{from:"Uber Receipts" from:"Reçu Uber" from:"Uber 收据" from:"Uber Fahrtinfo"} after:${startDate} before:${endDate}'`
         } else {
-          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?q='{from:"Uber Receipts" from:"Reçu Uber" from:"Uber 收据"} after:${startDate} before:${endDate}'`
+          apiUrl = `https://www.googleapis.com/gmail/v1/users/me/messages?q='{from:"Uber Receipts" from:"Reçu Uber" from:"Uber 收据" from:"Uber Fahrtinfo"} after:${startDate} before:${endDate}'`
         }
         const list = await axios.get(encodeURI(apiUrl), {
           headers: {
