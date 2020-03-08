@@ -1,0 +1,6 @@
+export const GOOGLE_CLIENT_ID = ''
+export const OUTLOOK_CLIENT_ID = ''
+export const OUTLOOK_CLIENT_SECRET = ''
+export const GUMROAD_PRODUCT_ID = ''
+export const TEST_LICENSE_KEY = ''
+export const API_URI = ''

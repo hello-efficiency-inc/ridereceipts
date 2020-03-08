@@ -1,0 +1,17 @@
+.DS_Store
+dist/electron/*
+dist/web/*
+build/*
+package/*
+!build/icons
+node_modules/
+npm-debug.log
+npm-debug.log.*
+yarn-error.log
+thumbs.db
+!.gitkeep
+.idea/
+_site/
+.env
+src/renderer/config.js
+windows_codesign.pfx

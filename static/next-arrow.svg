@@ -1,0 +1,16 @@
+
+<svg width="36px" height="30px" viewBox="0 0 36 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="8.50014503e-15%" x2="50%" y2="98.0513909%" id="linearGradient-1">
+            <stop stop-color="#00AFB0" offset="0%"></stop>
+            <stop stop-color="#003132" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="next-button-pro-hover" transform="translate(-112.000000, -12.000000)" fill="url(#linearGradient-1)" fill-rule="nonzero">
+            <path d="M132.582258,12.4401158 C132.089497,12.9328771 132.089497,13.7667807 132.582258,14.259542 L143.61253,25.2898131 L113.28876,25.2898131 C112.568571,25.2898131 112,25.8583838 112,26.5785733 C112,27.2987628 112.568571,27.8673335 113.28876,27.8673335 L143.61253,27.8673335 L132.582258,38.9355093 C132.089497,39.4282706 132.089497,40.2621743 132.582258,40.7549355 C133.07502,41.2476968 133.908923,41.2476968 134.401685,40.7549355 L147.630429,27.4882864 C148.12319,26.9955251 148.12319,26.1616215 147.630429,25.6688602 L134.401685,12.4401158 C133.908923,11.9473546 133.07502,11.9473546 132.582258,12.4401158 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

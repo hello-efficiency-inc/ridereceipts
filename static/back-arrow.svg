@@ -1,0 +1,18 @@
+
+<svg width="36px" height="30px" viewBox="0 0 36 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="49.5359917%" y1="97.3751355%" x2="49.5359917%" y2="2.62486452%" id="linearGradient-1">
+            <stop stop-color="#003132" offset="0%"></stop>
+            <stop stop-color="#00AFB0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="back-button-pro" transform="translate(0.000000, -1.000000)" fill="url(#linearGradient-1)" fill-rule="nonzero">
+            <g id="Back-Button">
+                <path d="M20.5822585,1.44011582 C20.0894972,1.93287707 20.0894972,2.76678073 20.5822585,3.25954198 L31.6125296,14.2898131 L1.2887602,14.2898131 C0.568570676,14.2898131 0,14.8583838 0,15.5785733 C0,16.2987628 0.568570676,16.8673335 1.2887602,16.8673335 L31.6125296,16.8673335 L20.5822585,27.9355093 C20.0894972,28.4282706 20.0894972,29.2621743 20.5822585,29.7549355 C21.0750197,30.2476968 21.9089234,30.2476968 22.4016847,29.7549355 L35.6304291,16.4882864 C36.1231903,15.9955251 36.1231903,15.1616215 35.6304291,14.6688602 L22.4016847,1.44011582 C21.9089234,0.947354567 21.0750197,0.947354567 20.5822585,1.44011582 Z" id="Shape-Copy" transform="translate(18.000000, 15.597526) scale(-1, 1) translate(-18.000000, -15.597526) "></path>
+            </g>
+        </g>
+    </g>
+</svg>
